@@ -16,6 +16,7 @@ function Watching({videoprops}) {
   const [hideCntrl, setHideCntrl] = useState('')
   const [hideBtn, setHideBtn] = useState('')
   const auto = useContext(SessionContext)
+  const [videoBlobUrl, setVideoBlobUrl] = useState('');
   const [controls, setControls] = useState(
     {
       currentTime: 0,
@@ -51,10 +52,24 @@ function Watching({videoprops}) {
   }
  
   useEffect(() => {
+    const fetchVideo = async () => {
+      try {
+        const response = await fetch(`/Videos/${videoprops.Video}`);
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        setVideoBlobUrl(blobUrl);
+      } catch (error) {
+        console.error('Error fetching video:', error);
+      }
+    };
+    fetchVideo()
+    
+
     const playPauseBtn = document.querySelector(".play-pause-btn")
     const fullScreenBtn = document.querySelector(".full-screen-btn")
     const miniPlayerBtn = document.querySelector(".mini-player-btn")
     const muteBtn = document.querySelector(".mute-btn")
+    const speedBtn = document.querySelector(".speed-btn")
     const currentTimeElem = document.querySelector(".current-time")
     const totalTimeElem = document.querySelector(".total-time")
     const volumeSlider = document.querySelector(".volume-slider")
@@ -124,9 +139,15 @@ function toggleScrubbing(e) {
 }
 
 
+// Playback Speed
+speedBtn.addEventListener("click", changePlaybackSpeed)
 
-
-
+function changePlaybackSpeed() {
+  let newPlaybackRate = video.playbackRate + 0.25
+  if (newPlaybackRate > 2) newPlaybackRate = 0.25
+  video.playbackRate = newPlaybackRate
+  speedBtn.textContent = `${newPlaybackRate}x`
+}
 
 // Duration
 video.addEventListener("loadeddata", () => {
@@ -189,9 +210,6 @@ video.addEventListener("volumechange", () => {
 fullScreenBtn.addEventListener("click", toggleFullScreenMode)
 miniPlayerBtn.addEventListener("click", toggleMiniPlayerMode)
 
-function toggleTheaterMode() {
-  videoContainer.classList.toggle("theater")
-}
 
 function toggleFullScreenMode() {
   if (document.fullscreenElement == null) {
@@ -226,11 +244,7 @@ playPauseBtn.addEventListener("click", togglePlay)
 video.addEventListener("click", togglePlay)
 
 function togglePlay() {
-  if(video.paused) {
-    video.play() 
-  }else{
-    video.pause()
-  }
+  video.paused ? video.play() : video.pause()
 }
 
 video.addEventListener("play", () => {
@@ -250,12 +264,14 @@ if(auto.session && auto.session != "unlogged"){
       const hours = currentTime / 3600 ; // Conversion en heures
       const response = await fetch(`/api/reactions/addHours/${videoprops.ID}/${user.ID}/${hours.toFixed(4)}`);
       const data = await response.json();
+      console.log(data)
     };
     async function insertViews() {
       const user = auto.session
       const timerId = setTimeout(async () => {  // Ajoutez le mot-clé "async" ici
         const response = await fetch(`/api/reactions/addViews/${videoprops.ID}/${user.ID}`);
         const data = await response.json();
+        console.log(data)
       }, 5000);
     }
     insertViews()
@@ -272,8 +288,6 @@ if(auto.session && auto.session != "unlogged"){
       router.events.off('routeChangeStart', handleRouteChange);
     };
   }
-
-
   }, [videoprops,auto.session,router])
 
   const [playbackSpeed,setPlaybackSpeed] = useState(1)
@@ -384,10 +398,8 @@ if (!videoprops) return null
       <video ref={videoRef} 
        onVolumeChange={(e)=>setControls({...controls,volume:e.currentTarget.volume})} 
        onTimeUpdate={(e)=>{handleCurrentTime(e),setControls({...controls,currentTime:e.currentTarget.currentTime})}}  
-       src={`/Videos/${videoprops.Video}`} onEnded={()=>handleNext(videoprops.NextVideo)} className='rounded h-[420px]' 
-       autoPlay
-       
-       />
+       src={videoBlobUrl} onEnded={()=>handleNext(videoprops.NextVideo)} className='rounded h-[420px]' 
+       autoPlay/>
     </div> 
     </>
   )

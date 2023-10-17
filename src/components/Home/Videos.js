@@ -25,12 +25,13 @@ function Videos() {
     const response = await fetch(`/api/posts/${user}/0/6`)
     const data = await response.json()
     if(data[0]) setVideos(data)
+    if(data) setLoad(true)
   }
 
 if(videos==null) {
   setLoad(false)
   return (<div className={`${styles.filmcontainer} mt-3  gap-[1rem] `}>Loading ...</div>)
-}else setLoad(true)
+}
 
 const getMoreVideos=async()=>{
   if(auto.session === 'unlogged'){

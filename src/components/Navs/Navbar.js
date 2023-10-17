@@ -100,7 +100,6 @@ function Navbar(props) {
         const response = await fetch(`/api/notifications/eachNotification`);
         if (response.ok) {
           const data = await response.json();
-          console.log(data)
           setliste(data);
           setNotifCounter(data.length);
         }

@@ -20,9 +20,7 @@ function DetailVideo() {
   const [video, setVideo] = useState(1);
   const [userData, setUserData] = useState(null);
   const [catstat, setCatstat] = useState(null);
-
-  
-
+  const [videoBlobUrl, setVideoBlobUrl] = useState('');
 
 useEffect(() => {
   if(router.query.v && auth.session){
@@ -33,9 +31,20 @@ useEffect(() => {
       if (data.length > 0) {
         setPeriod(TimeAgo(data[0].Created_at))
         setVideo(data[0]);
+        fetchVideo(data[0].Video)
       }
     };
-
+    const fetchVideo = async (video) => {
+      try {
+        const response = await fetch(`/Videos/${video}`);
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        setVideoBlobUrl(blobUrl);
+      } catch (error) {
+        console.error('Error fetching video:', error);
+      }
+    };
+    
     const getPostStatic = async (uuid) =>{
       const response = await fetch(`/api/statics/post/${uuid}`)
       const datas = await response.json()
@@ -106,7 +115,7 @@ if(!video) return(<div>Loading...</div>)
             <div className="flex justify-center lg:w-full max-h-96">
             
               <video className="w-full h-96  object-fill"
-               src={`/Videos/${video.Video}`} controls></video>
+               src={videoBlobUrl} controls></video>
             </div>
           {/* <!--video--> */}
           {/* <!--courbes--> */}
