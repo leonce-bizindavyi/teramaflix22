@@ -22,6 +22,7 @@ function Navbar(props) {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [notifCounter, setNotifCounter] = useState(0);
   const [liste_notification, setliste] = useState([]);
+  const [profBlobUrl, setProfBlobUrl] = useState('/img/logo.png');
   const compoRef = useRef(null);
   const sideBarRef = useRef(null);
   const notifRef = useRef(null);
@@ -93,7 +94,29 @@ function Navbar(props) {
       setSmSearch(false);
     }
   }; 
-
+  useEffect(() => {
+    const fetchProfile = async (photo) => {
+      try {
+        if(photo){
+          const response = await fetch(`/Thumbnails/${photo}`);
+          const blob = await response.blob();
+          const blobUrl = URL.createObjectURL(blob);
+          setProfBlobUrl(blobUrl);
+        }else{
+          const response = await fetch(`/img/logo.png`);
+          const blob = await response.blob();
+          const blobUrl = URL.createObjectURL(blob);
+          setProfBlobUrl(blobUrl);
+        }
+      } catch (error) {
+        console.error('Error fetching video:', error);
+      }
+    };
+    if(auto.session){
+      fetchProfile(auto.session.Photo)
+    }
+  }, [auto])
+  
   useEffect(() => {
     const available_notifications = async () => {
       try {
@@ -239,14 +262,8 @@ function Navbar(props) {
 
 
 <button ref={compoRef} id="image" className="p-0">
-{
-    auto.session.Photo ?
     <Image width={80} height={80}  className="w-8 h-8 rounded-full" title={`${auto.session.PageName}`}
-    src={`/Thumbnails/${auto.session.Photo}`} alt='profile' onClick={()=>handleAcPop()}/>
-    :
-    <Image width={80} height={80}  className="w-8 h-8 rounded-full" title={`${ auto.session.PageName}`}
-    src="/img/logo.png" alt='profile' onClick={()=>handleAcPop()}/>
-}
+    src={profBlobUrl} alt='profile' onClick={()=>handleAcPop()}/>
 </button>
 
 

@@ -1,11 +1,26 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 function Video({video}) {
     const deletePost = async (id,video,image) =>{
         const response = await fetch(`/api/posts/deletePost/${id}/${video}/${image}`)
         const data = await response.json()
     }
+    const [imageBlobUrl, setImageBlobUrl] = useState('/img/thumb.jpg');
+  useEffect(() => {
+    const fetchImage = async () => {
+      try {
+        const response = await fetch(`/Thumbnails/${video.Image}`);
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        setImageBlobUrl(blobUrl);
+      } catch (error) {
+        console.error('Error fetching video:', error);
+      }
+    };
+    fetchImage()
+
+  }, [video])
   return (
     <>
     {
@@ -13,7 +28,7 @@ function Video({video}) {
             <div className="videocontainer w-[230px] h-[230px]  ">
             <div className="imag w-[100%] h-[70%] rounded  overflow-hidden">
                 <Link href={`/details/post?v=${video.uniid}`}>
-                    <Image src={`/Thumbnails/${video.Image}`} alt="photo9" width={150} height={150} className="w-[100%]  h-[100%] object-cover"/>
+                    <Image src={imageBlobUrl} alt="photo9" width={150} height={150} className="w-[100%]  h-[100%] object-cover"/>
                 </Link>
             </div>
             <Link href="">

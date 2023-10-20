@@ -12,6 +12,8 @@ function DetailChannel() {
     const [user, setUser] = useState([])
     const [catStat, setCatStat] = useState(null)
     const [userData, setUserData] = useState(null)
+    const [profBlobUrl, setProfBlobUrl] = useState('/img/logo.png');
+    const [hours, setHours] = useState(0)
      
       useEffect(() => {
         if(auth.session){
@@ -21,7 +23,26 @@ function DetailChannel() {
                 const response = await fetch(`/api/users/getUser/${use.uniid}/`)
                 const data = await response.json();
                 setUser(data[0])
+                setHours(data[0].Hours.toFixed(2))
+                fetchProfile(data[0].Photo)
             }
+            const fetchProfile = async (photo) => {
+                try {
+                  if(photo){
+                    const response = await fetch(`/Thumbnails/${photo}`);
+                    const blob = await response.blob();
+                    const blobUrl = URL.createObjectURL(blob);
+                    setProfBlobUrl(blobUrl);
+                  }else{
+                    const response = await fetch(`/img/logo.png`);
+                    const blob = await response.blob();
+                    const blobUrl = URL.createObjectURL(blob);
+                    setProfBlobUrl(blobUrl);
+                  }
+                } catch (error) {
+                  console.error('Error fetching video:', error);
+                }
+              };
             const userStat = async () =>{
                 const use = auth.session
                 const response = await fetch(`/api/users/user/${use.ID}`)
@@ -85,12 +106,7 @@ function DetailChannel() {
                 <div className="flex justify-center lg:justify-start lg:ml-8">
                 <div className="-mt-0 grid grid-cols-1 lg:grid-cols-2 flex items-center gap-x-2">
                     <div className="">
-                    {
-                        auto.Photo ?
-                        <Image width={80} height={80} src={`/Thumbnails/${auto.Photo}`} className="rounded-full w-24 h-24" alt="image_professionnel" />
-                        :
-                        <Image width={80} height={80} src="/img/logo.png" className="rounded-full w-24 h-24" alt="image_professionnel" />
-                    }
+                        <Image width={80} height={80} src={profBlobUrl} className="rounded-full w-24 h-24" alt="image_professionnel" />
                     </div>
                     <div className="">
                     <h2 className="font-bold font-serif text-purple-700">{auto.PageName}</h2>
@@ -148,7 +164,7 @@ function DetailChannel() {
                         </svg>
                     </div>
                     <div className="flex justify-center p-1">
-                        <h2 className="text-white font-bold">{user.Hours} Hours</h2>
+                        <h2 className="text-white font-bold">{hours} Hours</h2>
                     </div>
                     </div>
                     {/* <!--fin total Hours--> */}

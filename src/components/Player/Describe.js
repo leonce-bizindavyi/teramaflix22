@@ -18,6 +18,7 @@ function Describe({video}) {
   const [isCopied, setCopied] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const urlRef = React.useRef(null);
+  const [profBlobUrl, setProfBlobUrl] = useState('/img/logo.png');
   // like the video begin
   // like clik
   const handleLike = (vidid,stats,like) =>{
@@ -101,6 +102,24 @@ const fetchSubReactions = useCallback(async (user) => {
 }, [auto.session]);
 
 useEffect(() => {
+  const fetchProfile = async (photo) => {
+    try {
+      if(photo){
+        const response = await fetch(`/Thumbnails/${photo}`);
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        setProfBlobUrl(blobUrl);
+      }else{
+        const response = await fetch(`/img/logo.png`);
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        setProfBlobUrl(blobUrl);
+      }
+    } catch (error) {
+      console.error('Error fetching video:', error);
+    }
+  };
+  fetchProfile(video.Photo)
   fetchLikesReactions(video.ID);
   fetchSubReactions(video.User);
 }, [auto, video, fetchLikesReactions, fetchSubReactions]);
@@ -230,13 +249,7 @@ const handleCopyClick = () => {
                 <div className="profil  flex flex-row justify-between lg:px-0 px-[3%] items-center ">
                   <Link href="/profile">
                     <div className="profilChannel  flex justify-start items-center space-x-2 w-12 h-12 my-1 cursor-pointer ">
-                      {
-                        video.Photo ?
-                        <Image width={80} height={80} src={`/Thumbnails/${video.Photo}`} className="w-full h-full   rounded-full " alt="logo"/>
-                        :
-                        <Image width={80} height={80} src="/img/logo.png" className=" w-full h-full  rounded-full " alt="logo"/>
-                      }
-                       
+                        <Image width={80} height={80} src={profBlobUrl} className="w-full h-full   rounded-full " alt="logo"/>                       
                         <h1 className= "font-bold text-[20px] cursor-pointer">{video.PageName}</h1>
                     </div>
                     </Link>

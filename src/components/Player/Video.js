@@ -1,9 +1,44 @@
-import React from 'react'
+import React, {useState,useEffect} from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePeriod } from '../Hooks/usePeriod'
-function Video({video,handleAsides}) {
+function Video({video}) {
 const period = usePeriod(video.Created_at)
+const [imageBlobUrl, setImageBlobUrl] = useState('/img/thumb.jpg');
+  const [profBlobUrl, setProfBlobUrl] = useState('/img/logo.png');
+  useEffect(() => {
+    const fetchImage = async () => {
+      try {
+        const response = await fetch(`/Thumbnails/${video.Image}`);
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        setImageBlobUrl(blobUrl);
+      } catch (error) {
+        console.error('Error fetching video:', error);
+      }
+    };
+    const fetchProfile = async (photo) => {
+      try {
+        if(photo){
+          const response = await fetch(`/Thumbnails/${photo}`);
+          const blob = await response.blob();
+          const blobUrl = URL.createObjectURL(blob);
+          setProfBlobUrl(blobUrl);
+        }else{
+          const response = await fetch(`/img/logo.png`);
+          const blob = await response.blob();
+          const blobUrl = URL.createObjectURL(blob);
+          setProfBlobUrl(blobUrl);
+        }
+      } catch (error) {
+        console.error('Error fetching video:', error);
+      }
+    };
+    fetchProfile(video.Photo)
+
+    fetchImage()
+
+  }, [video])
   return (
     <>
     <div className="lg:h-[115px]   sm:h-[450px] w-full  overflow-hidden flex lg:flex-row flex-col lg:justify-center lg:items-start lg:space-x-2">
@@ -11,11 +46,11 @@ const period = usePeriod(video.Created_at)
             {
                 video.Short == 1 ?
                 <Link  href={`/short`} style={{textDecolation: "none"}}>
-                    <Image width={100} height={100} alt='video' src={`/Thumbnails/${video.Image}`} className=" lg:rounded h-full w-full object-cover" />
+                    <Image width={100} height={100} alt='video' src={imageBlobUrl} className=" lg:rounded h-full w-full object-cover" />
                 </Link>
                 :
                 <Link  href={`/Watch?v=${video.uniid}`} style={{textDecolation: "none"}}>
-                    <Image width={100} height={100} alt='video' src={`/Thumbnails/${video.Image}`} className=" lg:rounded h-full w-full object-cover" />
+                    <Image width={100} height={100} alt='video' src={imageBlobUrl} className=" lg:rounded h-full w-full object-cover" />
                 </Link>
             }
         </div>
@@ -23,12 +58,7 @@ const period = usePeriod(video.Created_at)
             <Link href={`/profile?c=${video.uniid}`}>
                 <div className="videoName font-semibold lg:text-[18px] text-[18px]">{video.Title}</div>
                 <div className="profilChannel  flex justify-start items-center space-x-2  cursor-pointer ">
-                    {
-                        video.Photo ?
-                        <Image width={80} height={80} src={`/Thumbnails/${video.Photo}`} className="lg:w-6 w-8 lg:h-6 h-8 my-1 rounded-full " alt="logo"/>
-                        :
-                        <Image width={80} height={80} src="/img/logo.png" className="lg:w-6 w-8 lg:h-6 h-8 my-1 rounded-full " alt="logo"/>
-                    }
+                    <Image width={80} height={80} src={profBlobUrl} className="lg:w-6 w-8 lg:h-6 h-8 my-1 rounded-full " alt="logo"/>
                     <div className="flex flex-col  space-y-2">
                             <div className="right-5">
                                 <div className="text-md text-slate-900 opacity-90  font-bold">{video.PageName}</div>

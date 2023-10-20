@@ -21,6 +21,7 @@ function DetailVideo() {
   const [userData, setUserData] = useState(null);
   const [catstat, setCatstat] = useState(null);
   const [videoBlobUrl, setVideoBlobUrl] = useState('');
+  const [imageBlobUrl, setImageBlobUrl] = useState('/img/thumb.jpg');
 
 useEffect(() => {
   if(router.query.v && auth.session){
@@ -31,15 +32,19 @@ useEffect(() => {
       if (data.length > 0) {
         setPeriod(TimeAgo(data[0].Created_at))
         setVideo(data[0]);
-        fetchVideo(data[0].Video)
+        fetchVideo(data[0].Video,data[0].Image)
       }
     };
-    const fetchVideo = async (video) => {
+    const fetchVideo = async (video,image) => {
       try {
         const response = await fetch(`/Videos/${video}`);
+        const respimg = await fetch(`/Thumbnails/${image}`);
         const blob = await response.blob();
+        const blobimg = await respimg.blob();
         const blobUrl = URL.createObjectURL(blob);
+        const blobUrlimg = URL.createObjectURL(blobimg);
         setVideoBlobUrl(blobUrl);
+        setImageBlobUrl(blobUrlimg)
       } catch (error) {
         console.error('Error fetching video:', error);
       }
@@ -162,7 +167,7 @@ if(!video) return(<div>Loading...</div>)
               </div>
                 {/* <!--photo profile--> */}
                 <div className=" bottom-1 ml-20">
-                 <Image width={100} height={100} alt='thumbnail' className="w-52 h-30 my-1 -ml-12" src={`/Thumbnails/${video.Image}`}/>
+                 <Image width={100} height={100} alt='thumbnail' className="w-52 h-30 my-1 -ml-12" src={imageBlobUrl}/>
                   <div className="flex -ml-5">
                  </div>
                  {catstat && (<PieChart chartData={catstat} />)}

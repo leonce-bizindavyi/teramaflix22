@@ -12,6 +12,8 @@ function ProfileHeader({handleSetPage}) {
   const [auto, setAuto] = useState({})
   const [user, setUser] = useState([])
   const router = useRouter()
+  const [coverBlobUrl, setCoverBlobUrl] = useState('/img/cover.jpg');
+  const [profBlobUrl, setProfBlobUrl] = useState('/img/logo.png');
   //user profile
 
 const handleSub = async (status) =>{
@@ -54,6 +56,31 @@ const handleAddCover = async (image)=>{
   });
 }
 useEffect(() => {
+  const fetchCover = async (photo) => {
+    try {
+      if(photo){
+        const resCover = await fetch(`/Thumbnails/${photo}`);
+        const resProf = await fetch(`/Thumbnails/${photo}`);
+        const blobCover = await resCover.blob();
+        const blobProf = await resProf.blob();
+        const blobUrlCover = URL.createObjectURL(blobCover);
+        const blobUrlFrof = URL.createObjectURL(blobProf);
+        setCoverBlobUrl(blobUrlCover);
+        setProfBlobUrl(blobUrlFrof)
+      }else{
+        const resCover = await fetch(`/img/cover.jpg`);
+        const resProf = await fetch(`/img/logo.png`);
+        const blobCover = await resCover.blob();
+        const blobProf = await resProf.blob();
+        const blobUrlCover = URL.createObjectURL(blobCover);
+        const blobUrlFrof = URL.createObjectURL(blobProf);
+        setCoverBlobUrl(blobUrlCover);
+        setProfBlobUrl(blobUrlFrof)
+      }
+    } catch (error) {
+      console.error('Error fetching video:', error);
+    }
+  };
   if(router.query.c && auth.session){
     setAuto(auth.session)
     const fetchUsers = async (status) =>{
@@ -61,6 +88,7 @@ useEffect(() => {
         const response = await fetch(`/api/users/getUser/${status}`)
         const data = await response.json()
         fetchSubReactions(data[0].ID)
+        fetchCover(data[0].Cover)
         setUser(data[0])
       }
   }
@@ -92,12 +120,8 @@ useEffect(() => {
       <Image width={80} height={80} src={URL.createObjectURL(cover)} alt="cover" className=" w-full  rounded-md" />
       :
       <>
-      {
-        user.Cover ?
-        <Image width={80} height={80} src={`/Thumbnails/${user.Cover}`} alt="cover" className="  w-full  rounded-md" />
-        :
-        <Image width={80} height={80} src={`/img/cover.jpg`} alt="cover" className=" w-full  rounded-md" />
-      }
+        <Image width={80} height={80} src={coverBlobUrl} alt="cover" className="  w-full  rounded-md" />
+        
       </>
       }
       
@@ -114,13 +138,7 @@ useEffect(() => {
   </div>
   <div className=" relative bottom-9 flex md:flex-row flex-col items-center justify-center space-y-1 z-0  space-x-12 ">
     <div className=" break:hidden relative -bottom-3 sm:bottom-0 -left-[2.3rem] md:left-4 z-20 w-[4rem] h-[4rem] sm:h-[6.5rem] sm:w-[6.5rem]  lg:h-36 lg:w-36 rounded-full border border-gray-100 bg-white p-2">
-        {
-          user.Photo ?
-          <Image width={80} height={80} src={`/Thumbnails/${user.Photo}`} alt="profile" className="w-[4rem] h-[3rem] sm:h-[5rem] sm:w-[6.5rem]  lg:h-[7rem] lg:w-[6.8rem] rounded-full" />
-          :
-          <Image width={80} height={80} src="/img/logo.png" alt="profile" className="w-[4rem] h-[3rem] -mt-1 sm:-ml-[0.5] sm:-mt-1 sm:h-[5rem] sm:w-[6.5rem]  lg:h-[7rem] lg:mt-1 lg:w-[6.8rem] lg:ml-[0.6rem] rounded-full" />
-        }
-        
+        <Image width={80} height={80} src={profBlobUrl} alt="profile" className="w-[4rem] h-[3rem] sm:h-[5rem] sm:w-[6.5rem]  lg:h-[7rem] lg:w-[6.8rem] rounded-full" />
     </div>
     <div className=''>
       <div className="  break:relative break:bottom-12 flex  px-4 justify-start sm:flex-col md:flex-row lg:flex-row flex-col  ">

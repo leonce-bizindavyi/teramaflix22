@@ -9,6 +9,7 @@ function EditVideo({uuid}) {
   const router = useRouter()
     const auth = useContext(SessionContext)
     const [videos, setVideos] = useState(null)
+    const [imageBlobUrl, setImageBlobUrl] = useState('/img/logo.png');
     const [formData, setFormData] = useState({
       title: "",
       desc:"",
@@ -35,9 +36,19 @@ function EditVideo({uuid}) {
               oldimage: data.Image,
               video: data.Video,
             }));
+            fetchImage(data.Image)
           }
         };
-    
+        const fetchImage = async (image) => {
+          try {
+            const response = await fetch(`/Thumbnails/${image}`);
+            const blob = await response.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            setImageBlobUrl(blobUrl);
+          } catch (error) {
+            console.error('Error fetching video:', error);
+          }
+        };
         const fetchUploads = async () => {
           const user = await auth;
           const response = await fetch(`/api/posts/hidePosts/${user.ID}`);
@@ -128,7 +139,7 @@ function EditVideo({uuid}) {
                     {formData.oldimage && (
                         <div className="imag w-[100%] h-[170px] rounded overflow-hidden">
                           <Image width={80} height={80}
-                            src={`/Thumbnails/${formData.oldimage}`}
+                            src={imageBlobUrl}
                             className="w-[100%] h-[100%] object-cover"
                             alt="thumb"
                           />
