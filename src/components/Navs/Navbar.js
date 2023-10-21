@@ -23,6 +23,9 @@ function Navbar(props) {
   const [notifCounter, setNotifCounter] = useState(0);
   const [liste_notification, setliste] = useState([]);
   const [profBlobUrl, setProfBlobUrl] = useState('/img/logo.png');
+  const [logo1, setLogo1] = useState('/logo/TeramaFlixpic.png')
+  const [logo2, setLogo2] = useState('/logo/TeramaFlixnam.png')
+  const [create, setCreate] = useState('/img/create_video.png')
   const compoRef = useRef(null);
   const sideBarRef = useRef(null);
   const notifRef = useRef(null);
@@ -95,6 +98,22 @@ function Navbar(props) {
     }
   }; 
   useEffect(() => {
+    const fetchLogos = async () => {
+      try {
+          const resp1 = await fetch('/logo/TeramaFlixpic.png');
+          const resp2 = await fetch('/logo/TeramaFlixnam.png');
+          const respc = await fetch('/img/create_video.png');
+          const blob1 = await resp1.blob();
+          const blob2 = await resp2.blob();
+          const blobc = await respc.blob();
+          setLogo1(URL.createObjectURL(blob1))
+          setLogo2(URL.createObjectURL(blob2))
+          setCreate(URL.createObjectURL(blobc))
+      } catch (error) {
+        console.error('Error fetching video:', error);
+      }
+    };
+    fetchLogos()
     const fetchProfile = async (photo) => {
       try {
         if(photo){
@@ -207,8 +226,8 @@ function Navbar(props) {
                     </div>
                     
                     <div className="logo ml-4 flex-initial flex flex-col sm:flex-row sm:items-center sm:justify-start w-10 h-11 sm:w-64 sm:h-full items-center justify-center sm:static ml-/10 ">
-                    <Link href="/"> <Image width={80} height={80} src="/logo/TeramaFlixpic.png" className=" w-8 h-8 sm:w-[2.8rem] sm:h-[2.8rem] my-1" alt="logo"/></Link>
-                    <Link href="/"> <Image width={90} height={90}  src="/logo/TeramaFlixnam.png" alt="logo" className=" hidden sm:block w-[4rem] h-[1rem] sm:w-[8rem] sm:h-[1rem] " /></Link>
+                    <Link href="/"> <Image width={80} height={80} src={logo1} className=" w-8 h-8 sm:w-[2.8rem] sm:h-[2.8rem] my-1" alt="logo"/></Link>
+                    <Link href="/"> <Image width={90} height={90}  src={logo2} alt="logo" className=" hidden sm:block w-[4rem] h-[1rem] sm:w-[8rem] sm:h-[1rem] " /></Link>
                     </div>
                     
 
@@ -241,7 +260,7 @@ function Navbar(props) {
 <Link href='/upload'>
     <button id="image" className="hover:bg-gray-200 flex rounded-full items-center p-1 lg:w-10 lg:h-10 md:w-8 md:h-6 w-8 h-8">
         <Image width={80} height={80} className="lg:w-full lg:h-full w-full  h-full   my-1 ml-15 " 
-        src="/img/create_video.png" alt="create_video"/>
+        src={create} alt="create_video"/>
     </button>
 </Link>
 

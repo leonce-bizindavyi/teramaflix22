@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState,useEffect} from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
@@ -11,13 +11,36 @@ function Login() {
   const router = useRouter()
   const [loading, setLoading] = useState(false);
   const [showPassword,setShowPassword]=useState(false)
+  const [logo1, setLogo1] = useState('/logo/TeramaFlixpic.png')
+  const [logo2, setLogo2] = useState('/logo/TeramaFlixnam.png')
   const initialValues = {
     mail: "",
     password: ""
 }
+
+useEffect(() => {
+  const fetchLogos = async () => {
+    try {
+        const resp1 = await fetch('/logo/TeramaFlixpic.png');
+        const resp2 = await fetch('/logo/TeramaFlixnam.png');
+        const blob1 = await resp1.blob();
+        const blob2 = await resp2.blob();
+        setLogo1(URL.createObjectURL(blob1))
+        setLogo2(URL.createObjectURL(blob2))
+    } catch (error) {
+      console.error('Error fetching video:', error);
+    }
+  };
+  fetchLogos()
+}, [])
+
+
   const handleShowPassword=async(e)=>{
     e.preventDefault();
      setShowPassword(!showPassword)
+  }
+  const handleForgetPassword=()=>{
+    router.push('/changePassword')
   }
   const handleLogin = async (data) => {
     console.log(data)
@@ -49,8 +72,8 @@ function Login() {
     <>
 <div  className="flex flex-col items-center justify-center   h-screen lg:flex-row bg-no-repeat lg:bg-repeat bg-[url('/logo/loginwall.jpg')] bg-contain bg-bottom  lg:bg-left bg-white font-quicksand">
     <div className= "image w-[100%] lg:w-[50%] h-max  lg:h-screen flex justify-center items-center">
-      <Image src="/logo/TeramaFlixpic.png" width={280} height={280} className="  object-cover w-[180px] sm:w-[280px]  h-[180px] sm:h-[280px] mt-3" alt=""/>
-      <Image src="/logo/TeramaFlixnam.png" width={280} height={280} className=" hidden lg:block   object-cover  mt-3" alt=""/>
+      <Image src={logo1} width={280} height={280} className="  object-cover w-[180px] sm:w-[280px]  h-[180px] sm:h-[280px] mt-3" alt=""/>
+      <Image src={logo2} width={280} height={280} className=" hidden lg:block   object-cover  mt-3" alt=""/>
     </div>
     <div  className="w-[90%] h-[60%] sm:h-[45%] lg:w-[30%] lg:h-screen shadow-lg shadow-blue-300  flex justify-center items-center  rounded-lg mt-3">
         <div  className="flex lg:justify-center flex-col items-center space-y-2 w-full h-full lg:h-[400px] bg-gray-100  mx-2 my-2 rounded-lg  ">
@@ -105,7 +128,7 @@ function Login() {
                     <input type="checkbox"  className=" checked:bg-blue-500" />
                     <span  className="text-md sm:text-2xl lg:text-sm font-semibold ">Remember me</span>
                   </div>
-                  <span  className="text-md sm:text-2xl  lg:text-sm font-semibold text-blue-500 cursor-pointer">forget password ?</span>
+                  <span onClick={handleForgetPassword} className="text-md sm:text-2xl  lg:text-sm font-semibold text-blue-500 cursor-pointer">forget password ?</span>
               </div>
             </div>
             {/* <!--fin forget password and remember me-->

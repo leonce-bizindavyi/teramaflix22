@@ -1,7 +1,20 @@
 import Image from 'next/image'
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 
 function ResetPass() {
+  const [logo1, setLogo1] = useState('/logo/TeramaFlixpic.png')
+  useEffect(() => {
+    const fetchLogos = async () => {
+      try {
+          const resp1 = await fetch('/logo/TeramaFlixpic.png');
+          const blob1 = await resp1.blob();
+          setLogo1(URL.createObjectURL(blob1))
+      } catch (error) {
+        console.error('Error fetching video:', error);
+      }
+    };
+    fetchLogos()
+  }, [])
   return (
     <>
      <div  className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
@@ -10,7 +23,7 @@ function ResetPass() {
 
     <div  className="max-w-md mx-auto">
         <div>
-          <Image src="/logo/TeramaFlixpic.png" width={80} height={80} alt="logo"  className="h-7 sm:h-8"/>
+          <Image src={logo1} width={80} height={80} alt="logo"  className="h-7 sm:h-8"/>
         </div>
         <div  className="divide-y divide-gray-200">
           <div  className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">

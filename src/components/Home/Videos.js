@@ -5,6 +5,7 @@ import styles from '@/styles/Home.module.css'
 import { SessionContext } from '../context/Auth';
 import Adsense from '../Adsense/Adsense';
 import { LoadContext } from '../context/loading';
+import LoadData from '../Loading/LoadData';
 
 function Videos() {
   const auto = useContext(SessionContext)
@@ -30,7 +31,7 @@ function Videos() {
 
 if(videos==null) {
   setLoad(false)
-  return (<div className={`${styles.filmcontainer} mt-3  gap-[1rem] `}>Loading ...</div>)
+  return (<div className={`${styles.filmcontainer} mt-3  gap-[1rem] `}><LoadData /></div>)
 }
 
 const getMoreVideos=async()=>{
@@ -53,14 +54,14 @@ const getMoreVideos=async()=>{
     dataLength={videos.length}
     next={getMoreVideos}
     hasMore={hasMore}
-    loader={<h4>Loading...</h4>}
+    loader={<LoadData />}
     endMessage={
       <p style={{textAlign:"center"}}><b>You have seen it all</b></p>
     }>
     <div id="load_data" className={`${styles.filmcontainer} mt-3  gap-[1rem] `}>
-        <div className={styles.videocontainer}>
+        {/* <div className={styles.videocontainer}>
           <Adsense />
-          </div>
+          </div> */}
           {
             videos?.map(video=>{
               return <Video key={video.ID} video={video} />
