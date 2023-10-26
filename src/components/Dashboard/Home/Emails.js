@@ -8,7 +8,6 @@ function Emails() {
   async function fetchAllSms() {
     const response = await fetch(`/api/dash/sms`);
     const data = await response.json();
-    console.log(data)
     if(data[0]) {
       setAllSms(data[0])
     }

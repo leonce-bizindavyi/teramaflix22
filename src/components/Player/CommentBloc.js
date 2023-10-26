@@ -43,6 +43,9 @@ function CommentBloc({ video }) {
     }
   };
 
+
+  
+
   return (
     <div className="">
       {block ? (

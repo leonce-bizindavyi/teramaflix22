@@ -4,6 +4,7 @@ import Notify from './Notify'
 import Privacy from './Privacy'
 import Perform from './Perform'
 import Advanced from './Advanced'
+import Payment from './Payment'
 
 function Pages({page}) {
     if(page == 'account') return (<Account />)
@@ -11,6 +12,7 @@ function Pages({page}) {
     else if(page == 'privacy') return (<Privacy />)
     else if(page == 'perform') return (<Perform />)
     else if(page == 'advanced') return (<Advanced />)
+    else if(page == 'payments') return (<Payment />)
     return(
 
         <p>Others</p>

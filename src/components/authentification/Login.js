@@ -43,14 +43,17 @@ useEffect(() => {
     router.push('/changePassword')
   }
   const handleLogin = async (data) => {
-    console.log(data)
       setLoading(true)
       const response = await fetch(`/api/login/${data.mail}/${data.password}`);
       if (response.ok) {
         const data = await response.json();
           if(data){
             localStorage.setItem('token',data.token)
-             router.push('/')
+            if(data.admin === 1){
+              router.push('/dashboard')
+            }else if(data.admin === 0){
+              router.push('/')
+            }
           } 
         }
        else {

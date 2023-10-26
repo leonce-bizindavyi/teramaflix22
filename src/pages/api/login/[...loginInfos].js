@@ -42,7 +42,7 @@ export default async function handler(req, res) {
             },
             secret
           );
-          res.status(201).json({token, message: 'Success' });
+          res.status(201).json({admin: user.Admin, token, message: 'Success' });
   }catch(error){
     res.status(401).json({error,message:'validationError'});
   }

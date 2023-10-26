@@ -16,7 +16,6 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router'
 import Load from '@/components/Load'
 
-
 export default function App({ Component, pageProps }) {
   const [blur , setBlur] = useState(false)
   const [load, setLoad] = useState(true)
@@ -44,6 +43,22 @@ export default function App({ Component, pageProps }) {
       router.events.off('routeChangeError', handleRouteEnd);
     };
   }, [router.events]);
+
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker
+          .register('/service-worker.js')
+          .then(registration => {
+            console.log('Service Worker registration successful with scope: ', registration.scope);
+          })
+          .catch(err => {
+            console.log('Service Worker registration failed: ', err);
+          });
+      });
+    }
+  }, []);
+
   if(Component.getLayout){
       return Component.getLayout(<Component {...pageProps} />)
     }

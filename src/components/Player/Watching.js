@@ -216,6 +216,7 @@ function Watching({videoprops}) {
       const handleKeyPress = (event) => {
         const video = videoRef.current;
         if (video) {
+          if (document.activeElement.tagName === 'INPUT' && document.activeElement.type === 'text') {}else{
           switch (event.key) {
             case "ArrowRight":
               event.preventDefault()
@@ -290,14 +291,18 @@ function Watching({videoprops}) {
               break;
           }
         }
+        }
       };
       const handleKeyUp = (event) => {
-        const video = videoRef.current;
-        if (event.key === "c") {
-          isCPressed = false;
-          video.currentTime = 0;
-          togglePlay()
+        if (document.activeElement.tagName === 'INPUT' && document.activeElement.type === 'text') {}else{
+          const video = videoRef.current;
+          if (event.key === "c") {
+            isCPressed = false;
+            video.currentTime = 0;
+            togglePlay()
+          }
         }
+        
       };
       window.addEventListener("keydown", handleKeyPress);
       window.addEventListener("keyup", handleKeyUp);
