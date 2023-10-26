@@ -8,7 +8,7 @@ function Payment() {
           <p class="py-2 px-2 font-bold text-xl">Status</p>
           <div class="bg-white">
             <p class="py-2 px-4 font-bold ">Incomplete monetization rules </p>
-            <p class="py-2 px-4 text-sm">Your account can't earn money because it does no complete our <span class="text-blue-500 cursor-pointer">monetization rules for partners</span></p>
+            <p class="py-2 px-4 text-sm">Your account can&apos;t earn money because it does no complete our <span class="text-blue-500 cursor-pointer">monetization rules for partners</span></p>
             <div class="py-5 px-4">
               <button type="button" class="px-4 text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 ">See account eligibility</button>
             </div> 
@@ -58,6 +58,7 @@ function Payment() {
             </div>
           </div>
         </div>
+
               {/* <!--fin Payments--> */}
     </>
   )
