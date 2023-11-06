@@ -136,9 +136,12 @@ useEffect(() => {
       )}
     </div>
   </div>
-  <div className=" relative bottom-9 flex md:flex-row flex-col items-center justify-center space-y-1 z-0  space-x-12 ">
-    <div className=" break:hidden relative -bottom-3 sm:bottom-0 -left-[2.3rem] md:left-4 z-20 w-[4rem] h-[4rem] sm:h-[6.5rem] sm:w-[6.5rem]  lg:h-36 lg:w-36 rounded-full border border-gray-100 bg-white p-2">
-        <Image width={80} height={80} src={profBlobUrl} alt="profile" className="w-[4rem] h-[3rem] sm:h-[5rem] sm:w-[6.5rem]  lg:h-[7rem] lg:w-[6.8rem] rounded-full" />
+  <div className=" relative bottom-9 flex md:flex-row flex-col items-center justify-center  z-0  space-x-12 ">
+    <div className="  relative flex justify-center items-center w-[4rem] h-[4rem] sm:h-[6.5rem] sm:w-[6.5rem] md:w-[6rem] md:h-[6rem]  lg:h-36 lg:w-36 rounded-full border border-gray-100 bg-white ">
+      <div className='w-[90%] h-[90%]  rounded-full overflow-hidden'>
+        <Image width={80} height={80} src={profBlobUrl} alt="profile" className="w-full h-full" />
+      </div>
+        
     </div>
     <div className=''>
       <div className="  break:relative break:bottom-12 flex  px-4 justify-start sm:flex-col md:flex-row lg:flex-row flex-col  ">

@@ -213,7 +213,7 @@ function Navbar(props) {
       
   return (
     <>
-      <header className=" relative h-[60px]" >
+      <header className=" relative h-[60px] z-1" >
         <div className="headercontainer shadow-lg  lg:pl-2  w-[100%] bg-white fixed right-0 lef-0 top-0 z-20 ">
            <LinearIndeterminate />
             <nav className="flex sm:flex-row  max-h-16 sm:sticky sm:top-0 flex-row sm:items-center sm:justify-between items-center justify-between     pb-2   ">

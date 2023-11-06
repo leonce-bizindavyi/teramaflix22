@@ -248,8 +248,10 @@ const handleCopyClick = () => {
                 </div>
                 <div className="profil  flex flex-row justify-between lg:px-0 px-[3%] items-center ">
                   <Link href="/profile">
-                    <div className="profilChannel  flex justify-start items-center space-x-2 w-12 h-12 my-1 cursor-pointer ">
-                        <Image width={80} height={80} src={profBlobUrl} className="w-full h-full   rounded-full " alt="logo"/>                       
+                    <div className="profilChannel  flex justify-start items-center space-x-2 w-max  h-12 my-1 cursor-pointer  pr-2">
+                      <div className='w-12  h-12 '>
+                        <Image width={80} height={80} src={profBlobUrl} className="w-full h-full   rounded-full " alt="logo"/>
+                      </div>          
                         <h1 className= "font-bold text-[20px] cursor-pointer">{video.PageName}</h1>
                     </div>
                     </Link>

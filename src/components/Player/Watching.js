@@ -12,7 +12,7 @@ function Watching({videoprops}) {
   const timelineRef = useRef(null);
   let isCPressed = false;
   const videoContainerRef = useRef(null);
-  const [hideCntrl, setHideCntrl] = useState('')
+  const [hideCntrl, setHideCntrl] = useState('hidden')
   const [hideBtn, setHideBtn] = useState('')
   const [videoBlobUrl, setVideoBlobUrl] = useState('');
   const [paused, setPaused] = useState("paused")
@@ -37,6 +37,10 @@ function Watching({videoprops}) {
         videoRef.current.pause();
         setPaused('paused');
       }
+      setHideBtn('')
+      setTimeout(() => {
+        setHideBtn('hidden')
+      }, 2000);
     }
   };
   
@@ -132,7 +136,6 @@ function Watching({videoprops}) {
     //show or hide controls
     const handleHideCtrl = (state)=>{
       setHideCntrl(state)
-      setHideBtn(state)
     }
     //handle update time format
     function formatTime(time) {
@@ -216,7 +219,7 @@ function Watching({videoprops}) {
       const handleKeyPress = (event) => {
         const video = videoRef.current;
         if (video) {
-          if (document.activeElement.tagName === 'INPUT' && document.activeElement.type === 'text') {}else{
+          if (document.activeElement.classList[0] !== "react-input-emoji--input") {
           switch (event.key) {
             case "ArrowRight":
               event.preventDefault()
@@ -374,8 +377,8 @@ if (!videoprops) return null
     onContextMenu={displayMenu}
     className={`video-container ${paused} ${screen} mini-player w-full lg:w-[100%] rounded relative `} 
     data-volume-level={`${volumeLevel}`}>
-      <div  onClick={togglePlay} className={`controls z-20 play-center absolute  flex justify-center items-center h-full w-full ${hideBtn}`}>
-          <button className="play-pause-btn center  bg-blue-500 bg-opacity-90  md:w-20 w-14 md:h-20 h-14  rounded-full cursor-pointer ">
+      <div  onClick={togglePlay} className={`controls  play-center absolute  flex justify-center items-center h-full w-full ${hideBtn}`}>
+          <button className="play-pause-btn center z-0  bg-blue-500 bg-opacity-90  md:w-20 w-14 md:h-20 h-14  rounded-full cursor-pointer ">
             <svg className="play-icon text-white" viewBox="0 0 24 24">
               <path fill="currentColor" d="M8,5.14V19.14L19,12.14L8,5.14Z" />
             </svg>

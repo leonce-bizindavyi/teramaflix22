@@ -22,7 +22,7 @@ function OtherVideo({video}) {
   return (
     <>
         <div id="items " className="flex flex-col">
-            <div className="imag w-[100%] h-[170px] rounded  overflow-hidden">
+            <div className="imag md:w-[270px] w-full md:h-[170px]  h-[200px] rounded  overflow-hidden">
                {
                 video.Short == 1 ?
                 <Link href={`/short`}>
@@ -35,11 +35,11 @@ function OtherVideo({video}) {
                }     
             </div>
             <div className="ggg sm:w-45 lg:w-53 details bg-gray-200 text-gray-700 relative bottom-2  flex flex-col rounded-b-xl">
-            <div className="flex justify-center"><h3 className=" h-8 overflow-hidden py-2 text-base ">{video.Title}</h3></div>
-            <div className="flex flex-row justify-between p-1 px-4 pb-3">
-            <span className=" text-xs ">{video.Views} vues</span>
-                <span className=" text-xs" >{period}</span>
-            </div>
+                <div className="flex justify-center"><h3 className=" h-8 overflow-hidden py-2 text-base ">{video.Title}</h3></div>
+                <div className="flex flex-row justify-between p-1 px-4 pb-3">
+                    <span className=" text-xs ">{video.Views} vues</span>
+                        <span className=" text-xs" >{period}</span>
+                </div>
             </div>
         </div>
     </>
