@@ -65,7 +65,7 @@ export default async function handler(req, res) {
         }
       }
       try {
-        const userName=req.body.name
+        const userName=req.body.nom
         const userPrenom=req.body.prenom
         const userMail=req.body.mail
         const userPassword=req.body.password
