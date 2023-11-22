@@ -65,14 +65,14 @@ async function moveVideo(image,fields) {
   return newPath;
 }
 
-async function insertVideo(image,fields) {
-  const {title,desc,cat,id} = fields
+async function insertVideo(image, fields) {
+  const { title, desc, cat, id } = fields;
   try {
-    // Exécutez la requête SQL pour insérer une vidéo dans la base de données
-    const rows = await executeQuery("UPDATE posts SET `Title` = ?, `Image` = ?, `Body` = ?, `Categorie` = ?, `Visible` = ? WHERE `ID` = ?",
-      [title, image, desc, cat, 1, id]
-    );
-
+    // Exécutez la requête SQL pour mettre à jour une vidéo dans la base de données
+    const rows = await executeQuery(
+      "UPDATE posts SET Title="+title+",Image="+image+", Body="+desc+", Categorie="+cat+", Visible ="+1+" WHERE ID ="+id);
+    // Autres opérations après la mise à jour de la vidéo
   } catch (error) {
+    // Gérez les erreurs ici
   }
 }
