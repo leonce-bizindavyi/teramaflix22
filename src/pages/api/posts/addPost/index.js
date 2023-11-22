@@ -69,10 +69,10 @@ async function insertVideo(image,fields) {
   const {title,desc,cat,id} = fields
   try {
     // Exécutez la requête SQL pour insérer une vidéo dans la base de données
-    const rows = await executeQuery('UPDATE posts SET Title=?, Image=?, Body=?, Categorie=?, Visible=? WHERE ID=?',
-    [title, image, desc, cat, 1, id]);
+    const rows = await executeQuery("UPDATE posts SET `Title` = ?, `Image` = ?, `Body` = ?, `Categorie` = ?, `Visible` = ? WHERE `ID` = ?",
+      [title, image, desc, cat, 1, id]
+    );
 
   } catch (error) {
   }
-  console.log(fields)
 }
