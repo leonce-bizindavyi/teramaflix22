@@ -74,4 +74,5 @@ async function insertVideo(image,fields) {
 
   } catch (error) {
   }
+  console.log(fields)
 }
