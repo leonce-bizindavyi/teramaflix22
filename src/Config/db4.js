@@ -6,7 +6,7 @@ const CONNECTION_TIMEOUT =7 * 60 * 60 * 1000; // Délai d'expiration de la conne
 const pool = createPool({
   host: 'localhost',
   user: 'terama_20819u',
-  password: 'terama_20819P',
+  password: 'terama_20819p',
   database: 'terama_20819u',
   connectionLimit: 50, // Nombre maximal de connexions
 });
