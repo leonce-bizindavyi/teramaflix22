@@ -10,7 +10,7 @@ function Video({video}) {
   useEffect(() => {
     const fetchImage = async () => {
       try {
-        const response = await fetch(`/Thumbnails/${video.Image}`);
+        const response = await fetch(`http://localhost:8080/Thumbnails/${video.Image}`);
         const blob = await response.blob();
         const blobUrl = URL.createObjectURL(blob);
         setImageBlobUrl(blobUrl);
@@ -21,7 +21,7 @@ function Video({video}) {
     const fetchProfile = async (photo) => {
       try {
         if(photo){
-          const response = await fetch(`/Thumbnails/${photo}`);
+          const response = await fetch(`http://localhost:8080/Thumbnails/${photo}`);
           const blob = await response.blob();
           const blobUrl = URL.createObjectURL(blob);
           setProfBlobUrl(blobUrl);

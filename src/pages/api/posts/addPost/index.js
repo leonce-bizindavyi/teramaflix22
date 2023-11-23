@@ -2,7 +2,6 @@ import fs from 'fs-extra';
 import formidable from 'formidable';
 import path from 'path';
 import executeQuery from '@/Config/db4';
-import chokidar from 'chokidar';
 
 export const config = {
   api: {
@@ -10,16 +9,8 @@ export const config = {
   },
 };
 
-const thumbnailsFolderPath = path.join(process.cwd(), './public/Thumbnails');
+const thumbnailsFolderPath = path.join(process.env.NEXT_UPLOADS_FOLDERS,`/Thumbnails`);
 
-// Créez un watcher pour surveiller les changements dans le dossier Thumbnails
-const watcher = chokidar.watch(thumbnailsFolderPath);
-
-watcher.on('all', async (event, filePath) => {
-  console.log(`File ${filePath} has been ${event}`);
-  // Réagissez aux changements ici, par exemple, mettre à jour la base de données
-  // ou déclencher une autre action en fonction des changements dans le dossier Thumbnails
-});
 
 export default async function uploadHandler(req, res) {
   if (req.method === 'POST') {
@@ -27,9 +18,6 @@ export default async function uploadHandler(req, res) {
 
     // Créez un répertoire "Thumbnails" s'il n'existe pas déjà
     await fs.ensureDir(thumbnailsFolderPath);
-
-    // Définissez le répertoire de destination des vidéos uploadées
-    form.uploadDir = thumbnailsFolderPath;
 
     // Parsez la requête
     form.parse(req, async (err, fields, files) => {
@@ -73,9 +61,14 @@ export default async function uploadHandler(req, res) {
 
 async function moveVideo(image, fields) {
   // Modifier dans le dossier
-  const newPath = path.join(thumbnailsFolderPath, image.newFilename);
-  await insertVideo(image.newFilename, fields);
-  return newPath;
+  const oldPath = image.filepath;
+  const extension = path.extname(image.originalFilename);
+  const newFilename = image.newFilename+extension;
+  const newPath = path.join(thumbnailsFolderPath, newFilename);
+  await fs.ensureDir(path.dirname(newPath));
+  await fs.move(oldPath, newPath);
+  const post = await insertVideo(newFilename, fields);
+  return post;
 }
 
 async function insertVideo(image, fields) {

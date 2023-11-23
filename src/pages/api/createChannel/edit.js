@@ -13,6 +13,8 @@ export const config = {
   },
 };
 
+const thumbnailsFolderPath = path.join(process.env.NEXT_UPLOADS_FOLDERS,`/Thumbnails`);
+
 const saveChannel=z.object({
     pageName:z
     .string()
@@ -36,7 +38,7 @@ export default async function handler(req, res) {
         const secret="N33U8477474473"
         const form= new formidable.IncomingForm();
        // Créez un répertoire "uploads" s'il n'existe pas déjà
-        await fs.ensureDir('./public/Thumbnails');
+        await fs.ensureDir(thumbnailsFolderPath);
         // Parsez la requête
         form.parse(req, async (err, fields, files) => {
           if (err) {
@@ -88,7 +90,7 @@ export default async function handler(req, res) {
           const oldPath = image.filepath;
           const extension = path.extname(image.originalFilename);
           const newFilename = image.newFilename+extension;
-          const newPath = path.join(process.cwd(), './public/Thumbnails', newFilename);
+          const newPath = path.join(thumbnailsFolderPath, newFilename);
           await fs.ensureDir(path.dirname(newPath));
           try {
                 await fs.unlink(`./public/Thumbnails/${fields.image}`);

@@ -10,7 +10,7 @@ function Video({video}) {
   useEffect(() => {
     const fetchImage = async () => {
       try {
-        const response = await fetch(`/Thumbnails/${video.Image}`);
+        const response = await fetch(`http://localhost:8080/Thumbnails/${video.Image}`);
         const blob = await response.blob();
         const blobUrl = URL.createObjectURL(blob);
         setImageBlobUrl(blobUrl);

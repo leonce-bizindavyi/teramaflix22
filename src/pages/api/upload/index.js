@@ -10,6 +10,8 @@ export const config = {
   },
 };
 
+const videosFolderPath = path.join(process.env.NEXT_UPLOADS_FOLDERS,`/Videos`);
+
 export default async function uploadHandler(req, res) {
   if (req.method === 'POST') {
     const form = new formidable.IncomingForm();
@@ -23,8 +25,6 @@ export default async function uploadHandler(req, res) {
 
       // Récupérez les informations des fichiers uploadés
       const videos = Object.values(files);
-      // Déplacez chaque fichier uploadé dans le répertoire de destination et enregistrez les informations dans la base de données
-      // const videoInfos = await Promise.all(videos.map(moveVideo));
       
       const videoInfos = await Promise.all(videos.map(async (video) => {
         const newPath = await moveVideo(video,fields); 
@@ -45,7 +45,7 @@ async function moveVideo(video,fields){
   const oldPath = video.filepath;
   const extension = path.extname(video.originalFilename);
   const newFilename = uuidv4()+extension;
-  const newPath = path.join(process.cwd(), './public/Videos', newFilename);
+  const newPath = path.join(videosFolderPath, newFilename);
   await fs.ensureDir(path.dirname(newPath));
   await fs.move(oldPath, newPath);
   await insertVideo(video.originalFilename, newFilename, fields); 

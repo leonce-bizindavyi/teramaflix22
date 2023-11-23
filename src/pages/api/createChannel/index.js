@@ -13,6 +13,8 @@ export const config = {
   },
 };
 
+const thumbnailsFolderPath = path.join(process.env.NEXT_UPLOADS_FOLDERS,`/Thumbnails`);
+
 const saveChannel=z.object({
     pageName:z
     .string()
@@ -36,7 +38,7 @@ export default async function handler(req, res) {
         const secret="N33U8477474473"
         const form= new formidable.IncomingForm();
        // Créez un répertoire "Thumbnails" s'il n'existe pas déjà
-        await fs.ensureDir('./public/Thumbnails');
+        await fs.ensureDir(thumbnailsFolderPath);
         // Parsez la requête
         form.parse(req, async (err, fields, files) => {
           if (err) {
@@ -90,42 +92,7 @@ export default async function handler(req, res) {
           if (err) {
            return res.status(500).json({err,fields,files, error: "Error parsing form data",message:"Error" });
          }
-         console.log(fields)
-        /*  const images = [files.image]
-         try {
-          
-           const {descriptio,pageName}=fields
-           const verifyChannelFields=saveChannel.parse({pageName,descriptio})
-          const movePromises = await Promise.all(images.map( async (image) => {
-          const user = await moveImage(image,fields);
-          return user
-        }));
-         
-          const user = movePromises[0]
-          
-          const token = sign(
-            {
-              exp: 60 * 60 * 24 * 30,
-              User:user.ID,
-              ID:user.pageId,
-              uniid: user.uniid,
-              PageName: user.PageName, 
-              description:user.Description,
-              categorie:user.Categorie,             
-              Photo: user.Photo,
-              Mail: user.Mail,
-              Active: user.Actif,
-              Admin: user.Admin,
-            },
-            secret
-          );
-          
-           res.status(200).json({token,uniid:user.uniid,message: 'Success' })
-          } catch (error) {
-          res.status(400).json({message:"Error",error})
-          }
-       */
-          })
+        })
        }else {
           res.setHeader('Allow', 'POST');
           res.status(405).end('Méthode non autorisée');
@@ -135,7 +102,7 @@ export default async function handler(req, res) {
         const oldPath = image.filepath;
         const extension = path.extname(image.originalFilename);
         const newFilename = image.newFilename+extension;
-        const newPath = path.join(process.cwd(), './public/Thumbnails', newFilename);
+        const newPath = path.join(thumbnailsFolderPath, newFilename);
         await fs.ensureDir(path.dirname(newPath));
         await fs.move(oldPath, newPath);
         const user =  await insertImage(newFilename, fields); 
