@@ -40,6 +40,36 @@ function LastVideo({uniid}){
       await handledelete();
     }
     let video = LastPost({ uniid,setallMessage });
+    const [imageBlobUrl, setImageBlobUrl] = useState('/img/thumb.jpg');
+    const [videoBlobUrl, setVideoBlobUrl] = useState('');
+  useEffect(() => {
+    if(video){
+      const fetchImage = async () => {
+        try {
+          const response = await fetch(`/Thumbnails/${video.Image}`);
+          const blob = await response.blob();
+          const blobUrl = URL.createObjectURL(blob);
+          setImageBlobUrl(blobUrl);
+        } catch (error) {
+          console.error('Error fetching video:', error);
+        }
+      };
+      const fetchVideo = async (video) => {
+        try {
+          const response = await fetch(`/Videos/${video}`);
+          const blob = await response.blob();
+          const blobUrl = URL.createObjectURL(blob);
+          setVideoBlobUrl(blobUrl);
+        } catch (error) {
+          console.error('Error fetching video:', error);
+        }
+      };
+      fetchImage()
+      fetchVideo(video.Video)
+    }
+
+  }, [video])
+
     if (!video) {
       return <div>Loading...</div>;
     }  
@@ -125,7 +155,7 @@ return(
       :
       <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-4 h-[400] md:h-[250px] items-center border-b-2 border-blue-500">  
         <div className="w-64 sm:w-80 md:w-72 lg:w-96 h-48 lg:h-52">
-            <video  id="playing" src={`/Videos/${video.Video}`} className="w-full h-full" controls> </video>
+            <video  id="playing" src={videoBlobUrl} className="w-full h-full" controls> </video>
         </div>
         <div className="flex flex-row space-x-4">
             <div>
@@ -143,7 +173,7 @@ return(
                 </div>
             </div>
             <div className=" w-10 h-10 xl:w-14 xl:h-14 rounded-full overflow-hidden">
-               <Image width={100} height={100}  src={`/Thumbnails/`+ video.Image} className="h-[100%] w-[100%]" alt="profil"/>
+               <Image width={100} height={100}  src={imageBlobUrl} className="h-[100%] w-[100%]" alt="profil"/>
             </div>
             <div className="border border-blue-300 rounded-3xl">
               <div className="w-full  px-5 flex flex-col h-[210px] justify-between">

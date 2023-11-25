@@ -7,6 +7,7 @@ function TimeAgo(Created){
   return period
 }
 function Details({handleActive,users}) {  
+const [profBlobUrl, setProfBlobUrl] = useState('/img/logo.png');
 const [isActive,setIsActive]=useState(false)
 useEffect(() => {
   if(users && users.Actif === 1){
@@ -14,6 +15,27 @@ useEffect(() => {
   }
 }, [users])
 
+    useEffect(() => {
+      const fetchProfile = async (photo) => {
+        try {
+          if(photo){
+            const response = await fetch(`/Thumbnails/${photo}`);
+            const blob = await response.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            setProfBlobUrl(blobUrl);
+          }else{
+            const response = await fetch(`/img/logo.png`);
+            const blob = await response.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            setProfBlobUrl(blobUrl);
+          }
+        } catch (error) {
+          console.error('Error fetching video:', error);
+        }
+      };
+      fetchProfile(users.Photo)
+  
+    }, [users])
 if (!users) {
   return null
 }
@@ -25,11 +47,7 @@ const period = TimeAgo(users.Created_at)
       <div  className="userinfo xl:w-[60%] bg-white xl:full flex flex-col mb-5  rounded-3xl" id="userINFO">
         <div  className="flex felx-row justify-center w-full mt-5">
             <div  >
-              { users.Photo ?
-              <Image width={100} height={100} className='w-36 h-36  xl:w-40 xl:h-40 rounded-full overflow-hidden' alt='profile' src={`/Thumbnails/${users.Photo}`}/>
-              :
-              <Image width={100} height={100} alt='profile' className=" w-36 h-36  xl:w-40 xl:h-40 rounded-full overflow-hidden" src="/img/logo.png"/>
-              }
+              <Image width={100} height={100} className='w-36 h-36  xl:w-40 xl:h-40 rounded-full overflow-hidden' alt='profile' src={profBlobUrl}/>
             </div>
         </div>
         <div  className="userDetails p-8 xl:p-20 flex flex-row justify-between w-full ">

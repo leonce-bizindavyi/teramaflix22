@@ -15,7 +15,6 @@ function ShortVideo() {
   const [limit, setLimit] = useState(2)
   const [start, setStart] = useState(0)
   const [showCmnt, setShowCmnt] = useState(false)
-  const [liked, setLiked] = useState(2)
 
   
   const handleCmnt = (stat) =>{
@@ -128,7 +127,7 @@ function ShortVideo() {
                       </div>
                       </div>
                   </Link>
-                  <Sub user={video.User}/>
+                  {auto.session.ID !== video.User && (<Sub user={video.User}/>) }
               </div>
               <div className="buttons absolute z-50 bottom-0 right-0 h-[40%] w-[70px]  flex flex-col px-2 ">
                   <Like video={video.ID} />                          

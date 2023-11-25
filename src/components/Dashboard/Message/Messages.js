@@ -69,7 +69,27 @@ function Message() {
   useEffect(() => {
     async function fetchData() {
         const user = await auth;
-        if(user){ setAuto(user);}
+        if(user){
+             setAuto(user);
+            const fetchProfile = async (photo) => {
+            try {
+                if(photo){
+                const response = await fetch(`/Thumbnails/${photo}`);
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                setProfBlobUrl(blobUrl);
+                }else{
+                const response = await fetch(`/img/logo.png`);
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                setProfBlobUrl(blobUrl);
+                }
+            } catch (error) {
+                console.error('Error fetching video:', error);
+            }
+            };
+            fetchProfile(user.session.Photo)
+        }
     }
     fetchData();
 }, [auth]);
