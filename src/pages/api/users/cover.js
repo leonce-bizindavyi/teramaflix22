@@ -8,6 +8,7 @@ export const config = {
     bodyParser: false,
   },
 };
+const thumbnailsFolderPath = path.join(process.env.NEXT_UPLOADS_FOLDERS,`/Thumbnails`);
 
 export default async function uploadHandler(req, res) {
   if (req.method === 'POST') {
@@ -40,11 +41,11 @@ export default async function uploadHandler(req, res) {
     const oldPath = image.filepath;
     const extension = path.extname(image.originalFilename);
     const filename = image.newFilename+extension;
-    const newPath = path.join(process.cwd(), './public/Thumbnails', filename);
+    const newPath = path.join(thumbnailsFolderPath, filename);
     await fs.ensureDir(path.dirname(newPath));
     if(oldCover !== 'null'){
       try {
-        await fs.unlink(`./public/Thumbnails/${oldCover}`);
+        await fs.unlink(`${thumbnailsFolderPath}/${oldCover}`);
       } catch (err) {
           console.error("Erreur lors de la suppression de l'ancienne image :", err);
       }

@@ -86,7 +86,7 @@ export default async function handler(req, res) {
         const secret="N33U8477474473"
         const form= new formidable.IncomingForm();
        // Créez un répertoire "uploads" s'il n'existe pas déjà
-        await fs.ensureDir('./public/Thumbnails');
+        await fs.ensureDir(thumbnailsFolderPath);
         // Parsez la requête
         form.parse(req, async (err, fields, files) => {
           if (err) {

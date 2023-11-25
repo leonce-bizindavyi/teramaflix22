@@ -166,7 +166,7 @@ function ShortVideo() {
               {
                   showCmnt ? <Comments video={video} handleCmnt={handleCmnt} /> : null
                 }
-              <video
+              <video loop={true}
                 ref={(el) => (videoRefs.current[index] = el)}
                 onClick={(event) => handleVideoClick(event, index)}
                 src={`/Videos/${video.Video}`}
