@@ -1,12 +1,25 @@
-import React from "react";
+import * as React from 'react';
+import { useState, useEffect, useContext } from 'react';
+import Box from '@mui/material/Box';
+import LinearProgress from '@mui/material/LinearProgress';
+import { purple } from '@mui/material/colors';
+import { blue } from '@mui/material/colors';
+
 const ProgressCircle = ({ percentage }) => {
-  const gradient = `conic-gradient(#4d5bf9 ${percentage * 3.6}deg, #cadcff ${percentage * 3.6}deg)`;
   return (
-    <div className="progessBar w-[150px] h-[150px] bg-[#e8/f0f7] rounded-md grid place-items-center">
-      <div style={{ backgroundImage: gradient }} className="circular w-[100px] h-[100px] rounded-full grid place-items-center">
-        <div className="percent relative text-[1.2rem] font-semibold">{percentage}%</div>
+    <>
+      <div className='flex flex-col items-center'>
+        <Box sx={{ width: '100%', marginTop: '20px' }}>
+          <LinearProgress color="secondary" sx={{ color: purple[500], backgroundColor: blue[500] }} className='h-[0.2rem]' />
+        </Box>
+        <div className="uploading-text">
+          <span className="loading-dot">.</span>
+          <span className="loading-dot">.</span>
+          <span className="loading-dot">.</span>
+          &nbsp;Uploading
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

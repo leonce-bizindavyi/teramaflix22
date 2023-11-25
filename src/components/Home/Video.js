@@ -21,7 +21,7 @@ function Video({video}) {
     const fetchProfile = async (photo) => {
       try {
         if(photo){
-          const response = await fetch(`http://217.76.61.81:8080/Thumbnails/${photo}`);
+          const response = await fetch(`/Thumbnails/${photo}`);
           const blob = await response.blob();
           const blobUrl = URL.createObjectURL(blob);
           setProfBlobUrl(blobUrl);

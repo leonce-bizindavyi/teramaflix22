@@ -52,9 +52,11 @@ export default function SwipperSlide() {
         
         {
             videos.map(video=>{
+              if(video.Short === 0 && video.Visible === 1){
                 return (
                     <SwiperSlide  key={video.ID}><Slide video={video} /></SwiperSlide>
                 )
+              }
             })
         }
       </Swiper>

@@ -1,19 +1,19 @@
 import React, {useState} from 'react'
 function PopAddVideo(props) {
   const [isDragged, setDrag] = useState(false)
-  const handleDrop = (e) => {
+  const handleDrop = async (e) => {
     e.preventDefault();
     const files = Array.from(e.dataTransfer.files);
     const filterfile = files.filter((file) => file.type.includes('video'));
     if (filterfile.length > 0) {
-      props.handleUpload(filterfile)
+     await  props.handleUpload(filterfile)
     }
   };
-  const handleFileChange = (e) => {
+  const handleFileChange = async(e) => {
     const files = Array.from(e.target.files);
     const filteredFiles = files.filter((file) => file.type.includes('video'));
     if (filteredFiles.length > 0) {
-      props.handleUpload(filteredFiles)
+      await props.handleUpload(filteredFiles)
     }
   };
   

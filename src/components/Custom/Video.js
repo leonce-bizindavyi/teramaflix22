@@ -1,10 +1,13 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import React,{useState,useEffect} from 'react'
-function Video({video}) {
+function Video({video,handleRemoveVideo}) {
     const deletePost = async (id,video,image) =>{
         const response = await fetch(`/api/posts/deletePost/${id}/${video}/${image}`)
         const data = await response.json()
+        if(data.success){
+          handleRemoveVideo(id)
+        }
     }
     const [imageBlobUrl, setImageBlobUrl] = useState('/img/thumb.jpg');
   useEffect(() => {
@@ -18,8 +21,7 @@ function Video({video}) {
         console.error('Error fetching video:', error);
       }
     };
-    fetchImage()
-
+    if(video.Image){fetchImage()}
   }, [video])
   return (
     <>

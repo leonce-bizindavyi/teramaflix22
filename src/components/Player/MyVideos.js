@@ -39,7 +39,9 @@ function MyVideos() {
      <div className={`flex flex-col md:flex-row md:ml-2 md:flex-wrap md:space-x-4 mt-4`}>
       {
         myVideos?.map(video=>{
-          return <Myvideo key={video.ID} video={video}/>
+          if(video.Short === 0 && video.Visible === 1){
+            return <Myvideo key={video.ID} video={video}/>
+          }
         })
         
       }        

@@ -1,4 +1,3 @@
-
 import executeQuery from '@/Config/db4';
 export default async function  handler(req, res) {
   const [uniid]= req.query.uniidDelete

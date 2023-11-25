@@ -49,7 +49,6 @@ const getMoreVideos=async()=>{
 }
   return (
     <>
-   
     <InfiniteScroll
     dataLength={videos.length}
     next={getMoreVideos}
@@ -64,7 +63,9 @@ const getMoreVideos=async()=>{
           </div> */}
           {
             videos?.map(video=>{
-              return <Video key={video.ID} video={video} />
+              if(video.Short === 0 && video.Visible === 1){
+                return <Video key={video.ID} video={video} />
+              }
             })
       }
         

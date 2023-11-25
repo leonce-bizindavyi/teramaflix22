@@ -9,7 +9,7 @@ function UploadDrop() {
   const [addvid, setAddvid] = useState(false)
   const [auto, setAuto] = useState(12);
   const [isEmpty, setEmpty] = useState(true)
-  const [percentage, setPercentage] = useState(0);
+  const [percentage, setPercentage] = useState(false);
   const [videos, setVideos] = useState([])
   const [uploads, setUploads] = useState(null)
   const handleaddvid = (stat)=>{
@@ -22,7 +22,6 @@ function UploadDrop() {
     if(data.length == 0) {
     }
     else {
-      console.log(data)
       setUploads(data)
     }
 }
@@ -45,30 +44,71 @@ function UploadDrop() {
       fetchVideos()
     }   
   }, [auth])
-   const handleUpload = async (videos) => {
-    setAddvid(false)
+  const handleUpload = async (videos) => {
+    setAddvid(false);
+    setPercentage(true)
     const formData = new FormData();
-    formData.append(`user`, auto.ID);
-    for(let i = 0; i < videos.length; i++) {
-      formData.append(`${i}`, videos[i]);
+    formData.append('user', auto.ID);
+  
+    for (let i = 0; i < videos.length; i++) {
+      const fileSize = videos[i].size
+      if (fileSize>18944000) {
+        formData.append(`short`, 0);
+      } else {
+        formData.append(`short`, 1);
+      }
+      formData.append(`video${i}`, videos[i]);
     }
   
     const xhr = new XMLHttpRequest();
-    xhr.open('POST', '/api/upload');
-    xhr.upload.addEventListener('progress', (e) => {
-      const percent = (e.loaded / e.total) * 100;
-      setPercentage(percent.toFixed(0))
-      // Mettre à jour la barre de progression ou le cercle de progression ici
+  
+    // Suivre la progression
+    xhr.upload.addEventListener('progress', (event) => {
+      if (event.lengthComputable) {
+        const percentage = Math.round((event.loaded / event.total) * 100);
+        console.log(percentage)
+      }
     });
-    xhr.upload.addEventListener('load', () => {
-      fetchUploads()
-      console.log('Upload terminé !');
-      // Mettre à jour la barre de progression ou le cercle de progression ici
-    });
+  
+    // Gestion de la fin de la requête
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        // La requête a réussi
+        const responseData = JSON.parse(xhr.responseText);
+        if(responseData.success){
+          fetchUploads()
+          setPercentage(false)
+        }
+      } else {
+        // La requête a échoué
+        console.error('Erreur lors de l\'envoi des vidéos');
+      }
+    };
+  
+    // Gestion des erreurs pendant la requête
+    xhr.onerror = () => {
+      console.error('Erreur réseau lors de la requête');
+    };
+  
+    // Ouvrir et envoyer la requête
+    xhr.open('POST', '/api/upload', true);
     xhr.send(formData);
-    
-    
   };
+  
+
+  const handleRemoveVideo = (videoId)=>{
+    const newVideos = videos.filter(item=>item.ID !== videoId)
+    setVideos(newVideos)
+  }
+  const handleRemoveUpload = (videoId)=>{
+    const newUploads = uploads.filter(item=>item.ID !== videoId)
+    if(newUploads.length === 0){
+      setUploads(null)
+    }else{
+      setUploads(newUploads)
+    }
+  }
+
   return (
     <>
        <div className="vidManager flex flex-row justify-between">
@@ -86,11 +126,11 @@ function UploadDrop() {
               <>
               <div className="filmcontainer flex flex-wrap  blur mt-3 gap-[1rem]">
               {isEmpty ? <h2 className="text-[1.5rem] font-semibold">Upload Videos Here !! </h2> : null}
-                {
-                  videos?.map(video=>{
-                    return <Video key={video.ID} video={video} />
-                  })
-                }
+              {
+                videos?.map(video => (
+                  <Video key={video.ID} video={video} handleRemoveVideo={handleRemoveVideo} />
+                ))
+              }
               </div>
               <PopAddVideo handleaddvid={handleaddvid} handleUpload={handleUpload} />
               </>
@@ -99,7 +139,7 @@ function UploadDrop() {
                 {isEmpty ? <h2 className="text-[1.5rem] font-semibold">Upload Videos Here !! </h2> : null}
                 {
                   videos?.map(video=>{
-                    return <Video key={video.ID} video={video} />
+                    return <Video key={video.ID} video={video} handleRemoveVideo={handleRemoveVideo}/>
                   })
                 }
               </div>
@@ -107,13 +147,11 @@ function UploadDrop() {
             
               <div className='w-[100%] flex justify-end'>
               {
-              percentage==0 | percentage==100 ? null
-              :
-               <ProgressCircle percentage={percentage} />
+               percentage && (<ProgressCircle percentage={percentage} />)
               }
               {
               uploads ? 
-              <Upload key={uploads.ID} videos={uploads} />
+              <Upload key={uploads.ID} videos={uploads} handleRemoveUpload={handleRemoveUpload} />
               :
                null
               }
