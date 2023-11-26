@@ -16,8 +16,8 @@ function LastPost({ uniid ,setallMessage}) {
     const router = useRouter();
     videoId = router.query.w;
     useEffect(() => {
-      async function fetchLastPost() {
-        const response = await fetch(`/api/videos/${videoId}`);
+      async function fetchLastPost(id) {
+        const response = await fetch(`/api/videos/${id}`);
         const data = await response.json();
         const result = data[0];
         setVideo(result);
@@ -28,7 +28,7 @@ function LastPost({ uniid ,setallMessage}) {
       } else if (videoId) {
         fetchLastPost(videoId);
       }
-    }, [uniid]);
+    }, [uniid,setallMessage]);
     return video;
   }
 
@@ -40,8 +40,8 @@ function LastVideo({uniid}){
       await handledelete();
     }
     let video = LastPost({ uniid,setallMessage });
-    const [imageBlobUrl, setImageBlobUrl] = useState('/img/thumb.jpg');
     const [videoBlobUrl, setVideoBlobUrl] = useState('');
+    const [profBlobUrl, setProfBlobUrl] = useState('/img/logo.png');
   useEffect(() => {
     if(video){
       const fetchImage = async () => {
@@ -64,6 +64,24 @@ function LastVideo({uniid}){
           console.error('Error fetching video:', error);
         }
       };
+      const fetchProfile = async (photo) => {
+        try {
+          if(photo){
+            const response = await fetch(`/Thumbnails/${photo}`);
+            const blob = await response.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            setProfBlobUrl(blobUrl);
+          }else{
+            const response = await fetch(`/img/logo.png`);
+            const blob = await response.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            setProfBlobUrl(blobUrl);
+          }
+        } catch (error) {
+          console.error('Error fetching video:', error);
+        }
+      };
+      fetchProfile(video.Photo)
       fetchImage()
       fetchVideo(video.Video)
     }
@@ -173,7 +191,7 @@ return(
                 </div>
             </div>
             <div className=" w-10 h-10 xl:w-14 xl:h-14 rounded-full overflow-hidden">
-               <Image width={100} height={100}  src={imageBlobUrl} className="h-[100%] w-[100%]" alt="profil"/>
+               <Image width={100} height={100}  src={profBlobUrl} className="h-[100%] w-[100%]" alt="profil"/>
             </div>
             <div className="border border-blue-300 rounded-3xl">
               <div className="w-full  px-5 flex flex-col h-[210px] justify-between">

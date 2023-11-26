@@ -54,10 +54,12 @@ function Videos(props){
         fetchSearches(search)
     }
       const fetchSearches = async (search) =>{
-        const response = await fetch(`/api/results/${search}/0/100`)
-        const data = await response.json()
-        if(data[0]){
-            setSearches(data)
+        if(search !== ''){
+          const response = await fetch(`/api/results/${search}/0/100`)
+          const data = await response.json()
+          if(data[0]){
+              setSearches(data)
+          }
         }
       }
 return(
