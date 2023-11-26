@@ -56,26 +56,29 @@ const handleAddCover = async (image)=>{
   });
 }
 useEffect(() => {
-  const fetchCover = async (photo) => {
+  const fetchCover = async (cover,photo) => {
     try {
       if(photo){
-        const resCover = await fetch(`/Thumbnails/${photo}`);
         const resProf = await fetch(`/Thumbnails/${photo}`);
-        const blobCover = await resCover.blob();
         const blobProf = await resProf.blob();
-        const blobUrlCover = URL.createObjectURL(blobCover);
         const blobUrlFrof = URL.createObjectURL(blobProf);
-        setCoverBlobUrl(blobUrlCover);
         setProfBlobUrl(blobUrlFrof)
       }else{
-        const resCover = await fetch(`/img/cover.jpg`);
         const resProf = await fetch(`/img/logo.png`);
-        const blobCover = await resCover.blob();
         const blobProf = await resProf.blob();
-        const blobUrlCover = URL.createObjectURL(blobCover);
         const blobUrlFrof = URL.createObjectURL(blobProf);
-        setCoverBlobUrl(blobUrlCover);
         setProfBlobUrl(blobUrlFrof)
+      }
+      if(cover){
+        const resCover = await fetch(`/Thumbnails/${cover}`);
+        const blobCover = await resCover.blob();
+        const blobUrlCover = URL.createObjectURL(blobCover);
+        setCoverBlobUrl(blobUrlCover);
+      }else{
+        const resCover = await fetch(`/img/cover.jpg`);
+        const blobCover = await resCover.blob();
+        const blobUrlCover = URL.createObjectURL(blobCover);
+        setCoverBlobUrl(blobUrlCover);
       }
     } catch (error) {
       console.error('Error fetching video:', error);
@@ -88,7 +91,7 @@ useEffect(() => {
         const response = await fetch(`/api/users/getUser/${status}`)
         const data = await response.json()
         fetchSubReactions(data[0].ID)
-        fetchCover(data[0].Cover)
+        fetchCover(data[0].Cover,data[0].Photo)
         setUser(data[0])
       }
   }
