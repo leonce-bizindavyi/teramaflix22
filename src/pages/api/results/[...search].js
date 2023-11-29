@@ -2,6 +2,7 @@ import executeQuery from '@/Config/db4';
 
 export default async function handler(req, res) {
   const search = req.query.search
+  console.log(search)
   try {
     const rows = await executeQuery('CALL searches(?,?,?)',search);
     res.status(200).json(rows[0]);

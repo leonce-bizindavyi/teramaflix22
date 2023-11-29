@@ -2,6 +2,7 @@ import Message from '@/components/Dashboard/Message/Messages'
 import AdminSide from '@/components/Navs/AdminSide'
 import Image from 'next/image';
 import React,{useState,useEffect} from 'react'
+import jwt from 'jsonwebtoken';
 
 function MessagePage() {
   return (
@@ -19,6 +20,7 @@ function DashboardLayout({ page }) {
   const [auto, setAuto] = useState(12)
 
   useEffect(() => {
+    
     async function decodeJWT(token) {
       try {
         const decoded = jwt.decode(token);

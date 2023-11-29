@@ -215,6 +215,43 @@ function Watching({videoprops}) {
       router.beforePopState();
       router.events.on("routeChangeStart", handleRouteChange);
     
+      //views and hours 
+if(auto.session && auto.session != "unlogged"){
+  const handleAddHours = async () => {
+    const user = auto.session
+    const currentTime = videoRef.current.currentTime // Récupérer le temps écoulé réel de la vidéo
+    const hours = currentTime / 3600 ; // Conversion en heures
+    const response = await fetch(`/api/reactions/addHours/${videoprops.ID}/${user.ID}/${hours.toFixed(4)}`);
+    const data = await response.json();
+    if(data){
+      
+    }
+  };
+  async function insertViews() {
+    const user = auto.session
+    const timerId = setTimeout(async () => {  // Ajoutez le mot-clé "async" ici
+      const response = await fetch(`/api/reactions/addViews/${videoprops.ID}/${user.ID}`);
+      const data = await response.json();
+      console.log(data)
+    }, 5000);
+  }
+  insertViews()
+
+  const handleRouteChange = (url, { shallow }) => {
+    if (!shallow) {
+      handleAddHours();
+    }
+  };
+  router.beforePopState(handleAddHours);
+  router.events.on('routeChangeStart', handleRouteChange);
+
+  return () => {
+    router.events.off('routeChangeStart', handleRouteChange);
+  };
+}
+
+
+
 
       const handleKeyPress = (event) => {
         const video = videoRef.current;

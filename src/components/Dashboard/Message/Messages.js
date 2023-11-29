@@ -12,10 +12,11 @@ function Message() {
     const auth = useContext(SessionContext)
     let previousUserId = null;
     const user = router.query.user
-    const [sms, setSms] = useState(null)
+    const [sms, setSms] = useState([])
     const [auto, setAuto] = useState([])
     const [smsUser, setSmsUser] = useState(null)
     const [allsms, setAllSms] = useState(null)
+    const [profBlobUrl, setProfBlobUrl] = useState('/img/logo.png');
     const [fom, setFom] = useState({
         body: "",
         sent: "0",
@@ -31,17 +32,26 @@ function Message() {
                 body: JSON.stringify({body:fom.body,user:user,sent:fom.sent})
             });
             setFom({...fom,body:""})
+            fetchOtherSms()
     }
    }
+   const fetchOtherSms = async() =>{
+      const response = await fetch(`/api/dash/sms/${user}/${sms.length}/20`);
+      const data = await response.json();
+      if(data[0]) {
+        setSms(previousSms=>[...previousSms,...data])
+
+    }
+   
+  }
 
   useEffect(() => {
     // get sms detail in database
     async function fetchSms() {
-        const response = await fetch(`/api/dash/sms/${user}`);
+        const response = await fetch(`/api/dash/sms/${user}/${sms.length}/20`);
         const data = await response.json();
         if(data[0]) {
             setSms(data)
-            //console.log("sms : ",data)
         }
     }
     // get sms user detail in database
@@ -60,9 +70,11 @@ function Message() {
             setAllSms(data[0])
         }
       }
+        if(user){
         fetchSms()
-        fetchAllSms()
         fetchUser() 
+        }
+        fetchAllSms()
     
   }, [user]);
 
@@ -104,9 +116,9 @@ function Message() {
                         <div className=" w-10 h-10 xl:w-12 xl:h-12 rounded-full overflow-hidden">
                             {
                                 auto.Photo ?
-                                <Image width={100} height={100} title={`${auto.PageName}`} src={`/Thumbnails/${auto.Photo} `} className="" alt="profil"/>
+                                <Image width={100} height={100} title={`${auto.PageName}`} src={profBlobUrl} className="" alt="profil"/>
                                 :
-                                <Image width={100} height={100}  title={`${auto.PageName}`} src="/img/logo.png"  className="" alt="profil"/>
+                                <Image width={100} height={100}  title={`${auto.PageName}`} src={profBlobUrl}  className="" alt="profil"/>
                             }
                         </div>
                         <div  className="flex flex-col justify-center">
@@ -128,7 +140,7 @@ function Message() {
                     </div>
                 </div>
             </div>
-            {sms ? 
+            {sms.length !== 0 ? 
             
             <div  className="userChat xl:w-[60%] h-[550px]    bg-white xl:full flex flex-col  rounded-3xl " id="chat">
                 

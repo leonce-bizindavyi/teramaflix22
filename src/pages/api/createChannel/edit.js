@@ -93,7 +93,9 @@ export default async function handler(req, res) {
           const newPath = path.join(thumbnailsFolderPath, newFilename);
           await fs.ensureDir(path.dirname(newPath));
           try {
-                await fs.unlink(`${thumbnailsFolderPath}/${fields.image}`);
+                if(fields.image){
+                  await fs.unlink(`${thumbnailsFolderPath}/${fields.image}`);
+                }
           } catch (err) {
               console.error("Erreur lors de la suppression de l'ancienne image :", err);
           }

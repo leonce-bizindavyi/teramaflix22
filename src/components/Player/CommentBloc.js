@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 import Comments from './Comments';
 import { SessionContext } from '../context/Auth';
-import EmojiPicker from 'emoji-picker-react';
 import InputEmoji from 'react-input-emoji';
 
 function CommentBloc({ video }) {
@@ -13,8 +12,11 @@ function CommentBloc({ video }) {
     setBlock(etat);
   };
 
+
+  const handleInputChange = (newBody) => {
+    setBody(newBody);
+  };
   const handleSubmit = async () => {
-    console.log(body)
     const user = auto.session;
     // Send data to the API to insert into the database
     if (body) {
@@ -50,7 +52,7 @@ function CommentBloc({ video }) {
               <InputEmoji onEnter={handleSubmit}
               cleanOnEnter 
               placeholder='Enter Your comment'
-              onChange={(e) => setBody(e.target.value)}
+              onChange={handleInputChange}
               value={body}
               />
                 
