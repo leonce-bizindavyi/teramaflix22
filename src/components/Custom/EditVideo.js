@@ -93,7 +93,7 @@ function EditVideo({ uuid }) {
         if (videoRef.current.duration > 80 && videoRef.current.videoWidth < videoRef.current.videoHeight) {
           form.append('short', 1)
         } else {
-          form.append('short', 1)
+          form.append('short', 0)
         }
         // Envoyer les données à l'API pour les insérer dans la base de données
         const response = await fetch('/api/posts/addPost', {
