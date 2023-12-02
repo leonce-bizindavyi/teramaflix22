@@ -26,7 +26,7 @@ function NotFound() {
             <img src={logo} alt="Play Icon" className="mr-2 h-14" />
             <h1 className="text-6xl font-bold text-indigo-800">404</h1>
           </div>
-          <p className="text-lg mt-4 text-black">Oops! It seems like you've entered a wrong galaxy.</p>
+          <p className="text-lg mt-4 text-black">Oops! It seems like you &apos; ve entered a wrong galaxy.</p>
           <Link href="/" >
             <div className='flex items-center justify-center'>
                 <span className="text-purple-500 block mt-6 bg-blue-400 py-3 w-[8rem]">Go Back Home</span>
