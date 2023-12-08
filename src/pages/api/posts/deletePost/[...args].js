@@ -33,7 +33,7 @@ async function deleteIfExists(filePath) {
   } catch (error) {
     // Ignore les erreurs si le fichier n'existe pas
     if (error.code !== 'ENOENT') {
-      throw error;
+      console.log(error);
     }
   }
 }

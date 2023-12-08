@@ -36,6 +36,7 @@ export default async function uploadHandler(req, res) {
       } else {
         const movePromises = images.map(async (image) => {
           if (image.newFilename) {
+            await deleteIfExists(`${thumbnailsFolderPath}/${fields.oldimage}`)
             await moveVideo(image, fields);
           } else {
             await insertVideo(fields.oldimage, fields);
@@ -82,5 +83,18 @@ async function insertVideo(image, fields) {
     console.error(error);
     // Gérer l'erreur ici
     throw error; // Propager l'erreur pour que Promise.all le capture
+  }
+}
+
+// Fonction utilitaire pour supprimer un fichier s'il existe
+async function deleteIfExists(filePath) {
+  try {
+    await fs.access(filePath); // Vérifie l'existence du fichier
+    await fs.unlink(filePath); // Supprime le fichier
+  } catch (error) {
+    // Ignore les erreurs si le fichier n'existe pas
+    if (error.code !== 'ENOENT') {
+      console.log(error);
+    }
   }
 }

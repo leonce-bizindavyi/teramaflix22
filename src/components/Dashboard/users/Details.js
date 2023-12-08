@@ -12,30 +12,26 @@ const [isActive,setIsActive]=useState(false)
 useEffect(() => {
   if(users && users.Actif === 1){
     setIsActive(true)
+    const fetchProfile = async (photo) => {
+      try {
+        if(photo){
+          const response = await fetch(`/Thumbnails/${photo}`);
+          const blob = await response.blob();
+          const blobUrl = URL.createObjectURL(blob);
+          setProfBlobUrl(blobUrl);
+        }else{
+          const response = await fetch(`/img/logo.png`);
+          const blob = await response.blob();
+          const blobUrl = URL.createObjectURL(blob);
+          setProfBlobUrl(blobUrl);
+        }
+      } catch (error) {
+        console.error('Error fetching video:', error);
+      }
+    };
+    fetchProfile(users.Photo)
   }
 }, [users])
-
-    useEffect(() => {
-      const fetchProfile = async (photo) => {
-        try {
-          if(photo){
-            const response = await fetch(`/Thumbnails/${photo}`);
-            const blob = await response.blob();
-            const blobUrl = URL.createObjectURL(blob);
-            setProfBlobUrl(blobUrl);
-          }else{
-            const response = await fetch(`/img/logo.png`);
-            const blob = await response.blob();
-            const blobUrl = URL.createObjectURL(blob);
-            setProfBlobUrl(blobUrl);
-          }
-        } catch (error) {
-          console.error('Error fetching video:', error);
-        }
-      };
-      fetchProfile(users.Photo)
-  
-    }, [users])
 if (!users) {
   return null
 }
