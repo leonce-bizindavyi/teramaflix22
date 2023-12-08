@@ -246,18 +246,16 @@ function Navbar(props) {
                 </svg>
               </button>
             </div>
-            {!auto.session || auto.session === "unlogged" ?
-
-              <div className="buttons  flex flex-initial sm:flex sm:items-center sm:justify-end items-center justify-end mr-4 w-full sm:w-64 h-full   ">
-                <Link href='/login' className="bg-blue-500 text-white text-sm md: font-medium rounded-md  md:px-3 px-2 md:py-2 py-1 flex items-center justify-center hover:bg-blue-600">Login</Link>
-              </div>
-              :
               <div className="buttons  flex flex-initial sm:flex space-x-3 sm:items-center sm:justify-center items-center justify-center w-full sm:w-64 h-full   ">
                 <button ref={SearchInput2Ref} onClick={handleSmsearch} id="searchBtn" className=" hover:bg-gray-200 hover:rounded-full w-10 h-10 md:hidden block">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                   </svg>
                 </button>
+                {!auto.session || auto.session === "unlogged" ?
+                <Link href='/login' className="bg-blue-500 text-white text-sm md: font-medium rounded-md  md:px-3 px-2 md:py-2 py-1 flex items-center justify-center hover:bg-blue-600">Login</Link>
+                :
+                <>
                 <Link href='/upload'>
                   <button id="image" className="hover:bg-gray-200 flex rounded-full items-center p-1 lg:w-10 lg:h-10 md:w-8 md:h-6 w-8 h-8">
                     <Image width={80} height={80} className="lg:w-full lg:h-full w-full  h-full   my-1 ml-15 "
@@ -281,8 +279,10 @@ function Navbar(props) {
                   <Image width={80} height={80} className="w-8 h-8 rounded-full" title={`${auto.session.PageName}`}
                     src={profBlobUrl} alt='profile' onClick={() => handleAcPop()} />
                 </button>
+                </>
+                }
               </div>
-            }
+           
           </nav>
         </div>
       </header>

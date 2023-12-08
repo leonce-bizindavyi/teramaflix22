@@ -40,7 +40,7 @@ function Account() {
       if(Auth.session){
       const fetchUser = async () => {
         try {
-          if(Auth.session.User!=" "){
+          if(Auth.session.ID!=" "){
             handleUpdate();
           }
         } catch (error) {
@@ -50,8 +50,7 @@ function Account() {
       fetchUser();
     
       async function handleUpdate() {
-        
-          const response = await fetch(`/api/update/${Auth.session.User}`);
+          const response = await fetch(`/api/update/${Auth.session.ID}`);
           if (response.ok) {
             const data = await response.json();
             if (data) {
@@ -68,7 +67,6 @@ function Account() {
       }
     },  [Auth.session]);
     
-
       const handleSubmit = async (event)=>{
         event.preventDefault()
       
@@ -90,13 +88,14 @@ function Account() {
         setErrors(errors);
         if(Object.keys(errors).length ===0){
           let pass = event.target.password.value
+          console.log('password:',pass)
           const saltRounds = 10
-          bcrypt.hash(pass,saltRounds,async(error,hash)=>{
+          bcrypt.hash(pass,saltRounds,async (error,hash)=>{
             if(error){
                 console.log("error")
             }
             else{
-               setPasswordHash(hash)
+              console.log('password2:',pass)
                try{
                 const response = await fetch('/api/updateUser',{
                     method: 'PUT',
@@ -104,12 +103,12 @@ function Account() {
                       'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        id:Auth.session.ID,
+                        id:Auth.session.User,
                         nom:event.target.nom.value,
                         mail:event.target.mail.value,
                         password:hash
                     })
-                });
+                })
                 const data = await response.json()
                 if(response.ok){
                   if (data.affectedRows > 0) {
@@ -126,11 +125,10 @@ function Account() {
               }
               catch(error){
                 console.error(error.message)
-              }    
+              }   
             }
           })
-        
-        
+         
         }
       }
         const isValidEmail = (email) => {
@@ -217,7 +215,6 @@ function Account() {
                                 <button type='submit' className='text-2xl text-white font-serif'>Update</button>
                             </div>
                           </div>
-                  
                       </div>
                   </div>
               </form>
