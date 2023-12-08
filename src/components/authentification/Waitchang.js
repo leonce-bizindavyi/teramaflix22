@@ -1,8 +1,22 @@
-import {React,useState} from 'react'
+import {React,useState,useEffect} from 'react'
 import Link from 'next/link'
+import Image from 'next/image';
 
 function Waitingchang () {
-  
+  const [logo, setLogo] = useState('/logo/TeramaFlixpic.png')
+
+  useEffect(() => {
+    const fetchLogos = async () => {
+      try {
+        const resp = await fetch('/logo/TeramaFlixpic.png');
+        const blob = await resp.blob();
+        setLogo(URL.createObjectURL(blob))
+      } catch (error) {
+        console.error('Error fetching video:', error);
+      }
+    };
+    fetchLogos()
+  }, [])
   return (
     <>
     <div  className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
@@ -10,7 +24,7 @@ function Waitingchang () {
        <div  className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
           <div  className="max-w-md mx-auto">
                 <div>
-                  <img src="/logo/TeramaFlixpic.png" alt="logo"  className="h-7 sm:h-8"/>
+                <Image src={logo} width={280} height={280} alt="logo"  className="h-7 sm:h-8"/>
                 </div>
                 <div  className="divide-y divide-gray-200">
                   <div  className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">

@@ -5,7 +5,7 @@ import React from 'react'
 function ResetPage() {
   return (
     <>
-        <Title title='' />
+        <Title title='Waiting Change Password' />
         <Waitingchang/>
     </>
   )

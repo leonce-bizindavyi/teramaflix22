@@ -8,7 +8,7 @@ function ResetPage() {
   const mail=router.query.mail
   return (
     <>
-        <Title title='' />
+        <Title title='Waiting...' />
         <Wait/>
     </>
   )
