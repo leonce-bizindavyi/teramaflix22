@@ -1,5 +1,5 @@
 import Title from '@/components/Title'
-import ResetPass from '@/components/authentification/ResetPass'
+import Wait from '@/components/authentification/Waitingpage'
 import React from 'react'
 import { useRouter } from 'next/router'
 
@@ -8,8 +8,8 @@ function ResetPage() {
   const mail=router.query.mail
   return (
     <>
-        <Title title='Reset Your PassWord' />
-        <ResetPass mail={mail}/>
+        <Title title='' />
+        <Wait/>
     </>
   )
 }

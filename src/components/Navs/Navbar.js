@@ -315,18 +315,10 @@ function Navbar(props) {
                       }
                     </div>
                     <div className="flex-col w-[11rem] sm:w-[14rem] max-h-[6.8rem] ">
-                      {notification.typenotif == 'subscribe' &&
-                       (
                         <p className="text-sm font-medium text-gray-900 line-clamp-3 p-1">
                         <span className='text-md font-bold mx-1'>{notification.Prenom} </span>
-                        La musique sur la plateforme teramaflix est une étape importante,La musique sur la plateforme teramaflix est une étape importante,
-                        La musique sur la plateforme teramaflix est une étape importante,La musique sur la plateforme teramaflix est une étape importante,
-                        La musique sur la plateforme teramaflix est une étape importante.
+                        subscribed to your Terama channel, 12 days ago
                       </p>
-                       )
-                      
-                      }
-                      
                       <span className='text-xs p-1'>12 days ago</span>
                     </div>
                   </div>

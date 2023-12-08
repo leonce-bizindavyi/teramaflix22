@@ -1,15 +1,12 @@
 import Title from '@/components/Title'
-import ResetPass from '@/components/authentification/ResetPass'
+import Waitingchang from '@/components/authentification/Waitchang'
 import React from 'react'
-import { useRouter } from 'next/router'
 
 function ResetPage() {
-  const router=useRouter()
-  const mail=router.query.mail
   return (
     <>
-        <Title title='Reset Your PassWord' />
-        <ResetPass mail={mail}/>
+        <Title title='' />
+        <Waitingchang/>
     </>
   )
 }

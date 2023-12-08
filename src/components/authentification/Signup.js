@@ -1,11 +1,14 @@
 import React,{useState,useEffect} from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { Formik, Form, Field, ErrorMessage  } from 'formik'
 import * as Yup from 'yup'
 import 'animate.css';
 import Image from 'next/image'
 
 function Signup() {
+    const router=useRouter()
+    const [errorMail,setErrorMail]=useState("")
     const [showPassword,setShowPassword]=useState(false)
     const [showConfirm,setShowConfirm]=useState(false)
     const [loading, setLoading] = useState(false);
@@ -30,7 +33,7 @@ function Signup() {
             setLogo1(URL.createObjectURL(blob1))
             setLogo2(URL.createObjectURL(blob2))
         } catch (error) {
-          console.error('Error fetching video:', error);
+          console.error('Error fetching image:', error);
         }
       };
       fetchLogos()
@@ -45,21 +48,18 @@ function Signup() {
         setShowConfirm(!showConfirm)
       }
     const validationSchema = Yup.object().shape({
-        nom: Yup.string().required("You must input a nom !").min(3, "Nom must be at least 3 characters!"),
-        prenom: Yup.string().required("You must input a prenom !").min(3, "Prenom must be at least 3 characters!"),
+        nom: Yup.string().required("You must input a name !").min(3, "Name must be at least 3 characters!"),
+        prenom: Yup.string().required("You must input your lastname !").min(3, "Lastname must be at least 3 characters!"),
         mail: Yup.string().required("You must input a mail !").email("Invalid email address!"),
         password: Yup.string()
             .required("You must input a password !")
-            .min(7, "Password must be at least 7 characters!")
-            .matches(
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]+$/,
-                "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character!"
-            ),
+            .min(5, "Password must be at least 5 characters!"),
         confirm: Yup.string()
             .required("You must input a confirm !")
             .oneOf([Yup.ref("password")], "Confirm password must match the password!"),
     })
     const onSubmit = async(data)=>{
+        setErrorMail('')
         setLoading(true);
         const addData={
             method:"POST",
@@ -72,10 +72,11 @@ function Signup() {
           const response=await res.json()
           setLoading(false);
           if(response.response.data === "errorMail"){
-
-          }else if(response.response.message !=="success"){
+            setErrorMail(response.response.message)
+          }else if(response.response.message =="success"){
+            console.log("inserted");
             setInserted(true)
-            router.push('/login')
+            router.push('/waiting')
           }
     }
     
@@ -125,6 +126,7 @@ function Signup() {
                     <Field type="email" id="inputCreateUser" placeholder="Your Email" name="mail" 
                     className="rounded-xl sm:h-20 lg:h-10 h-12  w-64 sm:w-[27rem] lg:w-64 p-3 text-md sm:text-xl lg:text-sm font-semibold text-slate-600 focus:outline-none" />
                     <ErrorMessage name="mail" className='absolute text-red-800 text-xs sm:text-xl  lg:text-xs right-[5.7rem] -mt-7' component="span"/>
+                   {errorMail&&<span className="text-red-600"> {errorMail} </span>} 
                 </div>
                    
             
@@ -195,7 +197,7 @@ function Signup() {
             </div>
            </Form>
            </Formik>
-           {inserted ? <span className="">inserted </span> : null } 
+           {inserted ? <span className="">Account created </span> : null } 
            {/* <!--fin boutton valider--> */}
            <div className="ml-8 font-semibold text-md">
               <p className='text-md sm:text-2xl lg:text-sm font-semibold text-blue-700'>Already have an account?  <Link href="/login" className="text-purple-600 hover:text-purple-700 focus:outline-none focus:underline transition ease-in-out duration-150">Sign in !</Link></p>

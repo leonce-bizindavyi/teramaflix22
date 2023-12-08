@@ -74,33 +74,94 @@ export default async function handler(req, res) {
 
         const isUnique=await checkEmailUniqueness(userMail);
         if(isUnique!=="true"){  
-        res.status(402).json({response:{data:'errorMail',message:'cet email est déjà utilisé avec un  utre utilisateur.'}});
+        res.status(402).json({response:{data:'errorMail',message:'Email used.'}});
         }
         else{
           const saltrounds=10
           const salt=await bcrypt.genSalt(saltrounds)
           const hashedPassword=await bcrypt.hash(userPassword,salt)
           try {
-            // Exécuter la requête SQL pour récupérer les videos
-            const rows = await executeQuery( `CALL adduser(?,?,?,?)`, [uniid,uName,userMail,hashedPassword]);
-
             //Envoie d'Email pour la validation du compte
             const mailOptions = {
               from: 'teramaflix@gmail.com',
               to: userMail,
-              subject: 'Validation de votre compte',
-              html: `Hello ${userName} ${userPrenom} ,<br><br>Thanks your account created successfully<br>
-                    Please click the below link to activate your account<br><br>"<br><a href="${process.env.NEXT_PUBLIC_URL}/activate?uniid=${uniid}">
-                    <button style="
-                    display: inline-block;
-                    padding: 10px 20px;
-                    background-color: #4CAF50;
-                    color: white;
-                    text-decoration: none;
-                    border-radius: 4px;
-                    font-size: 16px;
-                    border: none;
-                    cursor: pointer;">Activer Maintenant</button></a>`
+              subject: 'Account validation',
+              html: `
+                <html>
+                  <head>
+                    <style>
+                    body {
+                      font-family: Arial, sans-serif;
+                      font-size: 16px;
+                      color: black;
+                      line-height: 1.5;
+                    }
+                    
+                    .container {
+                      max-width: 600px;
+                      margin: 0 auto;
+                      padding: 20px;
+                    }
+                    
+                    .header {
+                      color:black;
+                      margin-bottom: 20px;
+                    }
+                    
+                    .button {
+                      display: flex;
+                      justify-content: center;
+                      margin-top: 20px;
+                      margin-left:50px;
+                    }
+                    
+                    .button a {
+                      display: inline-block;
+                      padding: 10px 20px;
+                      background-color: #3a86ff;
+                      color: white;
+                      text-decoration: none;
+                      border-radius: 4px;
+                      font-size: 16px;
+                      border: none;
+                      cursor: pointer;
+                    }
+                    
+                    .image {
+                      margin-bottom: 20px;
+                    }
+                    
+                    .content {
+                      margin-bottom: 20px;
+                    }
+                    </style>
+                  </head>
+                  <body>
+                    <div class="container">
+                      <div class="header">
+                        <h2>Hello ${userName} ${userPrenom},</h2>
+                        <p>your account has been created successfully.<br>
+                        Please click the link below to activate your account</p>
+                      </div>
+                      <div class="button">
+                        <a href="${process.env.NEXT_PUBLIC_URL}/activate?uniid=${uniid}" style="text-decoration: none; color: white;">
+                          Active now
+                        </a>
+                      </div>
+                      <div class="image">
+                        <img src="cid:unique@image" alt="Image description" style="width: 200px; height: auto;">
+                      </div>
+                    </div>
+                  </body>
+                </html>
+              `,
+              attachments: [
+                {
+                  filename: 'TeramaFlix -logo.jpg',
+                  path: 'public/logo/TeramaFlix -logo.jpg',
+                  cid: 'unique@image'
+                }
+              ]
             };
             transporter.sendMail(mailOptions, function(error, info){
               if (error) {
@@ -109,12 +170,13 @@ export default async function handler(req, res) {
                 console.log('E-mail envoyé: ' + info.response);
               }
             });
-
+              // Exécuter la requête SQL pour inserer l'utilisateur
+              const rows = await executeQuery( `CALL adduser(?,?,?,?)`, [uniid,uName,userMail,hashedPassword]);
             // Renvoyer les résultats de la requête sous forme de réponse JSON
             res.status(200).json({response:{data:rows[0],message:'success'}})
           } catch (error) {
             console.error(error);
-            res.status(500).json({response:{data:"sqlError",dat:error,message: 'Erreur lors de l\'insertion à la base de données.'} });
+            res.status(500).json({response:{data:"sqlError",dat:error,message: 'Registration Error.'} });
           }
         }  
     }catch (error) {

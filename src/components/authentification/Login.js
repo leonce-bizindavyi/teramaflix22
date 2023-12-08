@@ -9,6 +9,8 @@ import '@/styles/fonts.module.css'
 
 function Login() {
   const router = useRouter()
+  const [errpass, setErrpass] = useState("")
+  const [errmail, setErrmail] = useState("")
   const [loading, setLoading] = useState(false);
   const [showPassword,setShowPassword]=useState(false)
   const [logo1, setLogo1] = useState('/logo/TeramaFlixpic.png')
@@ -43,6 +45,8 @@ useEffect(() => {
     router.push('/changePassword')
   }
   const handleLogin = async (data) => {
+      setErrmail('')
+      setErrpass('')
       setLoading(true)
       const response = await fetch(`/api/login/${data.mail}/${data.password}`);
       if (response.ok) {
@@ -59,7 +63,9 @@ useEffect(() => {
        else {
         const data = await response.json();
         if(data.message==="Email invalide"){
+          setErrmail(data.message)
         }else{
+          setErrpass(data.message)
         }
         
         console.log(`Erreur : ${response.status}${response.statusText} `);
@@ -95,7 +101,9 @@ useEffect(() => {
                       <Field type="email" name="mail"  id="emailid" placeholder="Your email" 
                       className=" rounded-xl sm:h-20 lg:h-10 h-12  w-64 sm:w-[27rem] lg:w-64 p-3 text-md sm:text-xl lg:text-sm font-semibold text-slate-600 focus:outline-none"/>
                   </div>
+                  {errmail && <span className="text-red-600"> {errmail} </span>  }
                   <ErrorMessage name="mail" className='text-red-800 text-xs sm:text-xl  lg:text-xs' component="span"/>
+                  {errpass&&<span className="text-red-600"> {errpass} </span>  }
               </div>
              
               {/* <!--fin email-->
