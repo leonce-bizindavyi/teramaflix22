@@ -10,7 +10,6 @@ function Account() {
     const [nom,setNom]=useState('')
     const [mail,setMail]=useState('')
     const [password,setPassword]=useState('')
-    const [passwordHash,setPasswordHash] =  useState('')
     const [cpassword,setCpassword]=useState('')
     const [errors,setErrors] =  useState({})
     const  [statusPass,setStatusPass] = useState(false);
@@ -41,7 +40,7 @@ function Account() {
       if(Auth.session){
       const fetchUser = async () => {
         try {
-          if(Auth.session.ID!=" "){
+          if(Auth.session.User!=" "){
             handleUpdate();
           }
         } catch (error) {
@@ -52,7 +51,7 @@ function Account() {
     
       async function handleUpdate() {
         
-          const response = await fetch(`/api/update/${Auth.session.ID}`);
+          const response = await fetch(`/api/update/${Auth.session.User}`);
           if (response.ok) {
             const data = await response.json();
             if (data) {
@@ -92,45 +91,46 @@ function Account() {
         if(Object.keys(errors).length ===0){
           let pass = event.target.password.value
           const saltRounds = 10
-          bcrypt.hash(pass,saltRounds,(error,hash)=>{
+          bcrypt.hash(pass,saltRounds,async(error,hash)=>{
             if(error){
                 console.log("error")
             }
             else{
                setPasswordHash(hash)
+               try{
+                const response = await fetch('/api/updateUser',{
+                    method: 'PUT',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        id:Auth.session.ID,
+                        nom:event.target.nom.value,
+                        mail:event.target.mail.value,
+                        password:hash
+                    })
+                });
+                const data = await response.json()
+                if(response.ok){
+                  if (data.affectedRows > 0) {
+                    updated();
+                    setPassword('')
+                    setCpassword('')
+                  } else {
+                    console.error('update failed');
+                  }
+                }
+                else{
+                  console.log('Error updating user:', response.status, response.statusText);
+                }
+              }
+              catch(error){
+                console.error(error.message)
+              }    
             }
           })
         
-          try{
-            const response = await fetch('/api/updateUser',{
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    id:Auth.session.ID,
-                    nom:event.target.nom.value,
-                    mail:event.target.mail.value,
-                    password:passwordHash
-                })
-            });
-            const data = await response.json()
-            if(response.ok){
-              if (data.affectedRows > 0) {
-                updated();
-                setPassword('')
-                setCpassword('')
-              } else {
-                console.error('update failed');
-              }
-            }
-            else{
-              console.log('Error updating user:', response.status, response.statusText);
-            }
-          }
-          catch(error){
-            console.error(error.message)
-          }    
+        
         }
       }
         const isValidEmail = (email) => {

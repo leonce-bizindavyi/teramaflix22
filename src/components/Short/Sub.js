@@ -41,9 +41,9 @@ function Sub({user}) {
     <>
         {
             abonne ?
-            <span onClick={deleteSub} className="bg-[rgba(255,255,255,0.4)] hover:bg-blue-600 p-1 rounded-md cursor-pointer">Subscribed</span>
+            <span onClick={deleteSub} className="bg-[rgba(255,255,255,0.4)] hover:bg-blue-600 hover:text-white p-1 rounded-md cursor-pointer">Subscribed</span>
             :
-            <span onClick={addSub} className="bg-[rgba(255,255,255,0.4)] hover:bg-blue-600 p-1 rounded-md cursor-pointer">Subscribe</span>
+            <span onClick={addSub} className="bg-[rgba(255,255,255,0.4)] hover:bg-blue-600 hover:text-white p-1 rounded-md cursor-pointer">Subscribe</span>
         }
     </>
   )

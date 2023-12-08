@@ -142,7 +142,7 @@ function Navbar(props) {
   useEffect(() => {
     const available_notifications = async () => {
       try {
-        const response = await fetch(`/api/notifications/eachNotification`);
+        const response = await fetch(`/api/notifications/${auto.session.ID}`);
         if (response.ok) {
           const data = await response.json();
           setliste(data);
@@ -157,7 +157,7 @@ function Navbar(props) {
       available_notifications();
     }, 60000);
     return () => clearInterval(interval);
-  }, []);
+  }, [auto]);
 
   //useEffect pour cacher le box d'account en cliquant n'importe où dans le DOM
   useEffect(() => {
@@ -315,12 +315,18 @@ function Navbar(props) {
                       }
                     </div>
                     <div className="flex-col w-[11rem] sm:w-[14rem] max-h-[6.8rem] ">
-                      <p className="text-sm font-medium text-gray-900 line-clamp-3 p-1">
+                      {notification.typenotif == 'subscribe' &&
+                       (
+                        <p className="text-sm font-medium text-gray-900 line-clamp-3 p-1">
                         <span className='text-md font-bold mx-1'>{notification.Prenom} </span>
                         La musique sur la plateforme teramaflix est une étape importante,La musique sur la plateforme teramaflix est une étape importante,
                         La musique sur la plateforme teramaflix est une étape importante,La musique sur la plateforme teramaflix est une étape importante,
                         La musique sur la plateforme teramaflix est une étape importante.
                       </p>
+                       )
+                      
+                      }
+                      
                       <span className='text-xs p-1'>12 days ago</span>
                     </div>
                   </div>

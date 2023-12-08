@@ -1,12 +1,12 @@
 .container.new {
     display: grid;
     place-items: center;
-    scroll-snap-type: y mandatory;
+    /* scroll-snap-type: y mandatory; */
      
 } 
 .videocontainer {
-    overflow: scroll;
-    height: 550px;
+    overflow: auto;
+    height: 85vh;
     scroll-snap-type: y mandatory;
 }
 .videocontainer::-webkit-scrollbar{
