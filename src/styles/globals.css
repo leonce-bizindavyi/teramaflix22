@@ -1,8 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-*{
-            
+*{     
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -71,39 +70,7 @@ body {
     transform: translateY(-10px);
     transition: 0.2s all linear;
 }
-/* @media (min-width: 768px) {
-    .container {
-        margin-left: 100px;
-    }
-    
-    .aside {
-        width: 250px;
-        height: 100vh;
-        position: fixed;
-        left: 0%;
-    }
-    .aside.active {
-        left: 0%;
-    }
-} */
 
-/* @media (max-width: 768px) {
-    .container {
-        margin-left: 0px;
-    }
-    .aside {
-        top: 10px;
-        width: 250px;
-        height: 100vh;
-        position: fixed;
-    }
-    .aside.active {
-        top: 30px;
-        left: -25%;
-    }
-
-
-}  */
 
 @-webkit-keyframes placeHolderShimmer {
   0% {

@@ -4,7 +4,7 @@ position: relative;
 max-width: 1000px;
 display: flex;
 justify-content: center;
-
+max-height: 450px;
 /* margin-inline: auto;  */
 background-color: black;
 }

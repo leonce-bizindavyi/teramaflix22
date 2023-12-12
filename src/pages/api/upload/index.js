@@ -36,7 +36,7 @@ export default async function uploadHandler(req, res) {
           };
         }));
 
-        res.status(200).json({ success:true, message: 'Upload réussi !', videos: videoInfos });
+        res.status(200).json({ success: true, message: 'Upload réussi !', videos: videoInfos });
       });
     } catch (error) {
       console.error(error);
@@ -53,11 +53,12 @@ async function moveVideo(video, fields) {
   const extension = path.extname(video.originalFilename);
   const newFilename = uuidv4() + extension;
   const newPath = path.join(videosFolderPath, newFilename);
-
+  const parsedPath = path.parse(video.originalFilename);
+  const originalFilename = parsedPath.name;
   try {
     await fs.ensureDir(path.dirname(newPath));
     await fs.move(oldPath, newPath);
-    await insertVideo(video.originalFilename, newFilename, fields);
+    await insertVideo(originalFilename, newFilename, fields);
     return newPath;
   } catch (error) {
     console.error(error);
@@ -66,10 +67,10 @@ async function moveVideo(video, fields) {
 }
 
 async function insertVideo(title, video, fields) {
-  const { user,short } = fields;
+  const { user, short } = fields;
   try {
     // Exécutez la requête SQL pour insérer une vidéo dans la base de données
-    const rows = await executeQuery('INSERT INTO posts (uniid,Title,Video,User,Short) VALUES(?,?,?,?,?)', [uuidv4(), title, video, user,short]);
+    const rows = await executeQuery('INSERT INTO posts (uniid,Title,Video,User,Short) VALUES(?,?,?,?,?)', [uuidv4(), title, video, user, short]);
   } catch (error) {
     console.error(error);
     throw new Error('Une erreur s\'est produite lors de l\'insertion de la vidéo dans la base de données.');

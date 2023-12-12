@@ -221,11 +221,13 @@ const interval = setInterval(() => {
       //views and hours 
       if (auth.session && auth.session != "unlogged") {
         const handleAddHours = async () => {
+          setVideoBlobUrl('')
           const user = auth.session
           const time = count // Récupérer le temps écoulé réel de la vidéo
           const hours = time / 3600; // Conversion en heures
           const response = await fetch(`/api/reactions/addHours/${videoprops.ID}/${user.ID}/${hours.toFixed(4)}`);
           const data = await response.json();
+          updateTime()
           if (data) {
 
           }
@@ -260,7 +262,7 @@ const interval = setInterval(() => {
     const handleKeyPress = (event) => {
       const video = videoRef.current;
       if (video) {
-        if (document.activeElement.classList[0] !== "react-input-emoji--input") {
+        if (document.activeElement.classList[0] !== "react-input-emoji--input" && document.activeElement.classList[0] !== "searche-here") {
           switch (event.key) {
             case "ArrowRight":
               event.preventDefault()
@@ -508,7 +510,7 @@ const interval = setInterval(() => {
         </div>
         <video onClick={togglePlay} ref={videoRef} src={videoBlobUrl} onEnded={() => handleNext(videoprops.NextVideo)}
 
-          className='rounded h-[420px]' />
+          className='rounded' />
         <Menu id={MENU_ID}>
           {videoRef.current && (
             <>

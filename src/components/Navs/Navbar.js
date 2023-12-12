@@ -9,6 +9,7 @@ import SmDrop from './smDrop'
 import AcountPop from './AcountPop'
 import { useRef } from 'react';
 import LinearIndeterminate from '../Bar'
+import { formatDistanceToNow, parseISO } from 'date-fns';
 
 function Navbar(props) {
   const router = useRouter()
@@ -18,6 +19,7 @@ function Navbar(props) {
   const [searches, setSearches] = useState()
   const [sideAll, setSideAll] = useState('active')
   const [smSearch, setSmSearch] = useState(false)
+  const [notif_pop, setpop_notif] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [notifCounter, setNotifCounter] = useState(0);
   const [liste_notification, setliste] = useState([]);
@@ -53,7 +55,13 @@ function Navbar(props) {
 
   const fetchSearches = async (search) => {
     if (search !== '') {
-      const response = await fetch(`/api/results/${search}/0/10`)
+      const response = await fetch('/api/results/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ search: search, start:0, limit: 10 }),
+      });
       const data = await response.json()
       if (data[0]) {
         setSearches(data)
@@ -67,9 +75,7 @@ function Navbar(props) {
   }
 
   const handlegetSecrhed = () => {
-    if (searchd !== '') {
-      router.push(`/results?results=${searchd}`)
-    }
+    router.push(`/results?results=${searchd}`)
   }
 
   //evenement pour  cacher le box d'account en cliquant n'importe où dans le DOM
@@ -213,7 +219,6 @@ function Navbar(props) {
     }
   };
 
-
   return (
     <>
       <header className=" relative h-[60px] z-1" >
@@ -232,8 +237,10 @@ function Navbar(props) {
                 <Link href="/"> <Image width={80} height={80} src={logo1} className=" w-8 h-8 sm:w-[2.8rem] sm:h-[2.8rem] my-1" alt="logo" /></Link>
                 <Link href="/"> <Image width={90} height={90} src={logo2} alt="logo" className=" hidden sm:block w-[4rem] h-[1rem] sm:w-[8rem] sm:h-[1rem] " /></Link>
               </div>
+
+
             </div>
-            <div className="searchDiv sm:flex flex-1  sm:justify-center sm:items-center lg:w-64 lg:h-full max-w-max items-center justify-center mr-6 p-0">
+            <div className="searche-here searchDiv sm:flex flex-1  sm:justify-center sm:items-center lg:w-64 lg:h-full max-w-max items-center justify-center mr-6 p-0">
               <input id="search" type="search"
                 className=" min-w-min h-9 border-none ring-2 ring-blue-500  rounded-l-full pl-3 pr-5 hidden md:block focus:outline-none "
                 placeholder="Search here..."
@@ -246,16 +253,18 @@ function Navbar(props) {
                 </svg>
               </button>
             </div>
+            {!auto.session || auto.session === "unlogged" ?
+
+              <div className="buttons  flex flex-initial sm:flex sm:items-center sm:justify-end items-center justify-end mr-4 w-full sm:w-64 h-full   ">
+                <Link href='/login' className="bg-blue-500 text-white text-sm md: font-medium rounded-md  md:px-3 px-2 md:py-2 py-1 flex items-center justify-center hover:bg-blue-600">Login</Link>
+              </div>
+              :
               <div className="buttons  flex flex-initial sm:flex space-x-3 sm:items-center sm:justify-center items-center justify-center w-full sm:w-64 h-full   ">
                 <button ref={SearchInput2Ref} onClick={handleSmsearch} id="searchBtn" className=" hover:bg-gray-200 hover:rounded-full w-10 h-10 md:hidden block">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                   </svg>
                 </button>
-                {!auto.session || auto.session === "unlogged" ?
-                <Link href='/login' className="bg-blue-500 text-white text-sm md: font-medium rounded-md  md:px-3 px-2 md:py-2 py-1 flex items-center justify-center hover:bg-blue-600">Login</Link>
-                :
-                <>
                 <Link href='/upload'>
                   <button id="image" className="hover:bg-gray-200 flex rounded-full items-center p-1 lg:w-10 lg:h-10 md:w-8 md:h-6 w-8 h-8">
                     <Image width={80} height={80} className="lg:w-full lg:h-full w-full  h-full   my-1 ml-15 "
@@ -275,17 +284,19 @@ function Navbar(props) {
                     )}
                   </div>
                 </button>
+
                 <button ref={compoRef} id="image" className="p-0">
                   <Image width={80} height={80} className="w-8 h-8 rounded-full" title={`${auto.session.PageName}`}
                     src={profBlobUrl} alt='profile' onClick={() => handleAcPop()} />
                 </button>
-                </>
-                }
               </div>
-           
+            }
+
           </nav>
         </div>
       </header>
+
+
       {isNotificationOpen && (
         <div
           id="setNotification"
@@ -299,7 +310,7 @@ function Navbar(props) {
             {liste_notification.map((notification) => (
               <div key={notification.id} className=''>
                 <Link href="" >
-                  <div className="flex justify-center space-x-1 mt-1  hover:bg-gray-300 mx-1 mt-4 rounded-sm">
+                  <div className="flex justify-center space-x-1  hover:bg-gray-300 mx-1 mt-4 rounded-sm">
                     <div className="w-[2.5rem] h-[2.5] sm:w-[3.5rem] sm:h-[3.5rem] mt-2 rounded-full">
                       {
                         notification.photo ?
@@ -315,21 +326,76 @@ function Navbar(props) {
                       }
                     </div>
                     <div className="flex-col w-[11rem] sm:w-[14rem] max-h-[6.8rem] ">
+                      {
+                        notification.typenotif === "subscribe" &&
                         <p className="text-sm font-medium text-gray-900 line-clamp-3 p-1">
-                        <span className='text-md font-bold mx-1'>{notification.Prenom} </span>
-                        subscribed to your Terama channel, 12 days ago
-                      </p>
-                      <span className='text-xs p-1'>12 days ago</span>
+                          <span className='text-md font-bold mx-1'>{notification.Prenom} </span>
+                          subscribed to your channel
+                        </p>
+                      }
+                      {
+                        notification.typenotif === "like" &&
+                        <Link href={`/Watch?v=${notification.uniid}`}>
+                          <p className="text-sm font-medium text-gray-900 line-clamp-3 p-1">
+                            <span className='text-md font-bold mx-1'>{notification.Prenom} </span>
+                            liked  your video {notification.title}
+                          </p>
+                        </Link>
+                      }
+                      {
+                        notification.typenotif === "comment" &&
+                        <Link href={`/Watch?v=${notification.uniid}`}>
+                          <p className="text-sm font-medium text-gray-900 line-clamp-3 p-1">
+                            <span className='text-md font-bold mx-1'>{notification.Prenom} </span>
+                            commented  your video <span className='text-xs p-1 font-bold'>{notification.title}</span>
+                          </p>
+                        </Link>
+                      }
+                      <span className='text-md p-1 font-bold'>{formatDistanceToNow(parseISO(notification.delay))} ago</span>
                     </div>
                   </div>
                 </Link>
               </div>
             ))}
+
+
+
+            {/* {liste_notification.map((notification) => (
+                  <li key={notification.id} className="pt-3 pb-0 sm:pt-4">
+                    <div className="flex items-center space-x-4">
+                      <div className="flex-shrink-0">
+                        <Image width={80} height={80} 
+                          className="w-10 h-10 rounded-full" 
+                          src={notification.photo ? `/Thumbnails/${notification.photo}` : `/img/notify.png`}
+                          alt='notice'/>
+                        
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                           {notification.Prenom}
+                        </p>
+                        <p className="text-sm text-gray-500 truncate dark:text-gray-400">
+                          {notification.typenotif !== "subscribe" &&
+                            notification.postid && (
+                              <>
+                                Reacted to your <Link href={"/"}> post </Link>
+                              </>
+                            )}
+                          {notification.typenotif == "subscribe" &&
+                            "Subscribed to your channel"}
+                        </p>
+                      </div>
+                    </div>
+                  </li>
+                ))} */}
           </div>
+
+
         </div>
       )}
+
       {smSearch ?
-        <div className="Searchinput2 transition-all bg-blue-500 px-2 top-14 left-9  sm:top-16 sm:left-[4.5rem]  md:top-14 md:hidden  z-50 fixed w-[80%] rounded-md h-12 flex flex-row space-x-2 items-center  overflow-hidden">
+        <div className="searche-here Searchinput2 transition-all bg-blue-500 px-2 top-14 left-9  sm:top-16 sm:left-[4.5rem]  md:top-14 md:hidden  z-50 fixed w-[80%] rounded-md h-12 flex flex-row space-x-2 items-center  overflow-hidden">
           <input type="search"
             className=" w-full h-full border-none ring-2 focus:outline-none ring-blue-500  pl-3 pr-5"
             placeholder="search here ..."
