@@ -1,11 +1,11 @@
 import React from 'react'
 import SwipperSlide from './SwipperSlide'
 import Videos from './Videos'
-function Home() {
+function Home({videos}) {
   return (
     <>
         <div className="w-full flex flex-col"> 
-          <SwipperSlide />
+          <SwipperSlide videos={videos} />
           <Videos />
         </div>
     </>

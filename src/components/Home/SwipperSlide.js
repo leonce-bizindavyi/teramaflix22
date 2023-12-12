@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import 'swiper/css';
@@ -9,26 +9,15 @@ import 'swiper/css/navigation';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import Slide from './Slide';
 
-export default function SwipperSlide() {
-  const [videos, setVideos] = useState([])
-
-  const fetchVideos = async () =>{
-      const response = await fetch(`/api/posts/slides/0/20`)
-      const data = await response.json()
-      if(data[0]) setVideos(data)
-  }
-  useEffect(() => {
-    fetchVideos()
-  }, [])
-  
+export default function SwipperSlide({videos}) {
   return (
     <>
       <Swiper
         autoplay={{
-            delay: 3500,
-            disableOnInteraction: false,
+          delay: 3500,
+          disableOnInteraction: false,
         }}
-        navigation={true} 
+        navigation={true}
         pagination={{
           clickable: true,
         }}
@@ -49,15 +38,15 @@ export default function SwipperSlide() {
         modules={[Autoplay, Pagination, Navigation]}
         className="mySwiper"
       >
-        
+
         {
-            videos.map(video=>{
-              if(video.Short === 0 && video.Visible === 1){
-                return (
-                    <SwiperSlide  key={video.ID}><Slide video={video} /></SwiperSlide>
-                )
-              }
-            })
+          videos.map(video => {
+            if (video.Short === 0 && video.Visible === 1) {
+              return (
+                <SwiperSlide key={video.ID}><Slide video={video} /></SwiperSlide>
+              )
+            }
+          })
         }
       </Swiper>
     </>

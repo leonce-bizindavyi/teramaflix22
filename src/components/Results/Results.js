@@ -21,7 +21,9 @@ function Results() {
       setVideos(videos=>[...videos, ...newVideos])
   }
   useEffect(() => {
-    fetchResults(search)
+    if(search){
+      fetchResults(search)
+    }
   }, [search])
   
   return (
