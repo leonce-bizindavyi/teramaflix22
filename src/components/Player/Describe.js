@@ -5,6 +5,7 @@ import { usePeriod } from '../Hooks/usePeriod'
 import { SessionContext } from '../context/Auth'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
+import CommentBloc from './CommentBloc'
 
 function Describe({video}) {
   const router = useRouter()
@@ -13,8 +14,8 @@ function Describe({video}) {
   const [liked, setLiked] = useState(2)
   const [likes, setLikes] = useState()
   const [abonne, setAbonne] = useState(true)
-  const [yesColor, setYesColor] = useState('text-slate-500')
-  const [noColor, setNoColor] = useState('text-slate-500')
+  const [yesColor, setYesColor] = useState('text-slate-800')
+  const [noColor, setNoColor] = useState('text-slate-800')
   const [isCopied, setCopied] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const urlRef = React.useRef(null);
@@ -25,27 +26,27 @@ function Describe({video}) {
     const user = auto.session
     if(like !== 2){
       if(like === stats){
-          setYesColor('text-slate-500');
-          setNoColor('text-slate-500');
+          setYesColor('text-slate-800');
+          setNoColor('text-slate-800');
           deleteLike(vidid,likes.ID)
       }else{
         if(stats === 0){
-          setYesColor('text-slate-500');
+          setYesColor('text-slate-800');
           setNoColor('text-blue-500');
         }else{
           setYesColor('text-blue-500');
-          setNoColor('text-slate-500');
+          setNoColor('text-slate-800');
         } 
           deleteLike(vidid,likes.ID)
           addLike(vidid,user.ID,stats)
       }
     }else{
       if(stats === 0){
-        setYesColor('text-slate-500');
+        setYesColor('text-slate-800');
         setNoColor('text-blue-500');
       }else{
         setYesColor('text-blue-500');
-        setNoColor('text-slate-500');
+        setNoColor('text-slate-800');
       }  
         addLike(vidid,user.ID,stats)
     } 
@@ -71,17 +72,17 @@ const fetchLikesReactions = useCallback(async (id) => {
   const response = await fetch(`/api/reactions/likes/${id}/${user.ID}`);
   const data = await response.json();
   if (data[0] == undefined) {
-    setYesColor('text-slate-500');
-    setNoColor('text-slate-500');
+    setYesColor('text-slate-800');
+    setNoColor('text-slate-800');
     setLiked(2);
   } else {
     if (data[0].Etat == 0) {
       setNoColor('text-blue-500');
-      setYesColor('text-slate-500');
+      setYesColor('text-slate-800');
       setLiked(0);
       setLikes(data[0]);
     } else {
-      setNoColor('text-slate-500');
+      setNoColor('text-slate-800');
       setYesColor('text-blue-500');
       setLiked(1);
       setLikes(data[0]);
@@ -248,6 +249,11 @@ const handleCopyClick = () => {
                             </div>
                        </div>
                          
+                    </div>
+                    <div className='relative min-h-full py-2  lg:hidden'>
+                          
+                          <CommentBloc video={video} />
+                          <div className='h-14'></div>
                     </div>
                 </div>
                 <div className="profil  flex flex-row justify-between lg:px-0 px-[3%] items-center ">

@@ -43,19 +43,29 @@ function CommentBloc({ video }) {
     <div className="">
       {block ? (
         <>
-          <div className="commentBox relative lg:flex flex-col justify-end space-y-4 overflow-auto px-3 pt-4 bg-gray-50 lg:rounded-md shadow-[inset_0px_2px_20px_8px_rgb(0,0,0,0.2)]">
+          <div className="commentBox  lg:flex flex-col justify-end space-y-4 overflow-auto px-3 pt-4 bg-gray-50 lg:rounded-md shadow-[inset_0px_2px_20px_8px_rgb(0,0,0,0.2)]">
             <div className="min-h-[50px] max-h-[450px] overflow-auto">
               <Comments video={video} />
             </div>
             <div className="inputBox  flex justify-center">
-              <div className="inputComment flex flex-row w-[80%]  h-10 border mb-3 rounded-full bg-gray-300">
-              <InputEmoji onEnter={handleSubmit}
-              cleanOnEnter 
-              placeholder='Enter Your comment'
-              onChange={handleInputChange}
-              value={body}
-              />
+              <div className="inputComment absolute flex flex-row w-[85%] z-20  h-12  mt-3 rounded-full bg-gray-300 justify-center items-center">
                 
+                  <div  className="Commentinput w-[90%]    flex flex-row  ">
+                    
+                        <InputEmoji onEnter={handleSubmit}
+                        cleanOnEnter 
+                        placeholder='Enter Your comment'
+                        onChange={handleInputChange}
+                        value={body}
+                        height={0}
+                        /> 
+                        
+                  </div>
+
+                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" onClick={handleSubmit} className=" sendButton w-6 h-6 m-[1%] text-slate-800 cursor-pointer">
+                      <path strokeLineCap="round" strokeLineJoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                  </svg>
+                          
               </div>
             </div>
           </div>

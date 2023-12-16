@@ -65,10 +65,9 @@ function ChangePass() {
       <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
         <div className="relative py-3 sm:max-w-xl sm:mx-auto">
           <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
-
             <div className="max-w-md mx-auto">
-              <div>
-                <Image src={logo} width={280} height={280} alt="logo" className="h-7 sm:h-8" />
+              <div className='w-[7rem] h-[7rem] md:w-[9rem] md:h-[9rem] lg:w-[10rem] lg:h-[10rem] mx-auto rounded-full'>
+               <Image src={logo} width={280} height={280} alt="logo" className="w-[7rem] h-[7rem] md:w-[9rem] md:h-[9rem] lg:w-[10rem] lg:h-[10rem]" />
               </div>
               <div className="divide-y divide-gray-200">
                 <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">

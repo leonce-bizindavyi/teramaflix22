@@ -19,30 +19,23 @@ function Waitingchang () {
   }, [])
   return (
     <>
-    <div  className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
-     <div  className="relative py-3 sm:max-w-xl sm:mx-auto">
-       <div  className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
-          <div  className="max-w-md mx-auto">
-                <div>
-                <Image src={logo} width={280} height={280} alt="logo"  className="h-7 sm:h-8"/>
-                </div>
-                <div  className="divide-y divide-gray-200">
-                  <div  className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-                    <div  className="bg-white  rounded px-8 pt-6 pb-8 mb-4">
-                        <h2  className="text-2xl text-center font-bold mb-6">
-                          The password change has been activated.
-                          See the message we sent you to change it in your e-mail box,
-                          but it may take some time.</h2>               
-                      <div  className="pt-6 text-base leading-6 font-bold sm:text-lg sm:leading-7">
-                          <p>Return to Login  <Link href="/login"  className="text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline transition ease-in-out duration-150">Log in </Link></p>
-                        </div>
-                    </div>
-                  </div>
-                </div>
-         </div>
-      </div>
-     </div>
-    </div>
+     <div className='flex justify-center mt-[4rem]'>
+            <div className='flex flex-col space-y-5 justify-center h-auto w-[22rem] md:w-[24rem] lg:w-[24rem] shadow-md shadow-indigo-400 bg-blue-600 rounded-tl-3xl rounded-br-3xl rounded-tr-xl'>
+                 <div className='grid grid-cols-1 mx-2 mt-[1rem]'>
+                      <h1 className='flex justify-center text-md lg:text-lg text-white font-semibold'> The password change has been activated. </h1>
+                      <h1 className='flex justify-center text-md lg:text-lg text-white font-semibold'> see the message sent on your e-mail box,</h1>
+                      <h1 className='flex justify-center text-md lg:text-lg text-white font-semibold'> but it may take some time. </h1>
+                 </div>
+                 <div  className="flex justify-center space-x-6">
+                    <h1 className='text-md text-white'>return to Login</h1>  
+                    <Link href="/login">
+                      <div className='shadow-[0_0_12px_gray] hover:bg-gray-700 bg-gray-600 mb-6 rounded-md h-[1.5rem] w-[3.5rem]'>
+                         <h1 className='text-white text-md font-semibold flex justify-center '>Log in</h1>
+                      </div> 
+                    </Link>
+                 </div>
+            </div>
+       </div>
     </>
   )
 }
