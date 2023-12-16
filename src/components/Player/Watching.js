@@ -31,7 +31,7 @@ function Watching({ videoprops }) {
   //handle play or pause video
   const togglePlay = () => {
     if (videoRef.current) {
-      if (videoRef.current.paused) {
+      if (videoRef.current.paused && isReady) {
         videoRef.current.play();
         setPaused('');
       } else {
@@ -131,6 +131,9 @@ function Watching({ videoprops }) {
   };
 
   const handleNext = (next) => {
+    if(videoRef.current){
+      videoRef.current.currentTime=0
+    }
     router.push(`/Watch?v=${next}`)
   }
 
@@ -374,7 +377,9 @@ const interval = setInterval(() => {
         const response = await fetch(`/Videos/${video}`);
         const blob = await response.blob();
         const blobUrl = URL.createObjectURL(blob);
-        setVideoBlobUrl(blobUrl);
+        if(videoprops.uniid === router.query.v){
+          setVideoBlobUrl(blobUrl);
+        }
       } catch (error) {
         console.error('Error fetching video:', error);
       }
