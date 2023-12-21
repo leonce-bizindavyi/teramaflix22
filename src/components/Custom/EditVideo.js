@@ -189,7 +189,7 @@ function EditVideo({ uuid }) {
         <div className="detail md:w-[50%] flex flex-col space-y-6 items-center">
           <div className="  h-[170px]">
             <div className="imag w-[100%] h-[170px] rounded  overflow-hidden">
-              <video ref={videoRef} src={videoBlobUrl} className="w-[100%]  h-[100%] object-cover" alt="" />
+              <video ref={videoRef} src={videoBlobUrl} className="w-[100%]  h-[100%] object-cover" alt="" controls />
             </div>
           </div>
           <div className="detail-details flex flex-col  space-y-2 ">

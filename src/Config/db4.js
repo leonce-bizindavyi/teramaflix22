@@ -10,6 +10,8 @@ const pool = createPool({
   connectionLimit: 50, // Nombre maximal de connexions
 });
 
+
+
 // Vérifiez si la connexion est ouverte avant d'exécuter une requête
 const executeQuery = async (query, params) => {
   let connection;

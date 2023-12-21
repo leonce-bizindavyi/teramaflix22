@@ -1,7 +1,5 @@
 import bcrypt from 'bcryptjs/dist/bcrypt';
 import { sign } from 'jsonwebtoken';
-import { serialize } from 'cookie';
-import * as z from 'zod';
 import executeQuery from "@/Config/db4";
 
 

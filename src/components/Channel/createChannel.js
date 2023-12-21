@@ -55,7 +55,7 @@ function CreateChannel({role}) {
             {
                localStorage.setItem('token',response.token)
                setSuccess('Success')
-               router.push(`/profile?c=${response.uniid}`)
+               router.reload()
             }
             else{
                setError(response.message)
