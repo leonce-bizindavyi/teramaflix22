@@ -58,7 +58,7 @@ const [imageBlobUrl, setImageBlobUrl] = useState('/img/thumb.jpg');
             <Link href={`/profile?c=${video.uniid}`}>
                 <div className="videoName font-semibold lg:text-[18px] text-[18px]">{video.Title}</div>
                 <div className="profilChannel  flex justify-start items-center space-x-2  cursor-pointer ">
-                    <Image width={80} height={80} src={profBlobUrl} className="lg:w-6 w-8 lg:h-6 h-8 my-1 rounded-full " alt="logo"/>
+                    <Image width={80} height={80} src={`/Thumbnails/${video.Image}`} className="lg:w-6 w-8 lg:h-6 h-8 my-1 rounded-full " alt="logo"/>
                     <div className="flex flex-col  space-y-2">
                             <div className="right-5">
                                 <div className="text-md text-slate-900 opacity-90  font-bold">{video.PageName}</div>
