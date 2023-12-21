@@ -513,7 +513,7 @@ const interval = setInterval(() => {
             </button>
           </div>
         </div>
-        <video onClick={togglePlay} ref={videoRef} src={`/Videos/${videoprops.Video}`} onEnded={() => handleNext(videoprops.NextVideo)}
+        <video onClick={togglePlay} ref={videoRef} src={videoBlobUrl} onEnded={() => handleNext(videoprops.NextVideo)}
 
           className='rounded' />
         <Menu id={MENU_ID}>

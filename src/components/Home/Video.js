@@ -57,7 +57,7 @@ function Video({video}) {
           <h1 className="font-bold text-slate-900 text-lg ml-2 mb-2 sm:ml-0">{video.Title} </h1>
             <Link href={`/profile?c=${video.Uuid}`}>
             <div className="flex gap-2 justify-start mb-4 ml-2 sm:ml-0">
-              <Image width={80} height={80} className=" w-10  h-10 my-1 ml-15 rounded-full " src={`/Thumbnails/${video.Image}`} alt='profile'/>
+              <Image width={80} height={80} className=" w-10  h-10 my-1 ml-15 rounded-full " src={profBlobUrl} alt='profile'/>
             <div className="flex flex-col  space-y-2">
                 <div className="right-5">
                     <div className="text-md text-slate-900 opacity-90  font-bold">{video.PageName}</div>
