@@ -8,10 +8,8 @@ import { useRouter } from 'next/router';
 function EditVideo({ uuid }) {
   const router = useRouter()
   const videoRef = useRef(null);
-  const [videoBlobUrl, setVideoBlobUrl] = useState('');
   const auth = useContext(SessionContext)
   const [videos, setVideos] = useState(null)
-  const [imageBlobUrl, setImageBlobUrl] = useState('/img/logo.png');
   const [erroImage, seterroImage] = useState('')
   const [formData, setFormData] = useState({
     title: "",
@@ -39,17 +37,6 @@ function EditVideo({ uuid }) {
             oldimage: data.Image,
             video: data.Video,
           }));
-          fetchImage(data.Image)
-          fetchVideo(data.Video)
-        }
-      };
-      const fetchImage = async (image) => {
-        try {
-          const response = await fetch(`/Thumbnails/${image}`);
-          const blob = await response.blob();
-          const blobUrl = URL.createObjectURL(blob);
-          setImageBlobUrl(blobUrl);
-        } catch (error) {
         }
       };
       const fetchUploads = async () => {
@@ -63,16 +50,6 @@ function EditVideo({ uuid }) {
         }
       };
 
-      const fetchVideo = async (video) => {
-        try {
-          const response = await fetch(`/Videos/${video}`);
-          const blob = await response.blob();
-          const blobUrl = URL.createObjectURL(blob);
-          setVideoBlobUrl(blobUrl);
-        } catch (error) {
-          console.error('Error fetching video:', error);
-        }
-      };
       fetchVideos();
       fetchUploads();
     }
@@ -119,7 +96,7 @@ function EditVideo({ uuid }) {
             console.error(`Failed to create user: ${response.status} ${response.statusText}`);
           }
         }
-      }else{
+      } else {
         seterroImage('Image Is required')
       }
     }
@@ -159,16 +136,16 @@ function EditVideo({ uuid }) {
                 <span className="bg-blue-500 p-2 text-white rounded text-base ">upload</span>
               </label>
             </div>
-            
+
             <input className='hidden'
               onChange={(e) => setFormData({ ...formData, image: e.target.files[0] })} type="file" id="thumnail" />
             {formData.oldimage && (
               <div className="imag w-[100%] h-[170px] rounded overflow-hidden">
-                <Image width={80} height={80}
-                  src={imageBlobUrl}
-                  className="w-[100%] h-[100%] object-cover"
-                  alt="thumb"
-                />
+                <Image src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${formData.oldimage}`}
+                  width={800} height={800} alt='video'
+                  className="video w-[100%]  h-[100%] object-fit"
+                  priority={true} placeholder='blur'
+                  blurDataURL="data:image/png;base64,...(base64-encoded image data)" />
               </div>
             )}
             {formData.image && (
@@ -189,7 +166,7 @@ function EditVideo({ uuid }) {
         <div className="detail md:w-[50%] flex flex-col space-y-6 items-center">
           <div className="  h-[170px]">
             <div className="imag w-[100%] h-[170px] rounded  overflow-hidden">
-              <video ref={videoRef} src={videoBlobUrl} className="w-[100%]  h-[100%] object-cover" alt="" controls />
+              <video ref={videoRef} src={`/Videos/${formData.video}`} className="w-[100%]  h-[100%] object-cover" alt="" controls />
             </div>
           </div>
           <div className="detail-details flex flex-col  space-y-2 ">

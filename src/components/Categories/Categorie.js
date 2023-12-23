@@ -37,9 +37,12 @@ function Categorie({ cat }) {
           }
         </div>
         <div className="filmcontainerCat mt-3 gap-[1rem]">
-          {videos.map((video) => (
-            <Video key={video} video={video} />
-          ))}
+          {videos.map(video => {
+            if(video.Image){
+              return <Video key={video} video={video} />
+            }
+          }
+          )}
         </div>
       </div>
     </>
