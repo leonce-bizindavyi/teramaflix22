@@ -8,13 +8,13 @@ function LoadData() {
       <div className={`w-[100%]`}>
         <Data />
       </div>
-      <div className={`hidden lg:block w-[100%]`}>
+      <div className={`w-[100%]`}>
         <Data />
       </div>
-      <div className={`hidden lg:block w-[100%]`}>
+      <div className={`w-[100%]`}>
         <Data />
       </div>
-      <div className={`hidden lg:block w-[100%]`}>
+      <div className={`w-[100%]`}>
         <Data />
       </div>
     </div>

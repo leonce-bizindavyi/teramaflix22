@@ -74,7 +74,6 @@ async function moveVideo(image, fields) {
 
 async function insertVideo(image, fields) {
   const { title, desc, cat, id,short } = fields;
-  console.log(fields)
   try {
     // Exécutez la requête SQL pour insérer une vidéo dans la base de données
     const rows = await executeQuery('CALL editPost(?,?,?,?,?,?)', [title, image, desc, cat, short ,id]);
