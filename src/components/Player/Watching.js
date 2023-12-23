@@ -16,7 +16,7 @@ function Watching({ videoprops }) {
   const [hideCntrl, setHideCntrl] = useState('hidden')
   const [hideBtn, setHideBtn] = useState('')
   const [videoBlobUrl, setVideoBlobUrl] = useState('');
-  const [paused, setPaused] = useState("paused")
+  const [paused, setPaused] = useState("")
   const [volumeLevel, setVolumeLevel] = useState("high")
   const [volume, setVolume] = useState(1);
   const [currentTime, setCurrentTime] = useState(0);
