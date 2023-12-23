@@ -1,38 +1,25 @@
 import Image from 'next/image'
-import React,{useState,useEffect} from 'react'
+import React from 'react'
 
 function Comment({comment}) {
-  const [profBlobUrl, setProfBlobUrl] = useState('/img/logo.png');
-  useEffect(() => {
-    const fetchProfile = async (photo) => {
-      try {
-        if(photo){
-          const response = await fetch(`/Thumbnails/${photo}`);
-          const blob = await response.blob();
-          const blobUrl = URL.createObjectURL(blob);
-          setProfBlobUrl(blobUrl);
-        }else{
-          const response = await fetch(`/img/logo.png`);
-          const blob = await response.blob();
-          const blobUrl = URL.createObjectURL(blob);
-          setProfBlobUrl(blobUrl);
-        }
-      } catch (error) {
-        console.error('Error fetching video:', error);
-      }
-    };
-    fetchProfile(comment.Photo)
-  }, [comment])
   return (
     <>
        <div className="userComment flex flex-row space-x-1  mb-5">
             <div className="userProfil  cursor-pointer w-[10%] ">
-                {
-                  comment.Photo ?
-                  <Image width={80} height={80} src={profBlobUrl} className="w-10 h-9  rounded-full " alt="logo"/>
-                  :
-                  <Image width={80} height={80} src={profBlobUrl} className="w-10 h-9  rounded-full " alt="logo"/>
-                }
+            {
+              comment.Photo ?
+                <Image width={500} height={500} alt='profile'
+                  className=" w-10  h-10 my-1 ml-15 rounded-full "
+                  src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${comment.Photo}`}
+                  priority={true} placeholder='blur'
+                  blurDataURL="data:image/png;base64,...(base64-encoded image data)" />
+                :
+                <Image width={500} height={500} alt='profile'
+                  className=" w-10  h-10 my-1 ml-15 rounded-full "
+                  src={`/img/logo.png`}
+                  priority={true} placeholder='blur'
+                  blurDataURL="data:image/png;base64,...(base64-encoded image data)" />
+            }
             </div>
             <div className="userTextComment bg-blue-500 max-w-[90%] rounded-lg px-[20px] py-[6px]">
                 <h5 className="userName font-semibold">{comment.PageName}</h5>

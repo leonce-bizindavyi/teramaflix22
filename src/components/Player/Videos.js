@@ -56,7 +56,7 @@ function Videos() {
       <div className="moreVideo flex flex-col space-y-2 rounded pt-16 lg:pt-12  overflow-y-hidden  ">
         {
           videos?.map(video=>{
-            if(video.Short === 0 && video.Visible === 1){
+            if(video.Short === 0 && video.Visible === 1 && video.Image){
               return <Video key={video.ID} video={video} />
             }
           })
