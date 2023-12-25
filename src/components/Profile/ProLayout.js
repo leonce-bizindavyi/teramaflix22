@@ -12,7 +12,7 @@ function ProLayout() {
         {/* <div className="container max-w-full mt-[1rem] min-h-screen  bg-white   ease-in-out  "> */}
             <div className="scrollbar  lg:max-w-[100%] max-w-[100%] lg:ml-[2rem]"> 
                 <div id="channel">
-                    <ProfileHeader handleSetPage={handleSetPage} />
+                    <ProfileHeader handleSetPage={handleSetPage} page={page} />
                     <Layout page={page}/>
                 </div>
             </div>

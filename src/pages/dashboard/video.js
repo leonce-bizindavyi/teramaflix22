@@ -69,7 +69,7 @@ function DashboardLayout({ page }) {
             </div>
             <div className="profil w-9 h-9 md:w-12 md:h-12 rounded-full overflow-hidden">
               {auto.Photo ?
-                <Image title={auto.pageName} src={`/Thumbnails/${auto.Photo} `} width={100} height={100} className="" alt="profil" />
+                <Image title={auto.pageName} src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${auto.Photo} `} width={100} height={100} className="" alt="profil" />
                 :
                 <Image title={auto.PageName} src="/img/logo.png" width={100} height={100} className="" alt="profil" />
               }

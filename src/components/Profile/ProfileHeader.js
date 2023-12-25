@@ -5,7 +5,7 @@ import Title from '../Title'
 import { SessionContext } from '../context/Auth'
 import Image from 'next/image'
 
-function ProfileHeader({ handleSetPage }) {
+function ProfileHeader({ handleSetPage,page }) {
   const auth = useContext(SessionContext)
   const [abonne, setAbonne] = useState(false)
   const [cover, setCover] = useState(null)
@@ -119,10 +119,10 @@ function ProfileHeader({ handleSetPage }) {
       <div className=" px-12 py-1 z-0">
         <div className="relative md:h-40 h-30 w-full rounded-md overflow-hidden ">
           {cover ?
-            <Image width={80} height={80} src={URL.createObjectURL(cover)} alt="cover" className=" w-full  rounded-md" />
+            <Image width={500} height={500} src={URL.createObjectURL(cover)} alt="cover" className=" w-full  rounded-md" />
             :
             <>
-              <Image width={80} height={80} src={coverBlobUrl} alt="cover" className="  w-full  rounded-md" />
+              <Image width={800} height={800} src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${user.Cover}`} alt="cover" className="  w-full  rounded-md" />
 
             </>
           }
@@ -141,7 +141,21 @@ function ProfileHeader({ handleSetPage }) {
       <div className=" relative bottom-9 flex md:flex-row flex-col items-center justify-center  z-0  space-x-12 ">
         <div className="  relative flex justify-center items-center w-[4rem] h-[4rem] sm:h-[6.5rem] sm:w-[6.5rem] md:w-[6rem] md:h-[6rem]  lg:h-36 lg:w-36 rounded-full border border-gray-100 bg-white ">
           <div className='w-[90%] h-[90%]  rounded-full overflow-hidden'>
-            <Image width={80} height={80} src={profBlobUrl} alt="profile" className="w-full h-full" />
+          {
+                  user.Photo ? 
+                  <Image width={500} height={500} alt='profile' 
+                  className="w-full h-full"
+                  src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${user.Photo}`}
+                  priority={true} placeholder='blur' 
+                  blurDataURL="data:image/png;base64,...(base64-encoded image data)"/>
+                  :
+                  <Image width={500} height={500} alt='profile' 
+                  className="w-full h-full"
+                  src={`/img/logo.png`} 
+                  priority={true} placeholder='blur'
+                  blurDataURL="data:image/png;base64,...(base64-encoded image data)"/>
+                }
+                <Image width={80} height={80} src={profBlobUrl} alt="profile"  />
           </div>
 
         </div>
@@ -175,10 +189,23 @@ function ProfileHeader({ handleSetPage }) {
       </div>
       <div className="flex items-center  justify-center mt-[2.5rem] sm:mt-[3.5rem] md:mt-[2rem] lg:mt-[2rem]">
         <div className="flex flex-row  xl:space-x-[6rem]  break:space-x-4 space-x-[2rem] sm:space-x-[4rem] justify-center    text-xs">
+          {page ===1 ?
+          <span className="flex justify-self-center  text-white font-semibold p-2  rounded-lg transform ease-in-out bg-blue-600 hover:rounded-lg  cursor-default lg:w-20 justify-center" > HOME </span>
+          :
           <span onClick={() => handleSetPage(1)} className="flex justify-self-center  bg-gray-500  text-white   font-semibold p-2  rounded-lg transform translate-y-1 hover:translate-y-0 duration-500 ease-in-out hover:bg-blue-600 hover:rounded-lg hover:text-white cursor-pointer lg:w-20 justify-center" > HOME </span>
+          }
+          {page ===2 ?
+          <span  className="flex justify-self-center  text-white font-semibold p-2  rounded-lg transform ease-in-out bg-blue-600 hover:rounded-lg  cursor-default lg:w-20 justify-center"  >  VIDEOS</span>
+          :
           <span onClick={() => handleSetPage(2)} className="flex justify-self-center  bg-gray-500  text-white   font-semibold p-2  rounded-lg transform translate-y-1 hover:translate-y-0 duration-500 ease-in-out hover:bg-blue-600 hover:rounded-lg hover:text-white cursor-pointer lg:w-20 justify-center "  >  VIDEOS</span>
-          {/* <span className="flex justify-self-center  text-white cursor-progress  font-semibold p-2  rounded-lg transform ease-in-out bg-blue-600 hover:rounded-lg  cursor-default lg:w-20 justify-center" >  VIDEOS </span> */}
+          }
+          {page ===3 ?
+          <span className="flex justify-self-center  text-white font-semibold p-2  rounded-lg transform ease-in-out bg-blue-600 hover:rounded-lg  cursor-default lg:w-20 justify-center"  >  ABOUT</span>
+          :
           <span onClick={() => handleSetPage(3)} className="flex justify-self-center  bg-gray-500  text-white   font-semibold p-2  rounded-lg transform translate-y-1 hover:translate-y-0 duration-500 ease-in-out hover:bg-blue-600 hover:rounded-lg hover:text-white cursor-pointer lg:w-20 justify-center "  >  ABOUT</span>
+          }
+          {/* <span className="flex justify-self-center  text-white cursor-progress  font-semibold p-2  rounded-lg transform ease-in-out bg-blue-600 hover:rounded-lg  cursor-default lg:w-20 justify-center" >  VIDEOS </span> */}
+          
 
         </div>
       </div>

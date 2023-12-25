@@ -24,9 +24,6 @@ function Navbar(props) {
   const [notifCounter, setNotifCounter] = useState(0);
   const [liste_notification, setliste] = useState([]);
   const [profBlobUrl, setProfBlobUrl] = useState('/img/logo.png');
-  const [logo1, setLogo1] = useState('/logo/TeramaFlixpic.png')
-  const [logo2, setLogo2] = useState('/logo/TeramaFlixnam.png')
-  const [create, setCreate] = useState('/img/create_video.png')
   const compoRef = useRef(null);
   const sideBarRef = useRef(null);
   const notifRef = useRef(null);
@@ -60,7 +57,7 @@ function Navbar(props) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ search: search, start:0, limit: 10 }),
+        body: JSON.stringify({ search: search, start: 0, limit: 10 }),
       });
       const data = await response.json()
       if (data[0]) {
@@ -106,44 +103,7 @@ function Navbar(props) {
       setSmSearch(false);
     }
   };
-  useEffect(() => {
-    const fetchLogos = async () => {
-      try {
-        const resp1 = await fetch('/logo/TeramaFlixpic.png');
-        const resp2 = await fetch('/logo/TeramaFlixnam.png');
-        const respc = await fetch('/img/create_video.png');
-        const blob1 = await resp1.blob();
-        const blob2 = await resp2.blob();
-        const blobc = await respc.blob();
-        setLogo1(URL.createObjectURL(blob1))
-        setLogo2(URL.createObjectURL(blob2))
-        setCreate(URL.createObjectURL(blobc))
-      } catch (error) {
-        console.error('Error fetching video:', error);
-      }
-    };
-    fetchLogos()
-    const fetchProfile = async (photo) => {
-      try {
-        if (photo) {
-          const response = await fetch(`/Thumbnails/${photo}`);
-          const blob = await response.blob();
-          const blobUrl = URL.createObjectURL(blob);
-          setProfBlobUrl(blobUrl);
-        } else {
-          const response = await fetch(`/img/logo.png`);
-          const blob = await response.blob();
-          const blobUrl = URL.createObjectURL(blob);
-          setProfBlobUrl(blobUrl);
-        }
-      } catch (error) {
-        console.error('Error fetching video:', error);
-      }
-    };
-    if (auto.session) {
-      fetchProfile(auto.session.Photo)
-    }
-  }, [auto])
+
 
   useEffect(() => {
     const available_notifications = async () => {
@@ -234,8 +194,8 @@ function Navbar(props) {
               </div>
 
               <div className="logo ml-4 flex-initial flex flex-col sm:flex-row sm:items-center sm:justify-start w-10 h-11 sm:w-64 sm:h-full items-center justify-center sm:static ml-/10 ">
-                <Link href="/"> <Image width={80} height={80} src={logo1} className=" w-8 h-8 sm:w-[2.8rem] sm:h-[2.8rem] my-1" alt="logo" /></Link>
-                <Link href="/"> <Image width={90} height={90} src={logo2} alt="logo" className=" hidden sm:block w-[4rem] h-[1rem] sm:w-[8rem] sm:h-[1rem] " /></Link>
+                <Link href="/"> <Image width={500} height={500} src={`/logo/TeramaFlixpic.png`} className=" w-8 h-8 sm:w-[2.8rem] sm:h-[2.8rem] my-1" alt="logo" /></Link>
+                <Link href="/"> <Image width={500} height={500} src={`/logo/TeramaFlixnam.png`} alt="logo" className=" hidden sm:block w-[4rem] h-[1rem] sm:w-[8rem] sm:h-[1rem] " /></Link>
               </div>
 
 
@@ -267,8 +227,8 @@ function Navbar(props) {
                 </button>
                 <Link href='/upload'>
                   <button id="image" className="hover:bg-gray-200 flex rounded-full items-center p-1 lg:w-10 lg:h-10 md:w-8 md:h-6 w-8 h-8">
-                    <Image width={80} height={80} className="lg:w-full lg:h-full w-full  h-full   my-1 ml-15 "
-                      src={create} alt="create_video" />
+                    <Image width={500} height={500} className="lg:w-full lg:h-full w-full  h-full   my-1 ml-15 "
+                      src={`/img/create_video.png`} alt="create_video" />
                   </button>
                 </Link>
 
@@ -286,8 +246,14 @@ function Navbar(props) {
                 </button>
 
                 <button ref={compoRef} id="image" className="p-0">
-                  <Image width={80} height={80} className="w-8 h-8 rounded-full" title={`${auto.session.PageName}`}
-                    src={profBlobUrl} alt='profile' onClick={() => handleAcPop()} />
+                  {auto.session.Photo ?
+                    <Image width={500} height={500} className="w-8 h-8 rounded-full" title={`${auto.session.PageName}`}
+                      src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${auto.session.Photo}`} alt='profile' onClick={() => handleAcPop()} />
+                    :
+                    <Image width={500} height={500} className="w-8 h-8 rounded-full" title={`${auto.session.PageName}`}
+                      src={`/img/logo.png`} alt='profile' onClick={() => handleAcPop()} />
+                  }
+
                 </button>
               </div>
             }
@@ -314,12 +280,12 @@ function Navbar(props) {
                     <div className="w-[2.5rem] h-[2.5] sm:w-[3.5rem] sm:h-[3.5rem] mt-2 rounded-full">
                       {
                         notification.photo ?
-                          <Image width={80} height={80}
+                          <Image width={500} height={500}
                             className="w-[2.5rem] h-[2.5] sm:w-[3.5rem] sm:h-[3.5rem] rounded-full"
-                            src={`/Thumbnails/${notification.photo}`}
+                            src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${notification.photo}`}
                             alt='notice' />
                           :
-                          <Image width={80} height={80}
+                          <Image width={500} height={500}
                             className="w-[2.5rem] h-[2.5] sm:w-[3.5rem] sm:h-[3.5rem] rounded-full"
                             src={`/logo/player.jpg`}
                             alt='notice' />
