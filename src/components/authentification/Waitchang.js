@@ -1,22 +1,8 @@
 import {React,useState,useEffect} from 'react'
 import Link from 'next/link'
-import Image from 'next/image';
 
 function Waitingchang () {
-  const [logo, setLogo] = useState('/logo/TeramaFlixpic.png')
-
-  useEffect(() => {
-    const fetchLogos = async () => {
-      try {
-        const resp = await fetch('/logo/TeramaFlixpic.png');
-        const blob = await resp.blob();
-        setLogo(URL.createObjectURL(blob))
-      } catch (error) {
-        console.error('Error fetching video:', error);
-      }
-    };
-    fetchLogos()
-  }, [])
+  
   return (
     <>
      <div className='flex justify-center mt-[4rem]'>

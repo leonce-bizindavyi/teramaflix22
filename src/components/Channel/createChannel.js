@@ -84,13 +84,13 @@ function CreateChannel({role}) {
         <div  className="flex flex-col justify-center items-center">
             <div  className="header-profil flex flex-col justify-center items-center space-y-2">
                 <div  className="profil-pic rounded-full overflow-hidden">
-                    {photo ? <Image src={selectedImage} width={36} height={36}alt="profil"  className="w-36 h-36" /> :
+                    {photo ? <Image src={selectedImage} width={500} height={500}alt="profil"  className="w-36 h-36" /> :
                     <>
                     {
                         thumb ? 
-                        <Image src={`/Thumbnails/${thumb}`} width={36} height={36} alt="profil"  className="w-36 h-36" />
+                        <Image src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${thumb}`} width={500} height={500} alt="profil"  className="w-36 h-36" />
                         :
-                        <Image src="/img/logo.png" width={36} height={36} alt="profil"  className="w-36 h-36" />
+                        <Image src="/img/logo.png" width={500} height={500} alt="profil"  className="w-36 h-36" />
                     }
                     </>
                     }
@@ -111,7 +111,6 @@ function CreateChannel({role}) {
                     <option value="2">Series</option>
                     <option value="3" >Film</option>
                     <option value="4">Comédie</option>
-                    <option value="5">Music</option>
                     <option value="5">Music</option>
                     <option value="1">Other</option>
                 </select>

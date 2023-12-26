@@ -1,27 +1,14 @@
 import Link from 'next/link'
 import React, { useState, useEffect } from 'react'
-import Router, { useRouter } from 'next/router'
+import  { useRouter } from 'next/router'
 import Image from 'next/image'
 
 function ChangePass() {
   const [email, setEmail] = useState('')
   const [errmail, setErrMail] = useState("")
   const [sended, setSended] = useState(false)
-  const [logo, setLogo] = useState('/logo/TeramaFlixpic.png')
   const router = useRouter()
 
-  useEffect(() => {
-    const fetchLogos = async () => {
-      try {
-        const resp = await fetch('/logo/TeramaFlixpic.png');
-        const blob = await resp.blob();
-        setLogo(URL.createObjectURL(blob))
-      } catch (error) {
-        console.error('Error fetching video:', error);
-      }
-    };
-    fetchLogos()
-  }, [])
   const sendLink = async () => {
     if (email !== "") {
       const addData = {
@@ -67,7 +54,7 @@ function ChangePass() {
           <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
             <div className="max-w-md mx-auto">
               <div className='w-[7rem] h-[7rem] md:w-[9rem] md:h-[9rem] lg:w-[10rem] lg:h-[10rem] mx-auto rounded-full'>
-               <Image src={logo} width={280} height={280} alt="logo" className="w-[7rem] h-[7rem] md:w-[9rem] md:h-[9rem] lg:w-[10rem] lg:h-[10rem]" />
+               <Image src={`/logo/TeramaFlixpic.png`} width={280} height={280} alt="logo" className="w-[7rem] h-[7rem] md:w-[9rem] md:h-[9rem] lg:w-[10rem] lg:h-[10rem]" />
               </div>
               <div className="divide-y divide-gray-200">
                 <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
