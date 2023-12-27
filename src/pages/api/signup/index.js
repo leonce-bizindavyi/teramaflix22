@@ -82,7 +82,7 @@ export default async function handler(req, res) {
           const hashedPassword=await bcrypt.hash(userPassword,salt)
           try {
             //Envoie d'Email pour la validation du compte
-            const mailOptions = {
+          /*  const mailOptions = {
               from: 'teramaflix@gmail.com',
               to: userMail,
               subject: 'Account validation',
@@ -169,9 +169,9 @@ export default async function handler(req, res) {
               } else {
                 console.log('E-mail envoyé: ' + info.response);
               }
-            });
+            });*/
               // Exécuter la requête SQL pour inserer l'utilisateur
-              const rows = await executeQuery( `CALL adduser(?,?,?,?)`, [uniid,uName,userMail,hashedPassword]);
+              const rows = await executeQuery( `CALL adduser(?,?,?,?,?)`, [uniid,uName,userMail,hashedPassword,1]);
             // Renvoyer les résultats de la requête sous forme de réponse JSON
             res.status(200).json({response:{data:rows[0],message:'success'}})
           } catch (error) {
