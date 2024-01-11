@@ -1,9 +1,10 @@
-import React, { useState,useEffect,useContext } from 'react'
+import React, { useRef,useState,useEffect,useContext } from 'react'
 import { SessionContext } from '../context/Auth';
 import { useRouter } from 'next/router'
 import Image from 'next/image';
+import AvatarEditor from 'react-avatar-editor';
 
-function CreateChannel({role}) {
+const CreateChannel= ({role}) =>  {
     const auto = useContext(SessionContext)
     const router=useRouter()
     const [selectedImage,setSelectedImage]=useState('')
@@ -14,7 +15,13 @@ function CreateChannel({role}) {
     const [pageName,setPageName]=useState('')
     const [success,setSuccess]=useState('')
     const [error,setError]=useState('')
-
+    const [annulation_recadrage,setAnnulation_recadrage] = useState(false);
+    
+    // crop image 
+    const [image, setImage] = useState(null);
+    const [croppedImage, setCroppedImage] = useState(null);
+    const [editor, setEditor] = useState(null);
+    const [scale, setScale] = useState(1);
     useEffect(() => {
         if(auto.session && role === 'edit'){
             console.log(auto.session)
@@ -78,19 +85,43 @@ function CreateChannel({role}) {
          }
         }
     }
+    const handleImageChange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        setImage(URL.createObjectURL(file));
+        setAnnulation_recadrage(true)
+        setCroppedImage(null);
+      }
+    };
+  
+    const handleScaleChange = (e) => {
+      const newScale = parseFloat(e.target.value);
+      setScale(newScale);
+    };
+  
+    const handleCrop = () => {
+      if (editor) {
+        const canvas = editor.getImageScaledToCanvas();
+        const croppedImageUrl = canvas.toDataURL('image/png');
+        setCroppedImage(croppedImageUrl);
+        setAnnulation_recadrage(!annulation_recadrage)
+
+      }
+        };
 
   return (
     <>
         <div  className="flex flex-col justify-center items-center">
-            <div  className="header-profil flex flex-col justify-center items-center space-y-2">
+          <div  className="header-profil flex flex-col justify-center items-center space-y-2">
                 <div  className="profil-pic rounded-full overflow-hidden">
-                    {photo ? <Image src={selectedImage} width={500} height={500}alt="profil"  className="w-36 h-36" /> :
+                    {croppedImage ? <Image src={croppedImage} width={500} height={500}alt="profil"  className="w-36 h-36" /> :
                     <>
                     {
                         thumb ? 
                         <Image src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${thumb}`} width={500} height={500} alt="profil"  className="w-36 h-36" />
                         :
-                        <Image src="/img/logo.png" width={500} height={500} alt="profil"  className="w-36 h-36" />
+                        <Image   
+                        src={`/img/logo.png`} width={500} height={500} alt="profil"  className="w-36 h-36" />
                     }
                     </>
                     }
@@ -99,10 +130,54 @@ function CreateChannel({role}) {
                 </label>
                     {error? <span className='text-red-600'>{error}</span>: <span className='text-blue-600'>{success}</span>}
                     
-                <input type='file' onChange={(e)=>handleGetpic(e.target.files)} id='changePic' className='hidden' />
+                <input type='file' onChange={handleImageChange} id='changePic' className='hidden' />
                 <h1  className="font-semibold text-[1.2rem] text-[rgb(100,116,139)]">Information of my page</h1>
-            
-            </div>
+                {image && 
+                <>
+                {
+                  annulation_recadrage && (
+                    <div className='flex items-center justify-center'>
+                      <div className='absolute bg-white h-[26.5rem] border-2 border-gray-500 rounded-md'>
+                        <AvatarEditor
+                          ref={(editorInstance) => setEditor(editorInstance)}
+                          image={image}
+                          width={200}
+                          height={200}
+                          border={50}
+                          borderRadius={100}
+                          color={[245, 245, 245, 0.6]} // Couleur de fond (blanc transparent)
+                          scale={scale}
+                          rotate={0}
+                        />
+                        <div className='grid grid-cols-1 gap-y-6 mt-2 mb-2'>
+                                          <div style={{ marginTop: '10px' }} className='flex justify-center space-x-4' >
+                                            <label className='font-semibold'>Échelle :</label>
+                                            <input
+                                              type="range"
+                                              min="1"
+                                              max="2"
+                                              step="0.01"
+                                              value={scale}
+                                              onChange={handleScaleChange}
+                                            />
+                                          </div>
+                          <div className='flex justify-center space-x-[4rem]'>
+                          <button style={{ marginTop: '10px' }} className='mb-4 hover:bg-blue-700 text-white  w-[4.5rem] h-[1.7rem] bg-blue-600 rounded-sm ' onClick={handleCrop}>
+                            Recadrer
+                          </button>
+                          <button onClick={()=>setAnnulation_recadrage(!annulation_recadrage)} className='hover:bg-red-700 text-white w-[4.5rem] h-[1.7rem] mt-3 bg-red-600 rounded-sm'>
+                              annuler
+                          </button>
+                          </div> 
+                        </div>
+                      </div>
+                    </div>
+                  )
+                }
+                </>
+                 }
+      
+          </div>
             <div  className="container-channel flex flex-col justify-center mt-4 md:w-[380px] space-y-3">
                 <label htmlFor="title">Name of channel</label>
                 <input type="text" value={pageName} id="title" onChange={(e)=>{setPageName(e.target.value)}} className=" border-2 border-blue-500 focus:outline-none h-10 rounded"/>
@@ -122,5 +197,4 @@ function CreateChannel({role}) {
     </>
   )
 }
-
 export default CreateChannel

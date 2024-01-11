@@ -221,20 +221,23 @@ function Navbar(props) {
               :
               <div className="buttons  flex flex-initial sm:flex space-x-3 sm:items-center sm:justify-center items-center justify-center w-full sm:w-64 h-full   ">
                 <button ref={SearchInput2Ref} onClick={handleSmsearch} id="searchBtn" className=" hover:bg-gray-200 hover:rounded-full w-10 h-10 md:hidden block">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#1c64f2" className="">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                   </svg>
                 </button>
                 <Link href='/upload'>
-                  <button id="image" className="hover:bg-gray-200 flex rounded-full items-center p-1 lg:w-10 lg:h-10 md:w-8 md:h-6 w-8 h-8">
-                    <Image width={500} height={500} className="lg:w-full lg:h-full w-full  h-full   my-1 ml-15 "
-                      src={`/img/create_video.png`} alt="create_video" />
+                  <button id="image" className="w-[2.8rem] h-[2.8rem] lg:w-[3.2rem] lg:h-[3.2rem] hover:bg-gray-200 flex rounded-full items-center p-1">
+                      <svg  className="w-[2.5rem] h-[2.5rem] lg:w-[3.5rem] lg:h-[3.5rem]" viewBox="0 0 519 383" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M172.9 119.609V175.609H119.87C111.308 175.609 107.545 186.275 106.734 191.609C106.734 202.009 115.492 206.942 119.87 208.109H172.9V265.109C176.793 274.709 185.874 277.442 189.928 277.609C201.605 278.009 205.173 269.442 205.497 265.109V208.109H259.5C270.009 205.709 272.636 196.109 272.636 191.609C272.636 182.409 263.879 177.109 259.5 175.609H205.497V119.609C204.329 112.009 194.631 108.109 189.928 107.109C179.809 105.909 174.36 114.942 172.9 119.609Z" fill="#1E74F3" stroke="#1E74F3"/>
+                        <path d="M63.7479 25.73C33.1521 30.9264 25.1677 58.8737 25 72.1978L29.0258 320.026C28.2206 341.611 56.8705 354.336 71.2961 358H322.906C341.827 353.203 355.615 332.684 360.144 323.024V235.085L467.833 355.002C487.156 363.796 493.329 349.339 494 341.012V41.7189C485.949 17.3358 470.852 24.8973 464.31 31.7259L360.144 142.149V63.2041C349.677 34.8237 327.938 26.3962 318.377 25.73H63.7479Z" stroke="#1E74F3" strokeWidth="50"/>
+                      </svg>
+                      
                   </button>
                 </Link>
 
                 <button ref={notifRef} className="p-0 ml-4">
-                  <div className="hover:bg-gray-200 rounded-full w-11 h-11 relative">
-                    <svg onClick={handleNotificationClick} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="w-full h-full ">
+                  <div className="w-[2.5rem] h-[2.5rem] lg:w-[3rem] lg:h-[3rem] hover:bg-gray-300 rounded-full text-blue-700 relative">
+                    <svg onClick={handleNotificationClick} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="#1c64f2" className="w-[3.5rem] h-[3.5rem]">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                     </svg>
                     {notifCounter > 0 && (
@@ -323,40 +326,7 @@ function Navbar(props) {
                 </Link>
               </div>
             ))}
-
-
-
-            {/* {liste_notification.map((notification) => (
-                  <li key={notification.id} className="pt-3 pb-0 sm:pt-4">
-                    <div className="flex items-center space-x-4">
-                      <div className="flex-shrink-0">
-                        <Image width={80} height={80} 
-                          className="w-10 h-10 rounded-full" 
-                          src={notification.photo ? `/Thumbnails/${notification.photo}` : `/img/notify.png`}
-                          alt='notice'/>
-                        
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                           {notification.Prenom}
-                        </p>
-                        <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                          {notification.typenotif !== "subscribe" &&
-                            notification.postid && (
-                              <>
-                                Reacted to your <Link href={"/"}> post </Link>
-                              </>
-                            )}
-                          {notification.typenotif == "subscribe" &&
-                            "Subscribed to your channel"}
-                        </p>
-                      </div>
-                    </div>
-                  </li>
-                ))} */}
           </div>
-
-
         </div>
       )}
 
@@ -385,7 +355,7 @@ function Navbar(props) {
         </div>
       </div>
 
-      <div id="searchedprop" className=" z-20 left-[40%] mt-14 w-[20%] sm:top-0 fixed  h-auto  overflow-hide bg-blue-100 rounded-md"></div>
+      <div id="searchedprop" className="z-20 left-[40%] mt-14 w-[20%] sm:top-0 fixed  h-auto  overflow-hide bg-blue-100 rounded-md"></div>
       <div id="setting" style={{ display: "flex", marginRight: 70 + "px", background: "black" }}>
       </div>
 

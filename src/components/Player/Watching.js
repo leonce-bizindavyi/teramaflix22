@@ -372,18 +372,6 @@ const interval = setInterval(() => {
 
 
   useEffect(() => {
-    const fetchVideo = async (video) => {
-      try {
-        const response = await fetch(`/Videos/${video}`);
-        const blob = await response.blob();
-        const blobUrl = URL.createObjectURL(blob);
-        if(videoprops.uniid === router.query.v){
-          setVideoBlobUrl(blobUrl);
-        }
-      } catch (error) {
-        console.error('Error fetching video:', error);
-      }
-    };
     // Timeline
     if (timelineRef.current) {
       const timelineContainer = timelineRef.current
@@ -410,11 +398,12 @@ const interval = setInterval(() => {
       }
 
     }
-    fetchVideo(videoprops.Video)
   }, [videoprops])
   const videoUrl = `${process.env.NEXT_PUBLIC_URL}/Watch?v=${videoprops.uniid}`;
 
-  if (!videoprops) return null
+  if (!videoprops) return 
+
+  const videoId = `/api/stream?videoId=${videoprops.Video}`;
 
   return (
     <>
@@ -513,7 +502,7 @@ const interval = setInterval(() => {
             </button>
           </div>
         </div>
-        <video onClick={togglePlay} ref={videoRef} src={`/Videos/${videoprops.Video}`} onEnded={() => handleNext(videoprops.NextVideo)} className='rounded' autoPlay />
+        <video onClick={togglePlay} ref={videoRef} src={videoId} onEnded={() => handleNext(videoprops.NextVideo)} className='rounded' autoPlay />
         <Menu id={MENU_ID}>
           {videoRef.current && (
             <>

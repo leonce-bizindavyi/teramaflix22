@@ -22,9 +22,7 @@ function Waitingpage() {
        <div className='flex justify-center mt-[4rem]'>
             <div className='flex flex-col space-y-5 justify-center h-auto w-[22rem] md:w-[24rem] lg:w-[24rem] shadow-md shadow-indigo-400 bg-blue-600 rounded-tl-3xl rounded-br-3xl rounded-tr-xl'>
                  <div className='grid grid-cols-1 mx-2 mt-[1rem]'>
-                      <h1 className='flex justify-center text-md lg:text-lg text-white font-semibold'> The account has been created.</h1>
-                      <h1 className='flex justify-center text-md lg:text-lg text-white font-semibold'> See the message sent on your e-mail box</h1>
-                      <h1 className='flex justify-center text-md lg:text-lg text-white font-semibold'>to activate it,but it may take some time.</h1>
+                      <h1 className='flex justify-center text-md lg:text-lg text-white font-semibold'>An activation code has been sent to your email adress</h1>
                  </div>
                  <div  className="flex justify-center space-x-6">
                     <h1 className='text-md text-white'>return to Login</h1>  

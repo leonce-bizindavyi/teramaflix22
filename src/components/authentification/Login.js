@@ -7,16 +7,33 @@ import * as Yup from 'yup'
 import '@/styles/fonts.module.css'
 
 
+
 function Login() {
   const router = useRouter()
-  const [errpass, setErrpass] = useState("")
-  const [errmail, setErrmail] = useState("")
   const [loading, setLoading] = useState(false);
   const [showPassword,setShowPassword]=useState(false)
+  const [logo1, setLogo1] = useState('/logo/TeramaFlixpic.png')
+  const [logo2, setLogo2] = useState('/logo/TeramaFlixnam.png')
   const initialValues = {
     mail: "",
     password: ""
 }
+
+useEffect(() => {
+  const fetchLogos = async () => {
+    try {
+        const resp1 = await fetch('/logo/TeramaFlixpic.png');
+        const resp2 = await fetch('/logo/TeramaFlixnam.png');
+        const blob1 = await resp1.blob();
+        const blob2 = await resp2.blob();
+        setLogo1(URL.createObjectURL(blob1))
+        setLogo2(URL.createObjectURL(blob2))
+    } catch (error) {
+      console.error('Error fetching video:', error);
+    }
+  };
+  fetchLogos()
+}, [])
 
 
   const handleShowPassword=async(e)=>{
@@ -27,8 +44,6 @@ function Login() {
     router.push('/changePassword')
   }
   const handleLogin = async (data) => {
-      setErrmail('')
-      setErrpass('')
       setLoading(true)
       const response = await fetch(`/api/login/${data.mail}/${data.password}`);
       if (response.ok) {
@@ -45,9 +60,7 @@ function Login() {
        else {
         const data = await response.json();
         if(data.message==="Email invalide"){
-          setErrmail(data.message)
         }else{
-          setErrpass(data.message)
         }
         
         console.log(`Erreur : ${response.status}${response.statusText} `);
@@ -61,10 +74,10 @@ function Login() {
 })
   return (
     <>
-<div  className="flex flex-col items-center justify-center   h-screen lg:flex-row bg-no-repeat lg:bg-repeat bg-[url('/logo/loginwall.jpg')] bg-contain bg-bottom  lg:bg-left bg-white font-quicksand">
+<div  className="flex flex-col items-center justify-center   h-max lg:flex-row bg-no-repeat lg:bg-repeat bg-[url('/logo/loginwall.jpg')] bg-contain bg-bottom  lg:bg-left bg-white font-quicksand">
     <div className= "image w-[100%] lg:w-[50%] h-max  lg:h-screen flex justify-center items-center">
-      <Image src={`/logo/TeramaFlixpic.png`} width={280} height={280} className="  object-cover w-[180px] sm:w-[280px]  h-[180px] sm:h-[280px] mt-3" alt=""/>
-      <Image src={`/logo/TeramaFlixnam.png`} width={280} height={280} className=" hidden lg:block   object-cover  mt-3" alt=""/>
+      <Image src={logo1} width={280} height={280} className="  object-cover w-[180px] sm:w-[280px]  h-[180px] sm:h-[280px] mt-3" alt=""/>
+      <Image src={logo2} width={280} height={280} className=" hidden lg:block   object-cover  mt-3" alt=""/>
     </div>
     <div  className="w-[90%] h-[60%] sm:h-[45%] lg:w-[30%] lg:h-screen shadow-lg shadow-blue-300  flex justify-center items-center  rounded-lg mt-3">
         <div  className="flex lg:justify-center flex-col items-center space-y-2 w-full h-full lg:h-[400px] bg-gray-100  mx-2 my-2 rounded-lg  ">
@@ -83,9 +96,7 @@ function Login() {
                       <Field type="email" name="mail"  id="emailid" placeholder="Your email" 
                       className=" rounded-xl sm:h-20 lg:h-10 h-12  w-64 sm:w-[27rem] lg:w-64 p-3 text-md sm:text-xl lg:text-sm font-semibold text-slate-600 focus:outline-none"/>
                   </div>
-                  {errmail && <span className="text-red-600"> {errmail} </span>  }
                   <ErrorMessage name="mail" className='text-red-800 text-xs sm:text-xl  lg:text-xs' component="span"/>
-                  {errpass&&<span className="text-red-600"> {errpass} </span>  }
               </div>
              
               {/* <!--fin email-->
@@ -101,15 +112,14 @@ function Login() {
                       className=" rounded-xl sm:h-20 lg:h-10 h-12  w-64 sm:w-[27rem] lg:w-64   
                       p-3 font-semibold text-md sm:text-xl lg:text-sm   focus:outline-none"/>
                       {!showPassword?
-                      
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" onClick={handleShowPassword} className="sm:w-8 w-6 lg:w-6 sm:h-8 h-6 lg:h-6absolute right-2 cursor-pointer hover:text-blue-500  text-slate-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"  strokeWidth="1.5" stroke="currentColor" onClick={handleShowPassword} className="sm:w-8 w-6 lg:w-6 sm:h-8 h-6 lg:h-6 absolute right-2 cursor-pointer hover:text-blue-500  text-slate-500" id="show_password" name="eye_show ">
+                          <path  strokeLinecap="round"  strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                          <path  strokeLinecap="round"  strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />                       
+                        </svg>
+                          :
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" onClick={handleShowPassword} className="sm:w-8 w-6 lg:w-6 sm:h-8 h-6 lg:h-6 absolute right-2 cursor-pointer hover:text-blue-500  text-slate-500">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
                         </svg> 
-                          :
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"  strokeWidth="1.5" stroke="currentColor" onClick={handleShowPassword} className="sm:w-8 w-6 lg:w-6 sm:h-8 h-6 lg:h-6 absolute right-2 cursor-pointer hover:text-blue-500  text-slate-500" id="show_password" name="eye_show ">
-                        <path  strokeLinecap="round"  strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                        <path  strokeLinecap="round"  strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />                       
-                        </svg>
                         } 
                   </div>
                   <ErrorMessage name="password" className='text-red-800 text-xs sm:text-xl  lg:text-xs' component="span"/> 
@@ -146,7 +156,19 @@ function Login() {
            <span  className="font-semibold  text-md sm:text-2xl lg:text-sm">Haven{"'"}t an account?</span>
            <Link href="/signup"> <span  className="font-semibold text-md sm:text-2xl lg:text-sm text-blue-500  cursor-pointer">Create an account</span></Link> 
           </div>
-          <div  className="h-0.5"></div>
+          <Link href="/">
+              <div  className="p-3 mb-5 grid grid-cols-2 place-items-center -space-x-1 md:space-x-0 lg:-space-x-1">
+                <div className='text-blue-700 font-semibold'>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 sm:w-7 sm:h-7">
+                    <path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z" />
+                    <path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z" />
+                  </svg>
+                </div>
+                <div className='mt-2'>
+                    <span className='text-blue-700 font-semibold text-md lg:text-lg'>Home</span>
+                </div>
+              </div>
+          </Link>
         {/* <!--fin haven't account and create it--> */}
         </div>
     </div>
