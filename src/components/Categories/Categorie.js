@@ -7,7 +7,7 @@ function Categorie({ cat }) {
   const [videos, setVideos] = useState([]);
 
   const fetchVideos = async (Uniid) => {
-    const response = await fetch(`/api/categorie/${Uniid}/0/4`);
+    const response = await fetch(`/api/categorie/${Uniid}/0/5`);
     const data = await response.json();
     if (data[0]) setVideos(data);
   };
@@ -36,7 +36,7 @@ function Categorie({ cat }) {
           )
           }
         </div>
-        <div className="filmcontainerCat mt-3 gap-[1rem]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-3 gap-[1rem]">
           {videos.map(video => {
             if(video.Image){
               return <Video key={video} video={video} />

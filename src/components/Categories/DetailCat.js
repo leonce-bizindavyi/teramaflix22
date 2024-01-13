@@ -23,7 +23,7 @@ function DetailCat({catType}) {
                 <div>{catType}</div>
                 <div onClick={()=>handlePush()}><button className="text-blue-500 hover:bg-gray-200 rounded-2xl px-2 cursor-pointer">All Categories</button></div>
             </div>
-            <div className="filmcontainerCat  mt-3 gap-[1rem]">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-3 gap-[1rem]">
                 {
                   videos?.map(video=>{
                     return <Video key={video} video={video} />

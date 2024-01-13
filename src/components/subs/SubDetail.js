@@ -8,7 +8,7 @@ const titleRef = useRef('');
 
 useEffect(() => {
   async function fetchpages(cat) {
-    const response = await fetch(`/api/subs/${cat}/0/5`);
+    const response = await fetch(`/api/subs/${cat}/0/20`);
     const data = await response.json();
     if (data[0]) setPages(data);
   }

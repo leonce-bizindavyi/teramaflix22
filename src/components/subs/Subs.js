@@ -11,7 +11,7 @@ function Subs() {
   useEffect(() => {
     // get sms detail in database
     async function fetchpages(cat) {
-      const response = await fetch(`/api/subs/${cat}/0/5`);
+      const response = await fetch(`/api/subs/${cat}/0/6`);
       const data = await response.json();
       if (data[0]) {
         if (cat === 1) setOthers(data)

@@ -1,6 +1,14 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
+import ImageComp from '../ImageComp'
+
+function truncateText(text, maxLength) {
+  if (text.length > maxLength) {
+    return text.substring(0, maxLength) + '...';
+  }
+  return text;
+}
 
 function Video({ video }) {
   return (
@@ -10,19 +18,11 @@ function Video({ video }) {
           {
             video.Short == 1 ?
               <Link href={`/short`}>
-                <Image src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${video.Image}`}
-                  width={800} height={800}
-                  className="w-[100%]  h-[100%] object-fit" alt="videos"
-                  priority={true} placeholder='blur'
-                  blurDataURL="data:image/png;base64,...(base64-encoded image data)" />
+                <ImageComp src={video.Image} w={800} h={800} a={'video'} />
               </Link>
               :
               <Link href={`/Watch?v=${video.uniid}`}>
-                <Image src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${video.Image}`}
-                  width={800} height={800} alt='video'
-                  className="video w-[100%]  h-[100%] object-fit"
-                  priority={true} placeholder='blur'
-                  blurDataURL="data:image/png;base64,...(base64-encoded image data)" />
+                <ImageComp src={video.Image} w={800} h={800} a={'video'} />
               </Link>
           }
         </div>
@@ -44,7 +44,7 @@ function Video({ video }) {
             }
             <div className="flex flex-col  space-y-2">
               <div className="right-1">
-                <h10 className="text-sm font-medium">{video.Title}</h10><br />
+              <h1 title={video.Title} className="font-bold text-slate-900 text-lg ml-2 mb-2 sm:ml-0">{truncateText(video.Title, 25)}</h1>
                 <span className="text-sm">{video.PageName}</span>
               </div>
             </div>

@@ -3,6 +3,8 @@ import React, { useRef, useState, useEffect, useContext } from 'react';
 import { Menu, Item, Separator, useContextMenu, Submenu } from 'react-contexify'
 import { useRouter } from 'next/router';
 import { SessionContext } from '../context/Auth';
+import videojs from 'video.js';
+import 'video.js/dist/video-js.css';
 import "react-contexify/dist/ReactContexify.css";
 
 const MENU_ID = "menu-id";
@@ -502,7 +504,7 @@ const interval = setInterval(() => {
             </button>
           </div>
         </div>
-        <video onClick={togglePlay} ref={videoRef} src={videoId} onEnded={() => handleNext(videoprops.NextVideo)} className='rounded' autoPlay />
+        <video onClick={togglePlay} poster={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${videoprops.Image}`} ref={videoRef} src={videoId} onEnded={() => handleNext(videoprops.NextVideo)} className='rounded' autoPlay />
         <Menu id={MENU_ID}>
           {videoRef.current && (
             <>

@@ -72,7 +72,6 @@ export default async function handler(req, res) {
           },
           secret
         );
-
         res.status(200).json({ token, uniid: user.uniid, message: 'Success' })
       } catch (error) {
         res.status(400).json({ message: "Error", error })
@@ -120,8 +119,6 @@ async function updatePage(photo, fields) {
       const user = result[0];
       return user[0]
     }
-    else
-      res.status(500).json({ error: "Error inserting post into database", message: 'Not inserted' });
   } catch (error) {
     console.log(error);
   }

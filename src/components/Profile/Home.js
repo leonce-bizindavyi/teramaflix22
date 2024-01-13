@@ -4,7 +4,7 @@ import styles from '@/styles/Home.module.css'
 import { useRouter } from 'next/router'
 import OtherVideos from './OtherVideos'
 
-function Home({}) {
+function Home() {
   const router = useRouter()
   const [video, setVideo] = useState(null)
   const [videos, setVideos] = useState([])
@@ -13,6 +13,7 @@ function Home({}) {
     if(unid){
       const response = await fetch(`/api/posts/allVideos/${unid}/0/16`)
       const data = await response.json()
+      console.log(data)
       if(data.length !== 0){
         setVideo(data[0])
         setVideos(data.slice(1))
