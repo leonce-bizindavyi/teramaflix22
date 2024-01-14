@@ -4,89 +4,71 @@ import { Formik, Form, Field, ErrorMessage  } from 'formik'
 import * as Yup from 'yup'
 import 'animate.css';
 import Image from 'next/image'
+import { useRouter } from 'next/router';
 
 function Signup() {
-    const [showPassword,setShowPassword]=useState(false)
-    const [showConfirm,setShowConfirm]=useState(false)
-    const [loading, setLoading] = useState(false);
-    const [inserted,setInserted]=useState(false)
-    const [logo1, setLogo1] = useState('/logo/TeramaFlixpic.png')
-    const [logo2, setLogo2] = useState('/logo/TeramaFlixnam.png')
-    const initialValues = {
-        nom: "",
-        prenom: "",
-        mail: "",
-        password: "",
-        confirm: ""
-    }
+  const router=useRouter()
+  const [errorMail,setErrorMail]=useState("")
+  const [showPassword,setShowPassword]=useState(false)
+  const [showConfirm,setShowConfirm]=useState(false)
+  const [loading, setLoading] = useState(false);
+  const [inserted,setInserted]=useState(false)
+  const initialValues = {
+      nom: "",
+      prenom: "",
+      mail: "",
+      password: "",
+      confirm: ""
+  }
 
-    useEffect(() => {
-      const fetchLogos = async () => {
-        try {
-            const resp1 = await fetch('/logo/TeramaFlixpic.png');
-            const resp2 = await fetch('/logo/TeramaFlixnam.png');
-            const blob1 = await resp1.blob();
-            const blob2 = await resp2.blob();
-            setLogo1(URL.createObjectURL(blob1))
-            setLogo2(URL.createObjectURL(blob2))
-        } catch (error) {
-          console.error('Error fetching video:', error);
+  const handleShowPassword=async(e)=>{
+      e.preventDefault();
+      setShowPassword(!showPassword)
+    }
+    const handleShowConfirm=async(e)=>{
+      e.preventDefault();
+      setShowConfirm(!showConfirm)
+    }
+  const validationSchema = Yup.object().shape({
+      nom: Yup.string().required("You must input a name !").min(3, "Name must be at least 3 characters!"),
+      prenom: Yup.string().required("You must input your lastname !").min(3, "Lastname must be at least 3 characters!"),
+      mail: Yup.string().required("You must input a mail !").email("Invalid email address!"),
+      password: Yup.string()
+          .required("You must input a password !")
+          .min(3, "Password must be at least 3 characters!"),
+      confirm: Yup.string()
+          .required("You must input a confirm !")
+          .oneOf([Yup.ref("password")], "Confirm password must match the password!"),
+  })
+  const onSubmit = async(data)=>{
+      setErrorMail('')
+      setLoading(true);
+      const addData={
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json",
+          },
+          body:JSON.stringify(data)
+        };
+        const res= await fetch(`/api/signup`,addData);
+        const response=await res.json()
+        setLoading(false);
+        if(response.response.data === "errorMail"){
+          setErrorMail(response.response.message)
+        }else if(response.response.message =="success"){
+          console.log("inserted");
+          setInserted(true)
+          router.push('/login')
         }
-      };
-      fetchLogos()
-    }, [])
-
-    const handleShowPassword=async(e)=>{
-        e.preventDefault();
-        setShowPassword(!showPassword)
-      }
-      const handleShowConfirm=async(e)=>{
-        e.preventDefault();
-        setShowConfirm(!showConfirm)
-      }
-    const validationSchema = Yup.object().shape({
-        nom: Yup.string().required("You must input a name !").min(3, " must be at least 3 characters!"),
-        prenom: Yup.string().required("You must input a last name !").min(3, " must be at least 3 characters!"),
-        mail: Yup.string().required("You must input an email !").email("Invalid email address!"),
-        password: Yup.string()
-            .required("You must input a password !")
-            .min(7, "Password must be at least 7 characters!")
-            .matches(
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]+$/,
-                "not respected"
-            ),
-        confirm: Yup.string()
-            .required("You must input a confirm !")
-            .oneOf([Yup.ref("password")], "Confirm password must match the password!"),
-    })
-    const onSubmit = async(data)=>{
-        setLoading(true);
-        const addData={
-            method:"POST",
-            headers:{
-              "Content-Type":"application/json",
-            },
-            body:JSON.stringify(data)
-          };
-          const res= await fetch(`/api/signup`,addData);
-          const response=await res.json()
-          setLoading(false);
-          if(response.response.data === "errorMail"){
-
-          }else if(response.response.message !=="success"){
-            setInserted(true)
-            router.push('/login')
-          }
-    }
-    
+  }
     return (
       <>
       {/* h-screen:dans la ligne 66 */}
 <div  className="flex flex-col items-center justify-center   lg:flex-row bg-no-repeat lg:bg-repeat bg-[url('/logo/loginwall.jpg')] bg-contain bg-bottom  lg:bg-left bg-white font-quicksand">
 
 <div className= "image w-[100%] lg:w-[50%] h-max lg:h-screen flex justify-center items-center">
-      <Image src={logo1} width={280} height={280} className="  object-cover w-[180px] sm:w-[280px]  h-[180px] sm:h-[280px] mt-3" alt=""/>
-      <Image src={logo2} width={280} height={280} className=" hidden lg:block   object-cover  mt-3" alt=""/>
+<Image src={`/logo/TeramaFlixpic.png`} width={280} height={280} className="  object-cover w-[180px] sm:w-[280px]  h-[180px] sm:h-[280px] mt-3" alt=""/>
+      <Image src={`/logo/TeramaFlixnam.png`} width={280} height={280} className=" hidden lg:block   object-cover  mt-3" alt=""/>
 </div>
   <div  className="w-[90%] h-[80%] overflow-auto sm:h-[45%] lg:w-[30%] lg:h-screen shadow-lg shadow-blue-300  flex justify-center items-center  rounded-lg mt-3">
     <div  className="flex lg:justify-center flex-col items-center space-y-1 w-full h-max bg-gray-100  mx-2 my-2 rounded-lg  ">
@@ -142,7 +124,6 @@ function Signup() {
             <!--debut password--> */}
             <div className=''>
             <h2  className="text-xl sm:text-3xl lg:text-lg text-slate-600  font-semibold">Password</h2>
-            <p className="text-[0.73rem]   w-64 sm:w-[27rem] lg:w-64 text-slate-600">must contain at least one uppercase,one lowercase,one digit, and one special character!</p>
                <ErrorMessage name="password" className='text-red-800 text-xs sm:text-xl  lg:text-xs ' component="span"/>
                 <div className='relative  flex flex-row space-x-3 items-center sm:h-20 lg:h-10 h-12  w-64 sm:w-[27rem] lg:w-64 shadow-md ring shadow-blue-500   hover:ring-blue-500
                          bg-white rounded-md p-3'>
