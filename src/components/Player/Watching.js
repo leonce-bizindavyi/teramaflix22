@@ -17,7 +17,6 @@ function Watching({ videoprops }) {
   const videoContainerRef = useRef(null);
   const [hideCntrl, setHideCntrl] = useState('hidden')
   const [hideBtn, setHideBtn] = useState('')
-  const [videoBlobUrl, setVideoBlobUrl] = useState('');
   const [paused, setPaused] = useState("")
   const [volumeLevel, setVolumeLevel] = useState("high")
   const [volume, setVolume] = useState(1);
@@ -226,7 +225,6 @@ const interval = setInterval(() => {
       //views and hours 
       if (auth.session && auth.session != "unlogged") {
         const handleAddHours = async () => {
-          setVideoBlobUrl('')
           const user = auth.session
           const time = count // Récupérer le temps écoulé réel de la vidéo
           const hours = time / 3600; // Conversion en heures

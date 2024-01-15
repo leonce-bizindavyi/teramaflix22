@@ -48,7 +48,7 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: err, fields, files, message: 'Error parsing form data' });
       }
 
-      const images = [files.image];
+      const images = [files.photo];
 
       try {
         const { descriptio, pageName } = fields;

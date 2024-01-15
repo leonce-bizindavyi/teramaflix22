@@ -16,6 +16,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router'
 import Load from '@/components/Load'
 import Head from 'next/head'
+import Script from 'next/script'
 
 export default function App({ Component, pageProps }) {
   const [blur , setBlur] = useState(false)
@@ -95,6 +96,20 @@ export default function App({ Component, pageProps }) {
        <Load load={load} />
       <ToastContainer />
       </LoadProvider>
+      <Script
+      strategy="afterInteractive"
+      src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
+      />
+      <Script strategy="afterInteractive">
+        {`
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    gtag('js', new Date());
+                    gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}', {
+                    page_path: window.location.pathname,
+                    });
+                `}
+      </Script>
     </SessionProvider>
   
   )
