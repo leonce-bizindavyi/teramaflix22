@@ -8,7 +8,7 @@ import '@/styles/fonts.css'
 import { SessionProvider } from '@/components/context/Auth'
 import Navbar from '@/components/Navs/Navbar'
 import Messagerie from '@/components/Messages/Messagerie'
-import {toast,ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react'
 import { LoadProvider } from '@/components/context/loading'
@@ -19,7 +19,7 @@ import Head from 'next/head'
 import Script from 'next/script'
 
 export default function App({ Component, pageProps }) {
-  const [blur , setBlur] = useState(false)
+  const [blur, setBlur] = useState(false)
   const [load, setLoad] = useState(true)
   const router = useRouter();
   useEffect(() => {
@@ -61,9 +61,9 @@ export default function App({ Component, pageProps }) {
     }
   }, []);
 
-  if(Component.getLayout){
-      return Component.getLayout(<Component {...pageProps} />)
-    }
+  if (Component.getLayout) {
+    return Component.getLayout(<Component {...pageProps} />)
+  }
 
   const sideAllOpened = (state) => {
     setBlur(state)
@@ -71,8 +71,8 @@ export default function App({ Component, pageProps }) {
   return (
     <SessionProvider>
       <LoadProvider>
-       <div className="font-quicksand">
-          
+        <div className="font-quicksand">
+
 
           <Head>
             <title>TeraMaFlix - Video Sharing Platform</title>
@@ -84,33 +84,35 @@ export default function App({ Component, pageProps }) {
           </Head>
 
           <div className="wrapper relative w-full h-full bg-gray-100   pt-1 overflow-x-hidden ">
-          <Navbar sideAllOpened = {sideAllOpened} />         
-        <div className={`Acceuilcontainer ${blur? 'blur': {}}  w-full  justify-center items-center  bg-gray-100 flex flex-col h-full `}>
-            <div className={`container w-[100%] h-[100%] lg:px-6    bg-white lg:p-4 lg:rounded  flex flex-col justify-center`}>
-            <Component {...pageProps} />
-            <Messagerie />
-          </div>
+            <Navbar sideAllOpened={sideAllOpened} />
+            <div className={`Acceuilcontainer ${blur ? 'blur' : {}}  w-full  justify-center items-center  bg-gray-100 flex flex-col h-full `}>
+              <div className={`container w-[100%] h-[100%] lg:px-6    bg-white lg:p-4 lg:rounded  flex flex-col justify-center`}>
+                <Component {...pageProps} />
+                <Messagerie />
+              </div>
+            </div>
           </div>
         </div>
-       </div>
-       <Load load={load} />
-      <ToastContainer />
+        <Load load={load} />
+        <ToastContainer />
       </LoadProvider>
       <Script
-      strategy="afterInteractive"
-      src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
+        strategy="afterInteractive"
+        id="google-tag-manager"
+        src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
       />
-      <Script strategy="afterInteractive">
+
+      <Script strategy="afterInteractive" id="google-analytics">
         {`
-                    window.dataLayer = window.dataLayer || [];
-                    function gtag(){dataLayer.push(arguments);}
-                    gtag('js', new Date());
-                    gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}', {
-                    page_path: window.location.pathname,
-                    });
-                `}
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}', {
+            page_path: window.location.pathname,
+          });
+        `}
       </Script>
     </SessionProvider>
-  
+
   )
 }
