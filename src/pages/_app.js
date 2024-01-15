@@ -15,6 +15,7 @@ import { LoadProvider } from '@/components/context/loading'
 import { useEffect } from 'react';
 import { useRouter } from 'next/router'
 import Load from '@/components/Load'
+import Head from 'next/head'
 
 export default function App({ Component, pageProps }) {
   const [blur , setBlur] = useState(false)
@@ -70,6 +71,17 @@ export default function App({ Component, pageProps }) {
     <SessionProvider>
       <LoadProvider>
        <div className="font-quicksand">
+          
+
+          <Head>
+            <title>TeraMaFlix - Video Sharing Platform</title>
+            <meta name="description" content="Discover and share captivating videos on TeraMaFlix." />
+            <meta property="og:title" content="TeraMaFlix - Video Sharing Platform" />
+            <meta property="og:description" content="Discover and share captivating videos on TeraMaFlix." />
+            <meta property="og:image" content="/logo/TeramaFlixpic.png" />
+            <meta property="og:url" content="https://www.teramaflix.com/" />
+          </Head>
+
           <div className="wrapper relative w-full h-full bg-gray-100   pt-1 overflow-x-hidden ">
           <Navbar sideAllOpened = {sideAllOpened} />         
         <div className={`Acceuilcontainer ${blur? 'blur': {}}  w-full  justify-center items-center  bg-gray-100 flex flex-col h-full `}>
