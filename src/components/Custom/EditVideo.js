@@ -67,7 +67,7 @@ function EditVideo({ uuid }) {
         form.append('image', formData.image)
         form.append('oldimage', formData.oldimage)
         if (!isNaN(videoRef.current.duration)) {
-          if (videoRef.current.duration > 80 && videoRef.current.videoWidth < videoRef.current.videoHeight) {
+          if (videoRef.current.duration < 80 && videoRef.current.videoWidth < videoRef.current.videoHeight) {
             form.append('short', 1)
           } else {
             form.append('short', 0)

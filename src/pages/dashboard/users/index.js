@@ -64,10 +64,18 @@ function DashboardLayout({ page }) {
               <h1 className="font-bold text-[#9442FE] text-[1.2rem] md:text-[1.5rem]">Dashboard</h1>
             </div>
             <div className="profil w-9 h-9 md:w-12 md:h-12 rounded-full overflow-hidden">
-              {auto.Photo ?
-                <Image title={auto.pageName} src={`/Thumbnails/${auto.Photo} `} width={100} height={100} className="" alt="profil" />
-                :
-                <Image title={auto.PageName} src="/img/logo.png" width={100} height={100} className="" alt="profil" />
+            {
+                auto.Photo ?
+                  <Image width={100} height={100}
+                    src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${auto.Photo}`}
+                    priority={true} placeholder='blur'
+                    blurDataURL="data:image/png;base64,...(base64-encoded image data)"
+                    className='' alt="profil" />
+                  :
+                  <Image width={100} height={100} src={`/img/logo.png`}
+                    priority={true} placeholder='blur'
+                    blurDataURL="data:image/png;base64,...(base64-encoded image data)"
+                    className='' alt="profil" />
               }
             </div>
           </div>

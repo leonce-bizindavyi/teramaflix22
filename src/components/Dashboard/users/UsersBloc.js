@@ -9,14 +9,7 @@ function UsersBloc() {
   const router = useRouter() 
   const [user, setUser]=useState(null)
   const [users, setUsers] = useState(null)
-  /* fetch('https://api.ipify.org?format=json')
-  .then(response => response.json())
-  .then(data => {
-    console.log('Mon addresse ip est ',data.ip);
-  })
-  .catch(error => {
-    console.error("Erreur lors de la récupération de l'adresse IP:", error);
-  }); */
+  
   useEffect(() => {
     
     // get users to in database

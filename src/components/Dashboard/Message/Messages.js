@@ -116,9 +116,16 @@ function Message() {
                         <div className=" w-10 h-10 xl:w-12 xl:h-12 rounded-full overflow-hidden">
                             {
                                 auto.Photo ?
-                                <Image width={100} height={100} title={`${auto.PageName}`} src={profBlobUrl} className="" alt="profil"/>
+                                <Image width={100} height={100} title={`${auto.PageName}`} 
+                                src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${auto.Photo}`} 
+                                priority={true} placeholder='blur' 
+                                blurDataURL="data:image/png;base64,...(base64-encoded image data)"
+                                className="" alt="profil"/>
                                 :
-                                <Image width={100} height={100}  title={`${auto.PageName}`} src={profBlobUrl}  className="" alt="profil"/>
+                                <Image width={100} height={100} src={`/img/logo.png`} 
+                                priority={true} placeholder='blur' 
+                                blurDataURL="data:image/png;base64,...(base64-encoded image data)"
+                                 className="w-full h-full" alt="profil"/>
                             }
                         </div>
                         <div  className="flex flex-col justify-center">

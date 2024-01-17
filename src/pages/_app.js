@@ -72,10 +72,9 @@ export default function App({ Component, pageProps }) {
     <SessionProvider>
       <LoadProvider>
         <div className="font-quicksand">
-
-
           <Head>
             <title>TeraMaFlix - Video Sharing Platform</title>
+            <meta name="google-adsense-account" content="ca-pub-8097044169349946"></meta>
             <meta name="description" content="Discover and share captivating videos on TeraMaFlix." />
             <meta property="og:title" content="TeraMaFlix - Video Sharing Platform" />
             <meta property="og:description" content="Discover and share captivating videos on TeraMaFlix." />

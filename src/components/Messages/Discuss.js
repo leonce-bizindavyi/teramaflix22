@@ -12,6 +12,8 @@ function Discuss({handlePopsms}) {
   const handleSubmit = async ()=>{
     // Envoyer les données à l'API pour les insérer dans la base de données
     if(body !== ""){
+      
+    console.log(body)
       const user = auto.session
       const response = await fetch('/api/dash/sms/send', {
         method:'POST',
@@ -20,6 +22,7 @@ function Discuss({handlePopsms}) {
             },
             body: JSON.stringify({body:body,user:user.ID,sent:1})
       });
+      setBody("")
       fetchOtherSms()
     }
    }

@@ -7,29 +7,10 @@ function TimeAgo(Created){
   return period
 }
 function Details({handleActive,users}) {  
-const [profBlobUrl, setProfBlobUrl] = useState('/img/logo.png');
 const [isActive,setIsActive]=useState(false)
 useEffect(() => {
   if(users && users.Actif === 1){
     setIsActive(true)
-    const fetchProfile = async (photo) => {
-      try {
-        if(photo){
-          const response = await fetch(`/Thumbnails/${photo}`);
-          const blob = await response.blob();
-          const blobUrl = URL.createObjectURL(blob);
-          setProfBlobUrl(blobUrl);
-        }else{
-          const response = await fetch(`/img/logo.png`);
-          const blob = await response.blob();
-          const blobUrl = URL.createObjectURL(blob);
-          setProfBlobUrl(blobUrl);
-        }
-      } catch (error) {
-        console.error('Error fetching video:', error);
-      }
-    };
-    fetchProfile(users.Photo)
   }
 }, [users])
 if (!users) {
@@ -43,7 +24,19 @@ const period = TimeAgo(users.Created_at)
       <div  className="userinfo xl:w-[60%] bg-white xl:full flex flex-col mb-5  rounded-3xl" id="userINFO">
         <div  className="flex felx-row justify-center w-full mt-5">
             <div  >
-              <Image width={100} height={100} className='w-36 h-36  xl:w-40 xl:h-40 rounded-full overflow-hidden' alt='profile' src={profBlobUrl}/>
+            {
+                users.Photo ?
+                  <Image width={100} height={100}
+                    src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${users.Photo}`}
+                    priority={true} placeholder='blur'
+                    blurDataURL="data:image/png;base64,...(base64-encoded image data)"
+                    className='w-36 h-36  xl:w-40 xl:h-40 rounded-full overflow-hidden' alt="profil" />
+                  :
+                  <Image width={100} height={100} src={`/img/logo.png`}
+                    priority={true} placeholder='blur'
+                    blurDataURL="data:image/png;base64,...(base64-encoded image data)"
+                    className='w-36 h-36  xl:w-40 xl:h-40 rounded-full overflow-hidden' alt="profil" />
+              }
             </div>
         </div>
         <div  className="userDetails p-8 xl:p-20 flex flex-row justify-between w-full ">

@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images:{
-    domains:['www.teramaflix.com']
+    domains:['www.teramaflix.com','localhost']
   }
 }
 
