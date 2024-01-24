@@ -1,9 +1,9 @@
 import executeQuery from "@/Config/db4";
 export default async function handler(req, res) {
-  const [uniidVid] = req.query.comments
+  const uniidVid = req.query.comments
   try {
     // Exécuter la requête SQL pour récupérer les commentaires
-    const rows = await executeQuery('CALL commentaire(?)', [uniidVid]);
+    const rows = await executeQuery('CALL commentaire(?,?,?)', uniidVid);
     
     // Renvoyer les résultats de la requête sous forme de réponse JSON
     res.status(200).json(rows[0]);

@@ -2,12 +2,14 @@ import React from 'react'
 import { usePeriod } from '../Hooks/usePeriod'
 import styles from '@/styles/Home.module.css'
 function FirstVideo({video}) {
+  const videoSrc = `/api/stream?videoId=${video.Video}`;
+
   return (
     <>
      <div id="items" className={`${styles.filmcontainer} flex w-full mt-3`} >
         <div className="flex flex-col md:flex-row space-x-10 space-y-2 w-full justify-center items-center mt-2">
             <div id ="content " className="h-[12rem] md:w-[40%] w-[90%] flex " >
-            <video src={`/Videos/${video.Video}`} className=" h-[100%] w-[100%] rounded-lg cursor-pointer "  controls autoPlay></video>
+            <video src={videoSrc} className=" h-[100%] w-[100%] rounded-lg cursor-pointer "  controls autoPlay></video>
             
             </div>
             <div className=" overflow-hidden">

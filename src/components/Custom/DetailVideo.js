@@ -90,6 +90,8 @@ function DetailVideo() {
     }
   }, [router, auth])
   if (!video) return (<div>Loading...</div>)
+  
+  const videoSrc = `/api/stream?videoId=${video.Video}`;
   return (
     <>
       <Title title={video.Title} />
@@ -102,7 +104,7 @@ function DetailVideo() {
             <div className="flex justify-center lg:w-full max-h-96">
 
               <video className="w-full h-96  object-fill"
-                src={`/Videos/${video.Video}`} controls></video>
+                src={videoSrc} controls></video>
             </div>
             {/* <!--video--> */}
             {/* <!--courbes--> */}

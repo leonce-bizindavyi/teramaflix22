@@ -13,7 +13,6 @@ function Home() {
     if(unid){
       const response = await fetch(`/api/posts/allVideos/${unid}/0/16`)
       const data = await response.json()
-      console.log(data)
       if(data.length !== 0){
         setVideo(data[0])
         setVideos(data.slice(1))

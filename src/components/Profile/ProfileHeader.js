@@ -56,34 +56,6 @@ function ProfileHeader({ handleSetPage, page }) {
     });
   }
   useEffect(() => {
-    const fetchCover = async (cover, photo) => {
-      try {
-        if (photo) {
-          const resProf = await fetch(`/Thumbnails/${photo}`);
-          const blobProf = await resProf.blob();
-          const blobUrlFrof = URL.createObjectURL(blobProf);
-          setProfBlobUrl(blobUrlFrof)
-        } else {
-          const resProf = await fetch(`/img/logo.png`);
-          const blobProf = await resProf.blob();
-          const blobUrlFrof = URL.createObjectURL(blobProf);
-          setProfBlobUrl(blobUrlFrof)
-        }
-        if (cover) {
-          const resCover = await fetch(`/Thumbnails/${cover}`);
-          const blobCover = await resCover.blob();
-          const blobUrlCover = URL.createObjectURL(blobCover);
-          setCoverBlobUrl(blobUrlCover);
-        } else {
-          const resCover = await fetch(`/img/cover.jpg`);
-          const blobCover = await resCover.blob();
-          const blobUrlCover = URL.createObjectURL(blobCover);
-          setCoverBlobUrl(blobUrlCover);
-        }
-      } catch (error) {
-        console.error('Error fetching video:', error);
-      }
-    };
     if (router.query.c && auth.session) {
       setAuto(auth.session)
       const fetchUsers = async () => {
@@ -91,7 +63,6 @@ function ProfileHeader({ handleSetPage, page }) {
           const data = await response.json()
           if (data.length > 0) {
             fetchSubReactions(data[0].ID)
-            fetchCover(data[0].Cover, data[0].Photo)
             setUser(data[0])
           }
       }
@@ -155,7 +126,6 @@ function ProfileHeader({ handleSetPage, page }) {
                   priority={true} placeholder='blur'
                   blurDataURL="data:image/png;base64,...(base64-encoded image data)" />
             }
-            <Image width={80} height={80} src={profBlobUrl} alt="profile" />
           </div>
 
         </div>
@@ -163,7 +133,7 @@ function ProfileHeader({ handleSetPage, page }) {
           <div className="  break:relative break:bottom-12 flex  px-4 justify-start sm:flex-col md:flex-row lg:flex-row flex-col  ">
 
             {
-              auto !== "unlogged" && (
+              user.ID && (
                 <div className="flex space-x-3">
                   <span className="mt-1 text-xl font-semibold sm:-mt-[1rem] md:mt-[2rem] sm:text-2xl md:text-3xl sm:font-normal text-blue-600 ">{user.PageName} </span>
                   {auto.ID === user.ID ? null : <SubBtn handleSub={handleSub} abonne={abonne} />}

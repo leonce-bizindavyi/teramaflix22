@@ -16,7 +16,7 @@ function Watching({ videoprops }) {
   let isCPressed = false;
   const videoContainerRef = useRef(null);
   const [hideCntrl, setHideCntrl] = useState('hidden')
-  const [hideBtn, setHideBtn] = useState('')
+  const [hideBtn, setHideBtn] = useState('hidden')
   const [paused, setPaused] = useState("")
   const [volumeLevel, setVolumeLevel] = useState("high")
   const [volume, setVolume] = useState(1);
@@ -26,6 +26,7 @@ function Watching({ videoprops }) {
   const [playbackSpeed, setPlaybackSpeed] = useState("1")
   const [screen, setScreen] = useState("")
   const [isReady, setIsReady] = useState(false);
+  const [loading, setLoading] = useState(true)
   const { show } = useContextMenu({ id: MENU_ID });
 
 
@@ -131,9 +132,16 @@ function Watching({ videoprops }) {
     }
   };
 
+
+  // handle restart video
+  const handleRestart = () => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0
+    }
+  }
   const handleNext = (next) => {
-    if(videoRef.current){
-      videoRef.current.currentTime=0
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0
     }
     router.push(`/Watch?v=${next}`)
   }
@@ -144,9 +152,24 @@ function Watching({ videoprops }) {
   }
   //handle update time format
   function formatTime(time) {
+    const hours = Math.floor(time / 3600);
+    time %= 3600;
+
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+    let formattedTime = '';
+
+    if (hours > 0) {
+      formattedTime += hours < 10 ? `0${hours}:` : `${hours}:`;
+    }
+
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+
+    formattedTime += `${formattedMinutes}:${formattedSeconds}`;
+
+    return formattedTime;
   }
 
   // handle set Contexte menu 
@@ -175,7 +198,7 @@ function Watching({ videoprops }) {
   useEffect(() => {
     const video = videoRef.current
     const handleCanPlay = () => {
-      console.log('isReady')
+      setLoading(false)
       setIsReady(true);
     };
     const handleProgress = () => {
@@ -205,15 +228,18 @@ function Watching({ videoprops }) {
       video.addEventListener('canplay', handleCanPlay);
       video.addEventListener('progress', handleProgress);
       video.addEventListener('error', handleError);
+      video.addEventListener('waiting', () => {
+        setLoading(true)
+      });
     }
     let count = 0;
-const interval = setInterval(() => {
-  if (videoRef.current && videoRef.current !== null) {
-    if (!videoRef.current.paused) {
-      count++;
-    }
-  }
-}, 1250);
+    const interval = setInterval(() => {
+      if (videoRef.current && videoRef.current !== null) {
+        if (!videoRef.current.paused) {
+          count++;
+        }
+      }
+    }, 1250);
 
     const handleRouteChange = (url, { shallow }) => {
       if (!shallow) {
@@ -402,7 +428,7 @@ const interval = setInterval(() => {
   }, [videoprops])
   const videoUrl = `${process.env.NEXT_PUBLIC_URL}/Watch?v=${videoprops.uniid}`;
 
-  if (!videoprops) return 
+  if (!videoprops) return
 
   const videoId = `/api/stream?videoId=${videoprops.Video}`;
 
@@ -417,18 +443,18 @@ const interval = setInterval(() => {
         data-volume-level={`${volumeLevel}`}>
         <div onClick={togglePlay} className={`controls  play-center absolute  flex justify-center items-center h-full w-full ${hideBtn}`}>
           <button className="play-pause-btn center z-0  bg-blue-500  bg-opacity-50  md:w-20 w-14 md:h-20 h-14 flex justify-center items-center  rounded-full cursor-pointer ">
-            
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="md:w-14 w-10 md:h-14 h-10 play-icon text-white">
-              <path fillRule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z" clipRule="evenodd" />
-            </svg>
-
-            
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="md:w-14 w-10 md:h-14 h-10 pause-icon font-bold text-white">
-              <path fillRule="evenodd" d="M6.75 5.25a.75.75 0 0 1 .75-.75H9a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H7.5a.75.75 0 0 1-.75-.75V5.25Zm7.5 0A.75.75 0 0 1 15 4.5h1.5a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H15a.75.75 0 0 1-.75-.75V5.25Z" clipRule="evenodd" />
-            </svg>
-   
+            {!loading && (
+              <>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="md:w-14 w-10 md:h-14 h-10 play-icon text-white">
+                  <path fillRule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z" clipRule="evenodd" />
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="md:w-14 w-10 md:h-14 h-10 pause-icon font-bold text-white">
+                  <path fillRule="evenodd" d="M6.75 5.25a.75.75 0 0 1 .75-.75H9a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H7.5a.75.75 0 0 1-.75-.75V5.25Zm7.5 0A.75.75 0 0 1 15 4.5h1.5a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H15a.75.75 0 0 1-.75-.75V5.25Z" clipRule="evenodd" />
+                </svg>
+              </>
+            )}
           </button>
-           {/* <div class="loading border-transparent h-14 w-14 animate-spin rounded-full border-4  border-t-blue-700 border-r-blue-700 " /> */}
+          {loading && (<div class="loading border-transparent h-14 w-14 animate-spin rounded-full border-4  border-t-blue-700 border-r-blue-700 " />)}
         </div>
 
         <div className={`video-controls-container ${hideCntrl}`}>
@@ -440,25 +466,26 @@ const interval = setInterval(() => {
           </div>
 
           <div className="controls z-0 md:space-x-3 px-3 py-2">
-          <button onClick={togglePlay} className="play-pause-btn ">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="play-icon w-6 h-6">
-              <path fillRule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z" clipRule="evenodd" />
-            </svg>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="pause-icon w-6 h-6">
-              <path fillRule="evenodd" d="M6.75 5.25a.75.75 0 0 1 .75-.75H9a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H7.5a.75.75 0 0 1-.75-.75V5.25Zm7.5 0A.75.75 0 0 1 15 4.5h1.5a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H15a.75.75 0 0 1-.75-.75V5.25Z" clipRule="evenodd" />
-            </svg>
+            <button onClick={togglePlay} className="play-pause-btn ">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="play-icon w-6 h-6">
+                <path fillRule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z" clipRule="evenodd" />
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="pause-icon w-6 h-6">
+                <path fillRule="evenodd" d="M6.75 5.25a.75.75 0 0 1 .75-.75H9a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H7.5a.75.75 0 0 1-.75-.75V5.25Zm7.5 0A.75.75 0 0 1 15 4.5h1.5a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H15a.75.75 0 0 1-.75-.75V5.25Z" clipRule="evenodd" />
+              </svg>
             </button>
 
-            <div onClick={() => handleNext(videoprops.NextVideo)} style={{ backgroundColor: 'black', width: 20 + 'px', height: 20 + 'px' }}>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8">
-                <path d="m0 0v6l5-3zm5 3v3h2v-6h-2" fill="currentColor" className='text-gray-300 hover:text-white bg-opacity-90  md:w-22 w-14 md:h-22 h-14  rounded-full cursor-pointer  ' transform="translate(0 1)" />
+            <button onClick={() => handleNext(videoprops.NextVideo)}>
+              <svg className="w-6 h-6 text-white mt-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3.83857 1.73317C2.04739 1.0163 1.20795 2.59175 1.01212 3.46909L1.0019 14.0158C1.38799 16.0347 2.95913 16.1129 3.69644 15.8997L12.7894 10.536C14.252 8.78269 13.268 7.40239 12.5931 6.9314L3.83857 1.73317Z" fill="currentColor" stroke="currentColor" />
+                <path d="M15.1074 1C14.4893 1.06521 14.3612 1.48365 14.3744 1.68471L14.3744 15.3626C14.517 15.9104 14.9885 16.0147 15.2064 15.9984C15.7769 15.9984 15.9724 15.5746 15.9988 15.3626V1.68471C16.0305 1.21519 15.4177 1.03261 15.1074 1Z" fill="currentColor" stroke="currentColor" />
               </svg>
-            </div>
+            </button>
 
 
             <div className="volume-container " >
-            <button onClick={toggleMute} className="mute-btn">
-                
+              <button onClick={toggleMute} className="mute-btn">
+
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="volume-high-icon w-6 h-6">
                   <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 0 0 1.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06ZM18.584 5.106a.75.75 0 0 1 1.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 0 1-1.06-1.06 8.25 8.25 0 0 0 0-11.668.75.75 0 0 1 0-1.06Z" />
                   <path d="M15.932 7.757a.75.75 0 0 1 1.061 0 6 6 0 0 1 0 8.486.75.75 0 0 1-1.06-1.061 4.5 4.5 0 0 0 0-6.364.75.75 0 0 1 0-1.06Z" />
@@ -472,7 +499,7 @@ const interval = setInterval(() => {
                   <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 0 0 1.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06ZM17.78 9.22a.75.75 0 1 0-1.06 1.06L18.44 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06l1.72-1.72 1.72 1.72a.75.75 0 1 0 1.06-1.06L20.56 12l1.72-1.72a.75.75 0 1 0-1.06-1.06l-1.72 1.72-1.72-1.72Z" />
                 </svg>
 
-                
+
               </button>
               <input className="volume-slider" type="range" min="0" max="1" step="any" value={volume} onChange={handleVolumeChange} />
             </div>
@@ -481,12 +508,12 @@ const interval = setInterval(() => {
               /
               <div className="total-time">{formatTime(duration)}</div>
             </div>
-            <button className='replay font-bold'>
-              <svg class="h-6 w-6 "  width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  
-                <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M4.05 11a8 8 0 1 1 .5 4m-.5 5v-5h5" />
+            <button onClick={handleRestart} className='replay font-bold'>
+              <svg class="h-6 w-6 " width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" />  <path d="M4.05 11a8 8 0 1 1 .5 4m-.5 5v-5h5" />
               </svg>
-              </button>
-              <div className='speed' >
+            </button>
+            <div className='speed' >
               {showPlaybackSpeedMenu && (
                 <div className="speed-menu absolute right-14 -top-[9rem] z-1  flex flex-col justify-center rounded-md items-center bg-gray-100 w-max px-4 text-slate-800 ">
                   <button onClick={() => setPlaybackSpeedValue(0.5)}>0.5x</button>
@@ -500,7 +527,7 @@ const interval = setInterval(() => {
               <button className="speed-btn wide-btn " onClick={togglePlaybackSpeedMenu}>
                 {playbackSpeed}x
               </button>
-              
+
             </div>
 
 
@@ -510,22 +537,22 @@ const interval = setInterval(() => {
               </svg>
             </button>
             <button className="full-screen-btn" onClick={handleFullScreen}>
-              <svg class="h-7 w-7 open"  width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M4 8v-2a2 2 0 0 1 2 -2h2" />  
-              <path d="M4 16v2a2 2 0 0 0 2 2h2" />  
-              <path d="M16 4h2a2 2 0 0 1 2 2v2" />  
-              <path d="M16 20h2a2 2 0 0 0 2 -2v-2" />
+              <svg class="h-7 w-7 open" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z" />  <path d="M4 8v-2a2 2 0 0 1 2 -2h2" />
+                <path d="M4 16v2a2 2 0 0 0 2 2h2" />
+                <path d="M16 4h2a2 2 0 0 1 2 2v2" />
+                <path d="M16 20h2a2 2 0 0 0 2 -2v-2" />
               </svg>
 
-                <svg class="h-7 w-7 close"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                  <path stroke="none" d="M0 0h24v24H0z"/>
-                    <path d="M15 19v-2a2 2 0 0 1 2 -2h2" />
-                      <path d="M15 5v2a2 2 0 0 0 2 2h2" />
-                        <path d="M5 15h2a2 2 0 0 1 2 2v2" />
-                          <path d="M5 9h2a2 2 0 0 0 2 -2v-2" />
-                </svg>
+              <svg class="h-7 w-7 close" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" />
+                <path d="M15 19v-2a2 2 0 0 1 2 -2h2" />
+                <path d="M15 5v2a2 2 0 0 0 2 2h2" />
+                <path d="M5 15h2a2 2 0 0 1 2 2v2" />
+                <path d="M5 9h2a2 2 0 0 0 2 -2v-2" />
+              </svg>
 
             </button>
-            
+
           </div>
         </div>
         <video onClick={togglePlay} poster={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${videoprops.Image}`} ref={videoRef} src={videoId} onEnded={() => handleNext(videoprops.NextVideo)} className='rounded' autoPlay />

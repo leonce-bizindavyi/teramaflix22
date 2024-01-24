@@ -176,7 +176,7 @@ function ShortVideo() {
               <video loop={true}
                 ref={(el) => (videoRefs.current[index] = el)}
                 onClick={(event) => handleVideoClick(event, index)}
-                src={`/Videos/${video.Video}`}
+                src={`/api/stream?videoId=${video.Video}`}
                 className={`${styles.video} vid object-cover w-[100%] h-full `}
               ></video>
             </div>

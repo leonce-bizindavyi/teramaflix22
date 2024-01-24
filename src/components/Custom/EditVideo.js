@@ -1,185 +1,210 @@
-import React, { useState, useEffect, useContext, useRef } from 'react'
+import React, { useState, useContext, useRef } from 'react'
 import Link from 'next/link';
 import { SessionContext } from '../context/Auth';
-import Upload from './Uploads';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
-function EditVideo({ uuid }) {
+function truncateText(text, maxLength) {
+  if (text.length > maxLength) {
+    return text.substring(0, maxLength) + '...';
+  }
+  return text;
+}
+
+function EditVideo({ uuid, video, handleaddvid }) {
   const router = useRouter()
   const videoRef = useRef(null);
+  const [short, setShort] = useState(0)
+  const [image, setImage] = useState(null)
+  const [clickedNext, setClickedNext] = useState(false)
   const auth = useContext(SessionContext)
-  const [videos, setVideos] = useState(null)
-  const [erroImage, seterroImage] = useState('')
-  const [formData, setFormData] = useState({
-    title: "",
-    desc: "",
-    cat: "",
-    user: "",
-    id: "",
-    image: null,
-    video: "",
-    oldimage: ""
-  });
-
+  const [formData, setFormData] = useState({});
   useEffect(() => {
-    if (auth.session) {
-      const fetchVideos = async () => {
-        const response = await fetch(`/api/posts/editPost/${uuid}`);
-        const data = await response.json();
-        if (data) {
-          setFormData((prevFormData) => ({
-            title: data.Title,
-            desc: data.Body,
-            cat: data.CatId,
-            user: data.User,
-            id: data.ID,
-            oldimage: data.Image,
-            video: data.Video,
-          }));
-        }
-      };
-      const fetchUploads = async () => {
-        const user = await auth;
-        const response = await fetch(`/api/posts/hidePosts/${user.ID}`);
-        const data = await response.json();
-        if (data.length === 0) {
-          // Faites quelque chose si les données sont videos
-        } else {
-          setVideos(data);
-        }
-      };
+    setFormData(video)
+  }, [video])
 
-      fetchVideos();
-      fetchUploads();
-    }
-  }, [auth, uuid]);
-
-  const handleSubmit = async () => {
-    if (videoRef.current) {
-      if (formData.image && formData.oldimage != 'NULL') {
-        const form = new FormData()
-        form.append('title', formData.title)
-        form.append('desc', formData.desc)
-        form.append('cat', formData.cat)
-        form.append('user', formData.user)
-        form.append('id', formData.id)
-        form.append('image', formData.image)
-        form.append('oldimage', formData.oldimage)
-        if (!isNaN(videoRef.current.duration)) {
-          if (videoRef.current.duration < 80 && videoRef.current.videoWidth < videoRef.current.videoHeight) {
-            form.append('short', 1)
-          } else {
-            form.append('short', 0)
-          }
-          // Envoyer les données à l'API pour les insérer dans la base de données
-          const response = await fetch('/api/posts/addPost', {
-            method: 'POST',
-            body: form
-          });
-
-          // Vérifier si la création de l'utilisateur a réussi
-          if (response.ok) {
-            const post = await response.json();
-            if (post.message) {
-              router.push('/upload')
-            }
-            // Réinitialiser le formulaire
-            setFormData({
-              ...formData,
-              title: ""
-            })
-            setFormData({ ...formData, desc: "" })
-            setFormData({ ...formData, cat: "" })
-            setFormData({ ...formData, image: null })
-          } else {
-            console.error(`Failed to create user: ${response.status} ${response.statusText}`);
-          }
-        }
+  const handleNext = () => {
+    if(videoRef.current){
+      if (videoRef.current.duration > 80 && videoRef.current.videoWidth > videoRef.current.videoHeight) {
+        setShort(0)
       } else {
-        seterroImage('Image Is required')
+        setShort(1)
       }
+      setClickedNext(true)
     }
   }
-  return (
-    <>
-      <div className="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 ">
-        <div className="description flex  flex-col md:w-[50%]  space-y-4">
-          <label htmlFor="title">Title</label>
-          <input type="text" id="title"
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-            value={formData.title}
-            className=" border-2 border-blue-500 h-10 rounded" />
-          <label htmlFor="textarea">Description</label>
-          <textarea id="textarea" cols="30" rows="5"
-            onChange={(e) => setFormData({ ...formData, desc: e.target.value })}
-            value={formData.desc}
-            className="border-2 border-blue-500  rounded"></textarea>
-          <label htmlFor="Categorie">Categories</label>
-          <select
-            id="Categorie"
-            value={formData.Categorie}
-            onChange={(e) => setFormData({ ...formData, cat: e.target.value })}
-            className="border-2 border-blue-500 h-10 rounded"
-          >
-            <option value="">-- Select Category --</option>
-            <option value="ct1">Music</option>
-            <option value="ct2">Films</option>
-            <option value="ct3">Comedie</option>
-            <option value="ct4">Saison</option>
-          </select>
-          <span className='text-red-600'>{erroImage}</span>
-          <div className="flex flex-row space-x-4 md:max-w-[60%]">
-            <div className="flex flex-row space-x-4">
-              <h2>Thumbnails</h2>
-              <label htmlFor="thumnail">
-                <span className="bg-blue-500 p-2 text-white rounded text-base ">upload</span>
-              </label>
+
+  const handleSubmit = async () => {
+    const form = new FormData()
+    form.append('title', formData.Title)
+    form.append('desc', formData.Body)
+    form.append('cat', formData.Categorie)
+    form.append('user', formData.User)
+    form.append('image', image)
+    form.append('short', short)
+    form.append('video', formData.Video)
+    const response = await fetch('/api/upload/edit', {
+      method: 'POST',
+      body: form
+    });
+    if(response.ok){
+      router.reload()
+    }
+  }
+  let videoSrc = ''
+  if (video.Video) {
+    videoSrc = `/api/stream?videoId=${video.Video}`;
+  }
+  if (clickedNext) {
+    return (
+      <div className='absolute rounded-md flex flex-col  justify-center items-center space-y-4  right-0 top-5 lg:w-[80%] w-full h-max bg-gray-200 p-4 py-10 '>
+        <div class="  w-[300px] h-[170px] rounded  overflow-hidden">
+          {image && (
+            <div class="imag w-[100%] h-[170px]  ">
+              <Image width={500} height={500}
+                src={URL.createObjectURL(image)}
+                className="w-[100%] h-[100%] object-cover"
+                alt="thumb"
+              />
             </div>
-
-            <input className='hidden'
-              onChange={(e) => setFormData({ ...formData, image: e.target.files[0] })} type="file" id="thumnail" />
-            {formData.oldimage && (
-              <div className="imag w-[100%] h-[170px] rounded overflow-hidden">
-                <Image src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${formData.oldimage}`}
-                  width={800} height={800} alt='video'
-                  className="video w-[100%]  h-[100%] object-fit"
-                  priority={true} placeholder='blur'
-                  blurDataURL="data:image/png;base64,...(base64-encoded image data)" />
-              </div>
-            )}
-            {formData.image && (
-              <div className="imag w-[100%] h-[170px] rounded overflow-hidden">
-                <Image width={80} height={80}
-                  src={URL.createObjectURL(formData.image)}
-                  className="w-[100%] h-[100%] object-cover"
-                  alt="thumb"
-                />
-              </div>
-            )}
-
-          </div>
-
-          <button onClick={handleSubmit} className="bg-blue-500 p-2 text-white rounded ">save</button>
-
+          )}
         </div>
-        <div className="detail md:w-[50%] flex flex-col space-y-6 items-center">
-          <div className="  h-[170px]">
-            <div className="imag w-[100%] h-[170px] rounded  overflow-hidden">
-              <video ref={videoRef} src={`/Videos/${formData.video}`} className="w-[100%]  h-[100%] object-cover" alt="" controls />
-            </div>
-          </div>
-          <div className="detail-details flex flex-col  space-y-2 ">
-            <span>Title : Brave</span>
-            <span >Link : <Link title={`${process.env.NEXT_PUBLIC_URL}Watch/${uuid}`} className='text-blue-500 hover:underline underline-offset-4' href={`/Watch?v=${uuid}`}>{process.env.NEXT_PUBLIC_URL}Watc...</Link></span>
+        <div class="detail-details flex flex-col  space-y-2 ">
+          <span className='font-semibold text-md'>Title : <span className='font-normal ' title={`${formData.Title}`}> {truncateText(formData.Title, 40)}</span></span>
+          <span className='font-semibold text-md'>Date : <span className='font-normal '>{formData.Created_at}</span> </span>
+          <div>
+            <span className='font-semibold text-md w-[80%]'>Description</span>
+            <p title={`${formData.Body}`} >{truncateText(formData.Body, 255)}</p>
           </div>
         </div>
+        <div className='flex flex-row space-x-6'>
+          <button className='border-none p-2 flex flex-row space-x-1 items-center text-blue-500 bg-white rounded-lg' onClick={e => setClickedNext(false)}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+            </svg>
+
+            <span>back</span>
+
+          </button>
+          <button onClick={() => {
+            handleSubmit()
+          }} className="bg-blue-500 p-3 text-white rounded font-semibold ">Upload</button>
+        </div>
+        <button className="btn-addvid-closer absolute top-1 right-4" onClick={() => handleaddvid(false)}>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="drop-video-closer w-6 h-6 text-blue-500 cursor-pointer">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
+    )
 
-      {
-        videos ? <Upload videos={videos} /> : null}
-    </>
-  )
+  }
+  else {
+    return (
+      <>
+        <div className='absolute rounded-md  right-0 top-5 lg:w-[80%] w-full bg-gray-200 p-4  '>
+          <div className=" p-4   h-max flex flex-col md:flex-row md:space-x-4 justify-center  space-y-4 md:space-y-0 ">
+            <div className="description flex  flex-col md:w-[50%]   space-y-4">
+              <label htmlFor="title" className='font-semibold text-slate-800'>Title</label>
+              <input type="text" id="title"
+                onChange={(e) => setFormData({ ...formData, Title: e.target.value })}
+                value={formData.Title}
+                className=" border-2 border-white h-10 rounded focus:outline-none" />
+              <label htmlFor="textarea" className='font-semibold text-slate-800'>Description</label>
+              <textarea id="textarea" cols="30" rows="5"
+                onChange={(e) => setFormData({ ...formData, Body: e.target.value })}
+                value={formData.Body}
+                className="border-2 border-white  rounded focus:outline-none "></textarea>
+              <label htmlFor="Categorie" className='font-semibold text-slate-800'>Categories</label>
+              <select
+                id="Categorie"
+                value={formData.Categorie}
+                onChange={(e) => setFormData({ ...formData, Categorie: e.target.value })}
+                className="border-2 border-white h-10 rounded focus:outline-none"
+              >
+                <option value="">-- Select Category --</option>
+                <option value="ct1">Music</option>
+                <option value="ct2">Films</option>
+                <option value="ct3">Comedie</option>
+                <option value="ct4">Saison</option>
+              </select>
+              <div className="flex flex-col space-y-4 space-x-4 md:max-w-[100%]">
+                <div className="flex flex-row space-x-4">
+                  <h2 className='font-semibold text-slate-800'>Thumbnails</h2>
+                  <label htmlFor="thumnail">
+                    <span className="bg-blue-500 p-2 text-white rounded text-base ">Add Thumbnail</span>
+                  </label>
+                </div>
+
+                <input className='hidden' accept="image/*"
+                  onChange={(e) => { setImage(e.target.files[0]) }} type="file" id="thumnail" />
+                {image && (
+                  <div className="imag w-[100%] h-[170px] rounded overflow-hidden">
+                    <Image width={500} height={500}
+                      src={URL.createObjectURL(image)}
+                      className="w-[100%] h-[100%] object-cover"
+                      alt="thumb"
+                    />
+                  </div>
+                )}
+              </div>
+
+
+
+            </div>
+            <div className="detail md:w-[40%] flex flex-col space-y-6 items-center">
+              <div className="  h-[170px]">
+                <div className="imag w-[100%] h-[170px] rounded  overflow-hidden">
+                  <video ref={videoRef} src={videoSrc} className="w-[100%]  h-[100%] object-cover" alt="" controls autoPlay />
+                </div>
+              </div>
+              <div className="detail-details flex flex-col  space-y-2 ">
+                <span className='font-semibold text-slate-800' >Link : <Link title={`${process.env.NEXT_PUBLIC_URL}Watch/${uuid}`} className='text-blue-500 font-normal hover:underline underline-offset-4' href={`/Watch?v=${uuid}`}>{process.env.NEXT_PUBLIC_URL}Watc...</Link></span>
+              </div>
+              <div className='uploading... flex flex-row items-center space-x-2'>
+                {video.Success || video.uniid ?
+                  <>
+                    <span>uploaded</span>
+                    <span>100%</span>
+                  </>
+                  :
+                  <>
+                    <div class="w-6 h-6 border-4 border-dashed rounded-full animate-spin border-blue-600"></div>
+                    {video.percent === 0 ?
+                      <span>Waiting...</span>
+                      :
+                      <>
+                        <span>uploading...</span>
+                        <span>{video.percent}%</span>
+                      </>
+                    }
+                  </>
+                }
+              </div>
+            </div>
+          </div>
+          <div className='w-full flex justify-center'>
+            <button className='border-none p-3 flex flex-row space-x-1 text-blue-500 bg-white rounded-lg' onClick={() => { handleNext() }}  >
+              <span>Next</span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                <path fill-rule="evenodd" d="M12.97 3.97a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06l6.22-6.22H3a.75.75 0 0 1 0-1.5h16.19l-6.22-6.22a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+              </svg>
+
+            </button>
+          </div>
+          <button className="btn-addvid-closer absolute top-3 right-4" onClick={() => handleaddvid(false)}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="drop-video-closer w-6 h-6 text-blue-500 cursor-pointer">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+
+      </>
+    )
+  }
+
 }
 
 export default EditVideo

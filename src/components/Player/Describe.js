@@ -259,7 +259,7 @@ function Describe({ video }) {
             </div>
           </Link>
           {
-            video.User === auto.ID ? null : <SubBtn handleSub={handleSub} abonne={abonne} />
+            video.User === auto.session.ID? null : <SubBtn handleSub={handleSub} abonne={abonne} />
           }
 
         </div>

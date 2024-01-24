@@ -1,5 +1,4 @@
 import { sign } from 'jsonwebtoken';
-import { serialize } from 'cookie';
 import { v4 as uuidv4 } from 'uuid';
 import * as z from 'zod';
 import fs from 'fs-extra';

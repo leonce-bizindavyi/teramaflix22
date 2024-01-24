@@ -4,8 +4,19 @@ import rangeParser from 'range-parser';
 
 export default function handler(req, res) {
   const { videoId } = req.query;
-  const videosFolderPath = path.join(process.env.NEXT_UPLOADS_FOLDERS, `/Videos`);
-  const videoPath = path.join(videosFolderPath, `${videoId}`);
+  const videosFolderPath = path.join(process.env.NEXT_UPLOADS_FOLDERS, '/Videos');
+  const videoPath = path.join(videosFolderPath, videoId);
+
+  // Vérifier l'existence du fichier
+  try {
+    fs.accessSync(videoPath, fs.constants.F_OK);
+  } catch (err) {
+    // Le fichier n'existe pas, gestion de l'erreur ici
+    console.error('Le fichier vidéo n\'existe pas.', err);
+    res.status(404).end();
+    return;
+  }
+
   const videoStat = fs.statSync(videoPath);
   const fileSize = videoStat.size;
 

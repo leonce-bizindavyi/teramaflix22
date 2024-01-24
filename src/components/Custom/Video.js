@@ -1,6 +1,15 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import React from 'react'
+
+function truncateText(text, maxLength) {
+  if (text.length > maxLength) {
+    return text.substring(0, maxLength) + '...';
+  }
+  return text;
+}
+
+
 function Video({ video, handleRemoveVideo }) {
   const deletePost = async (id, video, image) => {
     const response = await fetch(`/api/posts/deletePost/${id}/${video}/${image}`)
@@ -27,7 +36,7 @@ function Video({ video, handleRemoveVideo }) {
             <Link href="">
               <div className="flex space-x-1 justify-start mb-0">
                 <div className="right-1">
-                  <p className="text-sm font-medium">{video.Title}</p><br />
+                  <p className="text-sm font-medium" title={video.Title} > {truncateText(video.Title, 25)}</p><br />
                 </div>
               </div>
             </Link>
