@@ -21,7 +21,7 @@ function Slide({ video }) {
                 <ImageComp src={video.Image} w={400} h={400} a={'video'} />
               </Link>
             </div>
-            <p title={video.Title} className="font-bold text-slate-900 text-md ">{truncateText(video.Title, 25)}</p>
+            <p title={video.Title} className="font-bold text-slate-900 text-base">{truncateText(video.Title, 17)}</p>
             <Link href={`/profile?c=${video.Uuid}`}>
               <div className="flex  justify-center items-center space-x-2 mb-4">
                 {

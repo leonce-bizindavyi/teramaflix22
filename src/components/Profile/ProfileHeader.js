@@ -59,12 +59,12 @@ function ProfileHeader({ handleSetPage, page }) {
     if (router.query.c && auth.session) {
       setAuto(auth.session)
       const fetchUsers = async () => {
-          const response = await fetch(`/api/users/getUser/${router.query.c}`)
-          const data = await response.json()
-          if (data.length > 0) {
-            fetchSubReactions(data[0].ID)
-            setUser(data[0])
-          }
+        const response = await fetch(`/api/users/getUser/${router.query.c}`)
+        const data = await response.json()
+        if (data.length > 0) {
+          fetchSubReactions(data[0].ID)
+          setUser(data[0])
+        }
       }
       const fetchSubReactions = async (user) => {
         const sub = auth.session
@@ -93,8 +93,7 @@ function ProfileHeader({ handleSetPage, page }) {
             <Image width={500} height={500} src={URL.createObjectURL(cover)} alt="cover" className=" w-full  rounded-md" />
             :
             <>
-              <Image width={800} height={800} src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${user.Cover}`} alt="cover" className="  w-full  rounded-md" />
-
+              {user.Cover && (<Image width={800} height={800} src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${user.Cover}`} alt="cover" className="  w-full  rounded-md" />)}
             </>
           }
 
