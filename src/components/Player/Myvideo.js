@@ -30,7 +30,7 @@ function Myvideo({ video }) {
               </Link>
           }
         </div>
-        <Link href={`/profile?c=${video.uniid}`}>
+        <Link href={`/profile?c=${video.Uuid}`}>
           <div className="videoName font-semibold lg:text-[18px] text-[18px]" title={video.Title} >{truncateText(video.Title,25)}</div>
           <div className="profilChannel  flex justify-start items-center space-x-2  cursor-pointer ">
             {

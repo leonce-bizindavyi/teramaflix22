@@ -8,11 +8,9 @@ export default function handler(req, res) {
   const videoPath = path.join(videosFolderPath, videoId);
 
   // Vérifier l'existence du fichier
-  try {
-    fs.accessSync(videoPath, fs.constants.F_OK);
-  } catch (err) {
+  if (!fileExists(videoPath)) {
     // Le fichier n'existe pas, gestion de l'erreur ici
-    console.error('Le fichier vidéo n\'existe pas.', err);
+    console.error('Le fichier vidéo n\'existe pas.');
     res.status(404).end();
     return;
   }
@@ -49,4 +47,13 @@ export default function handler(req, res) {
   });
 
   fs.createReadStream(videoPath).pipe(res);
+}
+
+function fileExists(filePath) {
+  try {
+    fs.accessSync(filePath, fs.constants.F_OK);
+    return true;
+  } catch (err) {
+    return false;
+  }
 }

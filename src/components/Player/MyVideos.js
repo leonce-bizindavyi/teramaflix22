@@ -19,7 +19,9 @@ function MyVideos() {
     const fetchMyVideos = async (post) => {
       const response = await fetch(`/api/posts/myVideos/${post}/0/2`);
       const data = await response.json();
-      setMyVideos(data);
+      if (data.length>0) {
+        setMyVideos(data);
+      }
     };
     if(router.query.v){
       fetchMyVideos(router.query.v)
