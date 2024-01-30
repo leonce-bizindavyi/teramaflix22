@@ -439,9 +439,9 @@ function Watching({ videoprops }) {
         onContextMenu={displayMenu}
         className={`video-container ${paused} ${screen} mini-player w-full lg:w-[100%] rounded-md relative `}
         data-volume-level={`${volumeLevel}`}>
-        <div onClick={togglePlay} className={`controls  play-center absolute  flex justify-center items-center h-full w-full ${hideBtn}`}>
+        <div onClick={togglePlay} className={`controls  play-center absolute  flex justify-center items-center h-full w-full`}>
           {!loading && (
-            <button className="play-pause-btn center z-0  bg-blue-500  bg-opacity-50  md:w-20 w-14 md:h-20 h-14 flex justify-center items-center  rounded-full cursor-pointer ">
+            <button className={`play-pause-btn center z-0  bg-blue-500  bg-opacity-50  md:w-20 w-14 md:h-20 h-14 flex justify-center items-center  rounded-full cursor-pointer ${hideBtn}`}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="md:w-14 w-10 md:h-14 h-10 play-icon text-white">
                 <path fillRule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z" clipRule="evenodd" />
               </svg>

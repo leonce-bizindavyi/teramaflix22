@@ -1,5 +1,5 @@
 const CACHE_NAME = 'my-site-cache-v1';
-const urlsToCache = ['/history', '/Watch'];
+const urlsToCache = ['/downloads'];
 
 self.addEventListener('install', event => {
   event.waitUntil(
