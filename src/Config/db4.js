@@ -4,7 +4,7 @@ import { createPool } from 'mysql2/promise';
 // Créez un pool de connexions avec une limite de connexions maximale
 const pool = createPool({
   host: 'localhost',
-  user: 'terama_20819u',
+  user: 'root',
   password: 'terama_20819p',
   database: 'terama_20819u',
   connectionLimit: 50, // Nombre maximal de connexions
