@@ -17,15 +17,15 @@ function Video({video}) {
   return (
     <>
        <div className={styles.videocontainer}>
-          <div className="imag w-[100%] sm:h-[170px] h-[250px] flex justify-center items-center  sm:rounded bg-gray-100 overflow-hidden">
+          <div className="imag w-[100%] sm:h-[170px] h-[250px] flex justify-center items-center  sm:rounded bg-gray-500 overflow-hidden">
              {
               video.Short == 1 ?
               <Link href={`/short`}> 
-                 <ImageComp src={video.Image} w={800} h={800} a={'video'} />
+                 <ImageComp src={video.Image} w={455} h={270} a={'video'} />
               </Link>
               :
               <Link href={`/Watch?v=${video.uniid}`}>
-                <ImageComp src={video.Image} w={800} h={800} a={'video'} />
+                <ImageComp src={video.Image} w={455} h={270} a={'video'} />
               </Link>
              }
           </div>

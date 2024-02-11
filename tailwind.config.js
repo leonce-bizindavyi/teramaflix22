@@ -7,9 +7,10 @@ module.exports = {
   ],
   theme: {
     extend: {
-      fontFamily : {
-        quicksand : ['Quicksand','sans-serif'],
+      fontFamily: {
+        default: ['Poppins', 'Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
       },
+      
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':

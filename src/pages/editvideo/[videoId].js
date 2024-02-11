@@ -1,7 +1,7 @@
-import EditVideo from '@/components/Custom/EditVideo'
 import React from 'react'
 import { useRouter } from 'next/router';
 import Title from '@/components/Title';
+import EditVideo from '@/components/Custom/EditVideo2';
 function EditVideoPage() {
   const router = useRouter()
   const videoId = router.query.videoId

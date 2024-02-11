@@ -6,7 +6,7 @@ function ImageComp({ src, w, h, a }) {
         <>
             <Image src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${src}`}
                 width={w} height={h}
-                className="object-contain w-full h-full" alt={a}
+                className="object-cover h-full w-full" alt={a}
                 priority={true} placeholder='blur'
                 unoptimized
                 onError={(e) => {

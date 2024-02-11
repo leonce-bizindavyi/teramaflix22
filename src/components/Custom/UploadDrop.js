@@ -56,8 +56,7 @@ function UploadDrop() {
 
     for (let i = 0; i < videos.length; i++) {
       const file = videos[i];
-      const extension = file.name.split('.').pop(); // Extract file extension
-      const uniVideo = uuidv4() + i + '.' + extension;
+      const uniVideo = uuidv4() + i + '.mp4';
       const formData = new FormData();
       formData.append('User', auto.ID);
       formData.append('Video', uniVideo)
@@ -82,10 +81,10 @@ function UploadDrop() {
         }
       });
 
-      xhr.open('POST', `${process.env.NEXT_PUBLIC_URL}apis/upload`, true);
+      xhr.open('POST', `http://127.0.0.1:5000/upload`, true);
 
       xhr.onreadystatechange = () => {
-        if (xhr.readyState === 4) {
+        if (xhr.readyState === 4 && xhr.status === 200) {
           const responseData = JSON.parse(xhr.responseText);
           if (responseData.Success) {
             // Update the Success attribute of the corresponding video to true

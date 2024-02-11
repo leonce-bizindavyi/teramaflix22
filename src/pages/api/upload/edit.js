@@ -25,6 +25,7 @@ export default async function uploadHandler(req, res) {
                 console.error(err);
                 return res.status(500).json({ error: 'Une erreur s\'est produite lors de l\'upload des images.' });
             }
+            console.log(files,fields)
 
             // Récupérez les informations des fichiers uploadés
             const images = Array.isArray(files.image) ? files.image : [files.image];
@@ -55,8 +56,7 @@ async function moveImage(image, fields) {
     // Modifier dans le dossier
     try {
         const oldPath = image.filepath;
-        const extension = path.extname(image.originalFilename);
-        const newFilename = image.newFilename + extension;
+        const newFilename = image.newFilename + '.png';
         const newPath = path.join(thumbnailsFolderPath, newFilename);
         const parsedPath = path.parse(fields.title);
         const title = parsedPath.name;
@@ -71,6 +71,7 @@ async function moveImage(image, fields) {
 }
 
 async function insertVideo(image, fields, title) {
+    console.log(title)
     const { desc, cat, video, short, user } = fields;
     try {
         // Exécutez la requête SQL pour insérer une vidéo dans la base de données

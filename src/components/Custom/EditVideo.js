@@ -4,6 +4,7 @@ import { SessionContext } from '../context/Auth';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import AvatarEditor from 'react-avatar-editor';
 
 function truncateText(text, maxLength) {
   if (text.length > maxLength) {
@@ -15,6 +16,11 @@ function truncateText(text, maxLength) {
 function EditVideo({ uuid, video, handleaddvid }) {
   const router = useRouter()
   const videoRef = useRef(null);
+  const [scale, setScale] = useState(1);
+  const [croppedImage, setCroppedImage] = useState(null);
+  const [editor, setEditor] = useState(null);
+  const [photo, setPhoto] = useState(null)
+  const [annulation_recadrage, setAnnulation_recadrage] = useState(false);
   const [short, setShort] = useState(0)
   const [image, setImage] = useState(null)
   const [clickedNext, setClickedNext] = useState(false)
@@ -25,15 +31,47 @@ function EditVideo({ uuid, video, handleaddvid }) {
   }, [video])
 
   const handleNext = () => {
-    if(videoRef.current){
-      if (videoRef.current.duration > 80 && videoRef.current.videoWidth > videoRef.current.videoHeight) {
-        setShort(0)
-      } else {
+    if (videoRef.current && formData.Body) {
+      if (videoRef.current.duration < 80 && videoRef.current.videoWidth < videoRef.current.videoHeight) {
         setShort(1)
+      } else {
+        setShort(0)
       }
       setClickedNext(true)
     }
   }
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(URL.createObjectURL(file));
+      setAnnulation_recadrage(true)
+    }
+  };
+
+  const handleScaleChange = (e) => {
+    const newScale = parseFloat(e.target.value);
+    setScale(newScale);
+  };
+
+  const handleCrop = () => {
+    if (editor) {
+      const canvas = editor.getImageScaledToCanvas();
+      const croppedImageUrl = canvas.toDataURL('image/png');
+      setCroppedImage(croppedImageUrl);
+      setAnnulation_recadrage(!annulation_recadrage)
+      const byteString = atob(croppedImageUrl.split(',')[1]);
+      const mimeString = croppedImageUrl.split(',')[0].split(':')[1].split(';')[0];
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+
+      const blob = new Blob([ab], { type: mimeString });
+      setPhoto(blob)
+    }
+  };
 
   const handleSubmit = async () => {
     const form = new FormData()
@@ -41,16 +79,16 @@ function EditVideo({ uuid, video, handleaddvid }) {
     form.append('desc', formData.Body)
     form.append('cat', formData.Categorie)
     form.append('user', formData.User)
-    form.append('image', image)
+    form.append('image', photo)
     form.append('short', short)
     form.append('video', formData.Video)
     const response = await fetch('/api/upload/edit', {
       method: 'POST',
       body: form
     });
-    if(response.ok){
+    if (response.ok) {
       router.reload()
-    }
+    } 
   }
   let videoSrc = ''
   if (video.Video) {
@@ -60,10 +98,10 @@ function EditVideo({ uuid, video, handleaddvid }) {
     return (
       <div className='absolute rounded-md flex flex-col  justify-center items-center space-y-4  right-0 top-5 lg:w-[80%] w-full h-max bg-gray-200 p-4 py-10 '>
         <div class="  w-[300px] h-[170px] rounded  overflow-hidden">
-          {image && (
+          {croppedImage && (
             <div class="imag w-[100%] h-[170px]  ">
               <Image width={500} height={500}
-                src={URL.createObjectURL(image)}
+                src={croppedImage}
                 className="w-[100%] h-[100%] object-cover"
                 alt="thumb"
               />
@@ -138,16 +176,56 @@ function EditVideo({ uuid, video, handleaddvid }) {
                 </div>
 
                 <input className='hidden' accept="image/*"
-                  onChange={(e) => { setImage(e.target.files[0]) }} type="file" id="thumnail" />
-                {image && (
+                  onChange={(e) => { handleImageChange(e) }} type="file" id="thumnail" />
+                {croppedImage && (
                   <div className="imag w-[100%] h-[170px] rounded overflow-hidden">
                     <Image width={500} height={500}
-                      src={URL.createObjectURL(image)}
+                      src={croppedImage}
                       className="w-[100%] h-[100%] object-cover"
                       alt="thumb"
                     />
                   </div>
                 )}
+                {
+                  image && annulation_recadrage && (
+                    <div className='flex items-center justify-center'>
+                      <div className='absolute mb-[9rem] bg-gray-200 border-2 border-blue-500 rounded-md'>
+                        <AvatarEditor
+                          ref={(editorInstance) => setEditor(editorInstance)}
+                          image={image}
+                          width={455}
+                          height={270}
+                          border={80}
+                          color={[245, 245, 245, 0.6]} // Couleur de fond (blanc transparent)
+                          scale={scale}
+                          rotate={0}
+                        />
+                        <div className='grid grid-cols-1 gap-y-0'>
+                          <div className='flex justify-center space-x-4' >
+                            <label className='font-semibold'>Échelle :</label>
+                            <input
+                              type="range"
+                              min="1"
+                              max="2"
+                              step="0.01"
+                              value={scale}
+                              onChange={handleScaleChange}
+                            />
+                            <span>{scale}</span>
+                          </div>
+                          <div className='flex justify-between px-5 items-center'>
+                            <button className='hover:bg-blue-700 text-white  w-[4.5rem] h-[1.7rem] bg-blue-600 rounded-sm ' onClick={handleCrop}>
+                              Recadrer
+                            </button>
+                            <button onClick={() => setAnnulation_recadrage(!annulation_recadrage)} className='mb-4 hover:bg-red-700 text-white w-[4.5rem] h-[1.7rem] mt-3 bg-red-600 rounded-sm'>
+                              annuler
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                }
               </div>
 
 
@@ -171,12 +249,17 @@ function EditVideo({ uuid, video, handleaddvid }) {
                   :
                   <>
                     <div class="w-6 h-6 border-4 border-dashed rounded-full animate-spin border-blue-600"></div>
+                    {video.percent === 100 && (<span>Processing...</span>)}
                     {video.percent === 0 ?
                       <span>Waiting...</span>
                       :
                       <>
-                        <span>uploading...</span>
-                        <span>{video.percent}%</span>
+                        {video.percent < 100 && (
+                          <>
+                            <span>uploading...</span>
+                            <span>{video.percent}%</span>
+                          </>
+                        )}
                       </>
                     }
                   </>

@@ -25,14 +25,13 @@ export default async function uploadHandler(req, res) {
         console.error(err);
         return res.status(500).json({ error: 'Une erreur s\'est produite lors de l\'upload des vidéos.' });
       }
-
-      // Récupérez les informations des fichiers uploadés
+       // Récupérez les informations des fichiers uploadés
       const images = Array.isArray(files.image) ? files.image : [files.image];
 
-      // Déplacez chaque fichier uploadé dans le répertoire de destination
+     // Déplacez chaque fichier uploadé dans le répertoire de destination
       if (images[0] === undefined) {
         await insertVideo(fields.oldimage, fields);
-        res.status(200).json({ message: 'Upload réussi !' });
+        res.status(200).json({Success:true, message: 'Upload réussi !' });
       } else {
         const movePromises = images.map(async (image) => {
           if (image.newFilename) {
@@ -47,7 +46,7 @@ export default async function uploadHandler(req, res) {
           await Promise.all(movePromises);
           
           // Répondez au client une fois que tous les fichiers ont été traités
-          res.status(200).json({ message: true });
+        res.status(200).json({Success:true, message: 'Upload réussi !' });
         } catch (error) {
           console.error(error);
           res.status(500).json({ error: 'Une erreur s\'est produite lors de l\'enregistrement des vidéos.' });
@@ -63,8 +62,7 @@ export default async function uploadHandler(req, res) {
 async function moveVideo(image, fields) {
   // Modifier dans le dossier
   const oldPath = image.filepath;
-  const extension = path.extname(image.originalFilename);
-  const newFilename = image.newFilename+extension;
+  const newFilename = image.newFilename+".png";
   const newPath = path.join(thumbnailsFolderPath, newFilename);
   await fs.ensureDir(path.dirname(newPath));
   await fs.move(oldPath, newPath);
