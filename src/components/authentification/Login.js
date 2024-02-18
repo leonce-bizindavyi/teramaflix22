@@ -6,8 +6,6 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import '@/styles/fonts.module.css'
 
-
-
 function Login() {
   const router = useRouter()
   const [errpass, setErrpass] = useState("")

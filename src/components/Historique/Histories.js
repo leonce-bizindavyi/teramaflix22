@@ -48,7 +48,7 @@ function Histories() {
     hasMore={hasMore}
     loader={<h4>Loading...</h4>}
     endMessage={
-      <p style={{textAlign:"center"}}><b>You have seen it all</b></p>
+      <p style={{textAlign:"center"}} className='p-2'><b>You have seen it all</b></p>
     }>
       <div className="Uploads flex flex-col w-full h-full bg-white rounded-3xl">
         <div className="uploadsContainer w-full h-full pt-6 overflow-y-auto">

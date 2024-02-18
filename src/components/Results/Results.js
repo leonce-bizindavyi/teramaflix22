@@ -7,22 +7,35 @@ function Results() {
   const search = router.query.results
   const [videos, setVideos] = useState([])
   const [hasMore,setHasMore]=useState(true)
-  const fetchResults = async (search) =>{
-      const response = await fetch(`/api/results/${search}/0/5`)
-      const data = await response.json()
-      if(data[0]){
-        setVideos(data)
-      }
-  }
+  
   const getMoreResults=async()=>{
-    const res=await fetch(`/api/results/${search}/${videos.length}/4`)
+    const res = await fetch('/api/results/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ search: search, start: videos.length, limit: 5 }),
+    });
     const newVideos = await res.json()
-    if(newVideos.length==0)setHasMore(false)
+    if(newVideos.length===0) setHasMore(false)
       setVideos(videos=>[...videos, ...newVideos])
   }
   useEffect(() => {
-    if(search){
-      fetchResults(search)
+    if (search) {
+      const fetchResults = async (search) =>{
+      const response = await fetch('/api/results/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ search: search, start: 0, limit: 10 }),
+      });
+      const data = await response.json()
+      if (data[0]) {
+        setVideos(data)
+      }
+    }
+    fetchResults(search)
     }
   }, [search])
   

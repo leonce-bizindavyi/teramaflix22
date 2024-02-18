@@ -8,7 +8,7 @@ function Messagerie() {
   return (
     <>
       <div>
-        <div  className="fixed bottom-12 right-4" id="">
+        <div  className="fixed bottom-12 right-0 lg:right-4" id="">
           <div  className="flex justify-end mr-8 -mt-14 ">
             <button onClick={()=>handlePopsms(true)} type="button"  className="shadow border-2 bg-gray-200 border-gray-300 rounded-full p-2 flex items-center justify-center hover:border-blue-700" id="btn_a_message">
               <div>

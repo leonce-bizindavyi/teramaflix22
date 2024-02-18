@@ -26,7 +26,7 @@ function Watching({ videoprops }) {
   const [playbackSpeed, setPlaybackSpeed] = useState("1")
   const [screen, setScreen] = useState("")
   const [isReady, setIsReady] = useState(false);
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const { show } = useContextMenu({ id: MENU_ID });
 
 
@@ -51,6 +51,7 @@ function Watching({ videoprops }) {
   const toggleMute = () => {
     if (videoRef.current) {
       if (videoRef.current.muted) {
+        console.log(videoRef.current.duration)
         setVolume(1)
         setVolumeLevel("high")
         videoRef.current.muted = false;
@@ -174,7 +175,7 @@ function Watching({ videoprops }) {
 
   // handle set Contexte menu 
   function handleItemClick({ event, props, triggerEvent, data }) {
-    
+
   }
   function displayMenu(e) {
     // put whatever custom logic you need
@@ -282,9 +283,6 @@ function Watching({ videoprops }) {
         };
       }
     }
-
-
-
 
 
     const handleKeyPress = (event) => {
@@ -423,13 +421,12 @@ function Watching({ videoprops }) {
       }
 
     }
+   
   }, [videoprops])
   const videoUrl = `${process.env.NEXT_PUBLIC_URL}/Watch?v=${videoprops.uniid}`;
 
   if (!videoprops) return
-
   const videoId = `/api/stream?videoId=${videoprops.Video}`;
-
   return (
     <>
       <Title title={`${videoprops.Title} - TeramaFlix`} />
@@ -450,7 +447,7 @@ function Watching({ videoprops }) {
               </svg>
             </button>
           )}
-        {loading && (<div class="loading border-transparent h-14 w-14 animate-spin rounded-full border-4  border-t-blue-700 border-r-blue-700 " />)}
+          {loading && (<div class="loading border-transparent h-14 w-14 animate-spin rounded-full border-4  border-t-blue-700 border-r-blue-700 " />)}
         </div>
         <div className={`video-controls-container ${hideCntrl}`}>
           <div ref={timelineRef} className="timeline-container">

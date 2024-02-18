@@ -31,7 +31,7 @@ function Videos() {
 
   if (videos == null) {
     setLoad(false)
-    return (<div className={`${styles.filmcontainer} mt-3  gap-[1rem] `}><LoadData /></div>)
+    return (<LoadData />)
   }
 
   const getMoreVideos = async () => {
@@ -55,9 +55,9 @@ function Videos() {
         hasMore={hasMore}
         loader={<LoadData />}
         endMessage={
-          <p style={{ textAlign: "center" }}><b>You have seen it all</b></p>
+          <p style={{ textAlign: "center" }} className='p-2'><b>You have seen it all</b></p>
         }>
-        <div id="load_data" className={`${styles.filmcontainer} mt-3  gap-[1rem] `}>
+        <div id="load_data" className={`border-4 border-t-blue-500  border-white pt-[30px] grid grid-cols-1  sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-3  gap-3 `}>
           {/* <div className={styles.videocontainer}>
           <Adsense />
           </div> */}
