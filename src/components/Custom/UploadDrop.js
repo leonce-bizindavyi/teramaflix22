@@ -81,7 +81,7 @@ function UploadDrop() {
         }
       });
 
-      xhr.open('POST', `${NEXT_PUBLIC_URL}apis/upload`, true);
+      xhr.open('POST', `${process.env.NEXT_PUBLIC_URL}apis/upload`, true);
 
       xhr.onreadystatechange = () => {
         if (xhr.readyState === 4 && xhr.status === 200) {
