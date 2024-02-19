@@ -81,7 +81,7 @@ function UploadDrop() {
         }
       });
 
-      xhr.open('POST', `http://127.0.0.1:5000/upload`, true);
+      xhr.open('POST', `${NEXT_PUBLIC_URL}apis/upload`, true);
 
       xhr.onreadystatechange = () => {
         if (xhr.readyState === 4 && xhr.status === 200) {
